@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: python3.9
+    Timeout: 180
+
+Resources:  
+  FunctionA:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.a
+      FunctionName: FunctionA
+      Events:
+        FunctionA:
+          Type: Api
+          Properties:
+            Path: /a
+            Method: get
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: FunctionB
+  FunctionB:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.b
+      FunctionName: FunctionB
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: FunctionC
+  FunctionC:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.c
+      FunctionName: FunctionC
