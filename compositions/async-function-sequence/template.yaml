@@ -7,11 +7,11 @@ Globals:
     Timeout: 180
 
 Resources:  
-  SequenceFunctionA:
+  AsyncSequenceFunctionA:
     Type: AWS::Serverless::Function
     Properties:
       Handler: app.a
-      FunctionName: SequenceFunctionA
+      FunctionName: AsyncSequenceFunctionA
       Events:
         FunctionA:
           Type: Api
@@ -20,17 +20,17 @@ Resources:
             Method: get
       Policies:
         - LambdaInvokePolicy:
-            FunctionName: SequenceFunctionB
-  SequenceFunctionB:
+            FunctionName: AsyncSequenceFunctionB
+  AsyncSequenceFunctionB:
     Type: AWS::Serverless::Function
     Properties:
       Handler: app.b
-      FunctionName: SequenceFunctionB
+      FunctionName: AsyncSequenceFunctionB
       Policies:
         - LambdaInvokePolicy:
-            FunctionName: SequenceFunctionC
-  SequenceFunctionC:
+            FunctionName: AsyncSequenceFunctionC
+  AsyncSequenceFunctionC:
     Type: AWS::Serverless::Function
     Properties:
       Handler: app.c
-      FunctionName: SequenceFunctionC
+      FunctionName: AsyncSequenceFunctionC

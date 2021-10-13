@@ -10,16 +10,18 @@ def return_message(message, status_code: int = 200):
     }
 
 def a(event, context):
-    data = {}
-    response = compose(function_name='FunctionB', data=data)
-    response = response + f'Hello world from {a.__name__}. ' 
+    data = {
+        'greet': f'Hello world from {a.__name__}. ' 
+    }
+    response = compose(function_name='SequenceFunctionB', data=data)
     return return_message(message=response)
 
 def b(event, context):
-    response = compose(function_name='FunctionC', data=event)
-    response = response + f'Hello world from {b.__name__}. ' 
+    event['greet'] = event['greet'] + f'Hello world from {b.__name__}. '
+    response = compose(function_name='SequenceFunctionC', data=event)
     return return_message(message=response)
 
 def c(event, context):
-    response = f'Hello world from {c.__name__}. '
+    event['greet'] = event['greet'] + f'Hello world from {c.__name__}. '
+    response = event['greet']
     return return_message(message=response)
