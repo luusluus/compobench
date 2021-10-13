@@ -1,11 +1,14 @@
 # Serverless Function Compositions
 
 ## Initial Setup
-
+Install python package
 ```
 python3 -m venv venv && source ./venv/bin/activate && pip install -e .
 ```
 
+Install AWS SAM CLI
+
+https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-linux.html#serverless-sam-cli-install-linux-sam-cli
 
 ## Building and deploying a composition
 
@@ -14,12 +17,12 @@ python3 -m venv venv && source ./venv/bin/activate && pip install -e .
 sam build
 ```
 
-### Invoke Locally with HTTP
+### Invoke One Lambda Locally with HTTP
 ```
 sam local api
 ```
 
-### Invoke Locally with CLI
+### Invoke One Lambda Locally with CLI
 ```
 sam local invoke <<FunctionName>>
 ```
@@ -31,7 +34,14 @@ First time
 sam deploy --guided
 ```
 
-With `samconfig.toml` saved in root dir
+For subsequent deployments
 ```
 sam deploy
+```
+
+## Testing a composition
+Go into one of the composition directories. For example:
+```
+cd compositions/sync-function-sequence
+python3 client.py
 ```
