@@ -10,7 +10,7 @@ Resources:
   SequenceFunctionA:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: app.a
+      Handler: function_a.lambda_handler
       FunctionName: SequenceFunctionA
       Events:
         FunctionA:
@@ -24,7 +24,7 @@ Resources:
   SequenceFunctionB:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: app.b
+      Handler: function_b.lambda_handler
       FunctionName: SequenceFunctionB
       Policies:
         - LambdaInvokePolicy:
@@ -32,5 +32,5 @@ Resources:
   SequenceFunctionC:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: app.c
+      Handler: function_c.lambda_handler
       FunctionName: SequenceFunctionC

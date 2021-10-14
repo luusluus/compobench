@@ -20,5 +20,9 @@ def compose(function_name, data):
     result = json.load(payload)
     print(result)
     body = result['body']
-
-    return json.loads(body)
+    
+    return {
+            'statusCode': 200,
+            'headers': {'Content-Type': 'application/json'},
+            'body': body
+        }

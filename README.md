@@ -38,6 +38,11 @@ sam local api
 sam local invoke <<FunctionName>>
 ```
 
+### Validate Template
+Before deploying, validate the SAM YAML template
+```
+sam validate
+```
 
 ### Deployment
 First time

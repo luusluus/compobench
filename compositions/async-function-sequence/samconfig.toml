@@ -8,4 +8,5 @@ s3_prefix = "async-function-sequence"
 region = "eu-central-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
+parameter_overrides = "S3BucketName=\"async-sequence-store\""
 image_repositories = []
