@@ -56,6 +56,12 @@ sam deploy
 ```
 
 ## Testing a composition
+First activate virtual environment
+
+```
+source ./venv/bin/activate
+```
+
 Go into one of the composition directories and call the client script. For example:
 ```
 cd compositions/sync-function-sequence
