@@ -2,7 +2,6 @@
 
 import json
 from boto3 import client as boto3_client
-from compositions.aws_helpers.s3 import S3BucketHelper
 
 
 aws_region = 'eu-central-1'

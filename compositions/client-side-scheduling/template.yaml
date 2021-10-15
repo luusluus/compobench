@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: python3.9
+    Timeout: 180
+
+Resources:  
+  ClientSideFunctionA:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_a.lambda_handler
+      FunctionName: ClientSideFunctionA
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: ClientSideFunctionB
+  ClientSideFunctionB:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_b.lambda_handler
+      FunctionName: ClientSideFunctionB
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: ClientSideFunctionC
+  ClientSideFunctionC:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_c.lambda_handler
+      FunctionName: ClientSideFunctionC
