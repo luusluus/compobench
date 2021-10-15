@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: python3.9
+    Timeout: 180
+
+Resources:  
+  CompiledFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: compiled_function.lambda_handler
+      FunctionName: CompiledFunction
