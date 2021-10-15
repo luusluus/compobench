@@ -1,6 +1,4 @@
 
-import os
-
 def function_a():
     return f'Hello world from {function_a.__name__}. '
 

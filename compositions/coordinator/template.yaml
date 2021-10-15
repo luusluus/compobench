@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: python3.9
+    Timeout: 180
+
+Resources:
+  CoordinatorFunctionCoordinator:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: coordinator.lambda_handler
+      FunctionName: CoordinatorFunctionCoordinator
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: CoordinatorFunctionA
+        - LambdaInvokePolicy:
+            FunctionName: CoordinatorFunctionB
+        - LambdaInvokePolicy:
+            FunctionName: CoordinatorFunctionC
+  CoordinatorFunctionA:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_a.lambda_handler
+      FunctionName: CoordinatorFunctionA
+  CoordinatorFunctionB:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_b.lambda_handler
+      FunctionName: CoordinatorFunctionB
+  CoordinatorFunctionC:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_c.lambda_handler
+      FunctionName: CoordinatorFunctionC
