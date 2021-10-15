@@ -9,20 +9,11 @@ def compose(function_name, data):
 
     client = boto3_client('lambda', region_name=aws_region)
 
-    print(f'invoking {function_name}')
+    print(f'Synchronously invoking {function_name}')
     
     response = client.invoke(
         FunctionName=function_name,
         InvocationType='RequestResponse',
         Payload=json.dumps(data))
 
-    payload = response['Payload']
-    result = json.load(payload)
-    print(result)
-    body = result['body']
-    
-    return {
-            'statusCode': 200,
-            'headers': {'Content-Type': 'application/json'},
-            'body': body
-        }
+    return json.load(response['Payload'])

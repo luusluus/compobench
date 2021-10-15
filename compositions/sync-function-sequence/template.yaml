@@ -12,12 +12,6 @@ Resources:
     Properties:
       Handler: function_a.lambda_handler
       FunctionName: SequenceFunctionA
-      Events:
-        FunctionA:
-          Type: Api
-          Properties:
-            Path: /a
-            Method: get
       Policies:
         - LambdaInvokePolicy:
             FunctionName: SequenceFunctionB

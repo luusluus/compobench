@@ -5,14 +5,19 @@ from compositions.aws_helpers.s3 import S3BucketHelper
 
 
 aws_region = 'eu-central-1'
-bucket_name = 'async-sequence-store'
+bucket_name = 'routing-slip-store'
 result_key = 'result_c.json'
 
 client = boto3_client('lambda', region_name=aws_region)
 
+payload = {
+    'composition': ['RoutingSlipFunctionB', 'RoutingSlipFunctionC']
+    }
+
 response = client.invoke(
-    FunctionName='AsyncSequenceFunctionA',
-    InvocationType='Event'
+    FunctionName='RoutingSlipFunctionA',
+    InvocationType='Event',
+    Payload=json.dumps(payload),
 )
 
 if response['StatusCode'] == 202:

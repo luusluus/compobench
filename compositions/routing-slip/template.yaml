@@ -4,8 +4,8 @@ Transform: AWS::Serverless-2016-10-31
 Parameters:
   S3BucketName:
     Type: String
-    Default: async-sequence-store
-    Description: Enter S3 Bucket Name. Default is async-sequence-store
+    Default: routing-slip-store
+    Description: Enter S3 Bucket Name. Default is routing-slip-store
 
 Globals:
   Function:
@@ -18,29 +18,29 @@ Resources:
       Properties:
         BucketName: !Ref S3BucketName 
 
-  AsyncSequenceFunctionA:
+  RoutingSlipFunctionA:
     Type: AWS::Serverless::Function
     Properties:
       Handler: function_a.lambda_handler
-      FunctionName: AsyncSequenceFunctionA
+      FunctionName: RoutingSlipFunctionA
       Policies:
         - LambdaInvokePolicy:
-            FunctionName: AsyncSequenceFunctionB
+            FunctionName: RoutingSlipFunctionB
 
-  AsyncSequenceFunctionB:
+  RoutingSlipFunctionB:
     Type: AWS::Serverless::Function
     Properties:
       Handler: function_b.lambda_handler
-      FunctionName: AsyncSequenceFunctionB
+      FunctionName: RoutingSlipFunctionB
       Policies:
         - LambdaInvokePolicy:
-            FunctionName: AsyncSequenceFunctionC
+            FunctionName: RoutingSlipFunctionC
 
-  AsyncSequenceFunctionC:
+  RoutingSlipFunctionC:
     Type: AWS::Serverless::Function
     Properties:
       Handler: function_c.lambda_handler
-      FunctionName: AsyncSequenceFunctionC
+      FunctionName: RoutingSlipFunctionC
       Environment:
         Variables:
           BUCKET_NAME: !Ref S3BucketName
@@ -48,15 +48,15 @@ Resources:
         - S3WritePolicy:
             BucketName: !Ref S3BucketName
       Layers:
-        - !Ref AsyncSequenceDepends
+        - !Ref RoutingSlipDepends
 
-  AsyncSequenceDepends:
+  RoutingSlipDepends:
     Type: AWS::Serverless::LayerVersion
     Properties:
       CompatibleRuntimes:
           - python3.9
       ContentUri: ../aws_helpers
-      Description: Utility Functions for Async Sequence Composition
+      Description: Utility Functions for Routing Slip
       LicenseInfo: MIT
     Metadata:
       BuildMethod: python3.9

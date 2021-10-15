@@ -1,18 +1,22 @@
 
 
 import json
+from boto3 import client as boto3_client
+from compositions.aws_helpers.s3 import S3BucketHelper
 
-import requests
 
-from compositions.aws_helpers.api_gateway import ApiGatewayHelper
-
-gateway_helper = ApiGatewayHelper(aws_region='eu-central-1')
-endpoint = gateway_helper.get_api_gateway_endpoint(api_get_way_name='sync-function-sequence')
+aws_region = 'eu-central-1'
+client = boto3_client('lambda', region_name=aws_region)
 
 # call the first function a to start the workflow
-response = requests.get(endpoint + 'a')
+response = client.invoke(
+    FunctionName='SequenceFunctionA',
+    InvocationType='RequestResponse'
+)
 
-print(response.content.decode('utf-8'))
-# print(json.loads(response.content.decode('utf-8')))
+if response['StatusCode'] == 200:
+    result = json.load(response['Payload'])
+    print(result['result'])
+
 
 
