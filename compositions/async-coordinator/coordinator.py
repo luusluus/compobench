@@ -1,5 +1,6 @@
 
 import os
+from botocore.exceptions import ClientError
 from compose import compose
 from s3 import S3BucketHelper
 
@@ -14,21 +15,25 @@ def lambda_handler(event, context):
     s3_bucket_helper = S3BucketHelper(aws_region=os.environ['AWS_REGION'])
     try:
         workflow_state = s3_bucket_helper.get_object_from_bucket(bucket_name=bucket_name, object_key=object_key)
+        print(workflow_state)
         workflow = workflow_state['workflow']
         prev_invoked_function = workflow_state['prev_invoked_function']
         current_result = workflow_state['current_result']
 
         # concat the string result
         new_result = current_result + event['result']
-    except Exception as e:
+    except ClientError as e:
         # NoSuchKey Exception
-        print(e)
-        # only in initial invocation by client
-        workflow = event['workflow']
-        print(workflow)
-        new_result = ''
-        prev_invoked_function = ''
+        if e.response['Error']['Code'] == 'NoSuchKey':
+            print(e)
+            workflow = event['workflow']
+            print(workflow)
+            new_result = ''
+            prev_invoked_function = ''
+        else:
+            raise
 
+    print(new_result)
     if prev_invoked_function == workflow[-1]:
         # end of workflow
         s3_bucket_helper.write_json_to_bucket(
@@ -50,7 +55,9 @@ def lambda_handler(event, context):
             'current_result': new_result
         }
         s3_bucket_helper.write_json_to_bucket(bucket_name=bucket_name, json_object=new_workflow_state, object_key=object_key)
-        compose(function_name=function_name, data={
+        compose(
+            function_name=function_name, 
+            data={
             'workflow_id': workflow_id
         })
     
