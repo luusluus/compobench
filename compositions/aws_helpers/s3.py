@@ -27,10 +27,12 @@ class S3BucketHelper():
         )
 
     def get_object_from_bucket(self, bucket_name, object_key):
-        return self._client.get_object(
+        response = self._client.get_object(
             Bucket=bucket_name,
             Key=object_key
         )
+
+        return json.loads(response['Body'].read())
 
     def delete_object_from_bucket(self, bucket_name, object_key):
         return self._client.delete_object(

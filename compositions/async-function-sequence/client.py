@@ -21,8 +21,7 @@ if response['StatusCode'] == 202:
     s3_bucket_helper.poll_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 
     response = s3_bucket_helper.get_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
-    result = json.loads(response['Body'].read())
-    print(result['result'])
+    print(response['result'])
 
     s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 else:

@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  S3BucketName:
+    Type: String
+    Default: async-coordinator-store
+    Description: Enter S3 Bucket Name. Default is async-coordinator-store
+
+Globals:
+  Function:
+    Runtime: python3.9
+    Timeout: 180
+    Environment:
+        Variables:
+          BUCKET_NAME: !Ref S3BucketName
+
+Resources:
+  AsyncCoordinatorCompositionStore:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3BucketName
+
+
+  AsyncCoordinatorFunctionCoordinator:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: coordinator.lambda_handler
+      FunctionName: AsyncCoordinatorFunctionCoordinator
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: AsyncCoordinatorFunctionA
+        - LambdaInvokePolicy:
+            FunctionName: AsyncCoordinatorFunctionB
+        - LambdaInvokePolicy:
+            FunctionName: AsyncCoordinatorFunctionC
+        - S3WritePolicy:
+            BucketName: !Ref S3BucketName
+        - S3ReadPolicy:
+            BucketName: !Ref S3BucketName
+
+      Layers:
+        - !Ref AsyncCoordinatorDepends
+
+  AsyncCoordinatorFunctionA:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_a.lambda_handler
+      FunctionName: AsyncCoordinatorFunctionA
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: AsyncCoordinatorFunctionCoordinator
+
+  AsyncCoordinatorFunctionB:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_b.lambda_handler
+      FunctionName: AsyncCoordinatorFunctionB
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: AsyncCoordinatorFunctionCoordinator
+  AsyncCoordinatorFunctionC:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_c.lambda_handler
+      FunctionName: AsyncCoordinatorFunctionC
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: AsyncCoordinatorFunctionCoordinator
+
+  AsyncCoordinatorDepends:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      CompatibleRuntimes:
+          - python3.9
+      ContentUri: ../aws_helpers
+      Description: Utility Functions for Async Coordinator Composition
+      LicenseInfo: MIT
+    Metadata:
+      BuildMethod: python3.9
