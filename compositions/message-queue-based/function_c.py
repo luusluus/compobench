@@ -12,8 +12,6 @@ def lambda_handler(event, context):
     bucket_name = os.environ['BUCKET_NAME']
     s3_bucket_helper = S3BucketHelper(aws_region=os.environ['AWS_REGION'])
 
-    print(message)
-
     s3_bucket_helper.write_json_to_bucket(
         bucket_name=bucket_name,
         json_object={'result': message}, 
