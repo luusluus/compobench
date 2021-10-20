@@ -23,6 +23,12 @@ first_topic = topics[0]['TopicArn']
 try:
     client.publish(
         TopicArn=first_topic,
+        MessageAttributes={
+            'caller': {
+                'DataType': 'String',
+                'StringValue': 'Client',
+            }
+        },
         Message=json.dumps({'message': 'start'})
     )
 

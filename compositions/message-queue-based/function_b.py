@@ -10,4 +10,6 @@ def lambda_handler(event, context):
     function_name = os.path.basename(__file__).split('.')[0]
     message += f'Hello world from {function_name}. '
 
-    publish(message=message)
+    caller = os.environ['AWS_LAMBDA_FUNCTION_NAME']
+    print(caller)
+    publish(message=message, caller=caller)

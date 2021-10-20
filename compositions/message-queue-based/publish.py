@@ -3,7 +3,7 @@ import json
 
 from boto3 import client as boto3_client
 
-def publish(message):
+def publish(message, caller):
     aws_region = os.environ['AWS_REGION']
 
     topic_arn = os.environ['TOPIC_ARN']
@@ -14,4 +14,10 @@ def publish(message):
 
     client.publish(
         Message=message,
+        MessageAttributes={
+            'caller': {
+                'DataType': 'String',
+                'StringValue': caller,
+            }
+        },
         TopicArn=topic_arn)

@@ -9,4 +9,6 @@ def lambda_handler(event, context):
 
     print(message)
 
-    publish(message=message)
+    caller = os.environ['AWS_LAMBDA_FUNCTION_NAME']
+    print(caller)
+    publish(message=message, caller=caller)

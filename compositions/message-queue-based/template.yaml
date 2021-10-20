@@ -18,21 +18,10 @@ Resources:
       Properties:
         BucketName: !Ref S3BucketName 
 
-  MessageQueueTopicA:
+  MessageQueueTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: MessageQueueTopicA
-    
-  MessageQueueTopicB:
-    Type: AWS::SNS::Topic
-    Properties:
-      TopicName: MessageQueueTopicB
-
-  MessageQueueTopicC:
-    Type: AWS::SNS::Topic
-    Properties:
-      TopicName: MessageQueueTopicC
-  
+      TopicName: MessageQueueTopic
   # https://forum.serverless.com/t/aws-topicpolicy-invalid-template-resource-property-topics/2726/2
   # AWS:SourceOwner (default) --> AWS:PrincipalAccount is the fix for AuthorizationErrorException (boto3)
   MessageQueueTopicPolicy:
@@ -51,9 +40,7 @@ Resources:
               StringEquals:
                 AWS:PrincipalAccount: !Ref AWS::AccountId
       Topics:
-        - !Ref MessageQueueTopicA
-        - !Ref MessageQueueTopicB
-        - !Ref MessageQueueTopicC
+        - !Ref MessageQueueTopic
 
   MessageQueueFunctionA:
     Type: AWS::Serverless::Function
@@ -62,15 +49,18 @@ Resources:
       FunctionName: MessageQueueFunctionA
       Environment:
         Variables:
-          TOPIC_ARN: !Ref MessageQueueTopicB
+          TOPIC_ARN: !Ref MessageQueueTopic
       Policies:
         - SNSPublishMessagePolicy:
-            TopicName: !Ref MessageQueueTopicB
+            TopicName: !Ref MessageQueueTopic
       Events:
         SNSEvent:
           Type: SNS
           Properties:
-            Topic: !Ref MessageQueueTopicA
+            Topic: !Ref MessageQueueTopic
+            FilterPolicy:
+              caller:
+                - Client
 
   MessageQueueFunctionB:
     Type: AWS::Serverless::Function
@@ -79,15 +69,18 @@ Resources:
       FunctionName: MessageQueueFunctionB
       Environment:
         Variables:
-          TOPIC_ARN: !Ref MessageQueueTopicC
+          TOPIC_ARN: !Ref MessageQueueTopic
       Policies:
         - SNSPublishMessagePolicy:
-            TopicName: !Ref MessageQueueTopicC
+            TopicName: !Ref MessageQueueTopic
       Events:
         SNSEvent:
           Type: SNS
           Properties:
-            Topic: !Ref MessageQueueTopicB
+            Topic: !Ref MessageQueueTopic
+            FilterPolicy:
+              caller:
+                - MessageQueueFunctionA
 
   MessageQueueFunctionC:
     Type: AWS::Serverless::Function
@@ -104,7 +97,10 @@ Resources:
         SNSEvent:
           Type: SNS
           Properties:
-            Topic: !Ref MessageQueueTopicC
+            Topic: !Ref MessageQueueTopic
+            FilterPolicy:
+              caller:
+                - MessageQueueFunctionB
       Layers:
         - !Ref MessageQueueDepends
 
