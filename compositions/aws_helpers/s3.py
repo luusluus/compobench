@@ -22,7 +22,7 @@ class S3BucketHelper():
             Key=object_key,
             WaiterConfig={
                 'Delay': 1,
-                'MaxAttempts': 10
+                'MaxAttempts': 30
             }
         )
 

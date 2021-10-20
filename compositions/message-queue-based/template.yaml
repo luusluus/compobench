@@ -1,0 +1,120 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  S3BucketName:
+    Type: String
+    Default: message-queue-store
+    Description: Enter S3 Bucket Name. Default is message-queue-store
+
+Globals:
+  Function:
+    Runtime: python3.9
+    Timeout: 180
+
+Resources:
+  CompositionStore:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: !Ref S3BucketName 
+
+  MessageQueueTopicA:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: MessageQueueTopicA
+    
+  MessageQueueTopicB:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: MessageQueueTopicB
+
+  MessageQueueTopicC:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: MessageQueueTopicC
+  
+  # https://forum.serverless.com/t/aws-topicpolicy-invalid-template-resource-property-topics/2726/2
+  # AWS:SourceOwner (default) --> AWS:PrincipalAccount is the fix for AuthorizationErrorException (boto3)
+  MessageQueueTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: '*'
+            Action:
+              - "SNS:Publish"
+            Resource: '*'
+            Condition: 
+              StringEquals:
+                AWS:PrincipalAccount: !Ref AWS::AccountId
+      Topics:
+        - !Ref MessageQueueTopicA
+        - !Ref MessageQueueTopicB
+        - !Ref MessageQueueTopicC
+
+  MessageQueueFunctionA:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_a.lambda_handler
+      FunctionName: MessageQueueFunctionA
+      Environment:
+        Variables:
+          TOPIC_ARN: !Ref MessageQueueTopicB
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !Ref MessageQueueTopicB
+      Events:
+        SNSEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref MessageQueueTopicA
+
+  MessageQueueFunctionB:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_b.lambda_handler
+      FunctionName: MessageQueueFunctionB
+      Environment:
+        Variables:
+          TOPIC_ARN: !Ref MessageQueueTopicC
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !Ref MessageQueueTopicC
+      Events:
+        SNSEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref MessageQueueTopicB
+
+  MessageQueueFunctionC:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_c.lambda_handler
+      FunctionName: MessageQueueFunctionC
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref S3BucketName
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref S3BucketName
+      Events:
+        SNSEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref MessageQueueTopicC
+      Layers:
+        - !Ref MessageQueueDepends
+
+  MessageQueueDepends:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      CompatibleRuntimes:
+          - python3.9
+      ContentUri: ../aws_helpers
+      Description: Utility Functions for Message Queue Composition
+      LicenseInfo: MIT
+    Metadata:
+      BuildMethod: python3.9
