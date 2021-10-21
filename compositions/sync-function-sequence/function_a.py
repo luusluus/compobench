@@ -3,6 +3,8 @@ import os
 from compose import compose
 
 def lambda_handler(event, context):
+    return compose(event=event, function_name='SequenceFunctionB', business_logic_function=hello_world)
+
+def hello_world(prev_hello_world: str):
     function_name = os.path.basename(__file__).split('.')[0]
-    event['greet'] = f'Hello world from {function_name}. '
-    return compose(function_name='SequenceFunctionB', data=event)
+    return prev_hello_world + f'Hello world from {function_name}. '

@@ -1,10 +1,10 @@
 
 import os
-import json
 from compose import compose
 
 def lambda_handler(event, context):
+    return compose(event=event, function_name='', business_logic_function=hello_world)
+
+def hello_world(prev_hello_world: str):
     function_name = os.path.basename(__file__).split('.')[0]
-    event['greet'] = event['greet'] + f'Hello world from {function_name}. '
-    print(event['greet'])
-    return {'result': event['greet']}
+    return prev_hello_world + f'Hello world from {function_name}. '

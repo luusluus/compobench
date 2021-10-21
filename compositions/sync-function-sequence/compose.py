@@ -4,16 +4,21 @@ import json
 from boto3 import client as boto3_client
 from botocore.config import Config
 
-def compose(function_name, data):
-    aws_region = os.environ['AWS_REGION']
+def compose(event, function_name, business_logic_function):
+    event['greet'] = business_logic_function(event['greet'])
 
-    client = boto3_client('lambda', region_name=aws_region)
+    if function_name == '':
+        return {'result': event['greet']}
+    else:
+        aws_region = os.environ['AWS_REGION']
 
-    print(f'Synchronously invoking {function_name}')
-    
-    response = client.invoke(
-        FunctionName=function_name,
-        InvocationType='RequestResponse',
-        Payload=json.dumps(data))
+        client = boto3_client('lambda', region_name=aws_region)
 
-    return json.load(response['Payload'])
+        print(f'Synchronously invoking {function_name}')
+        
+        response = client.invoke(
+            FunctionName=function_name,
+            InvocationType='RequestResponse',
+            Payload=json.dumps(event))
+
+        return json.load(response['Payload'])
