@@ -11,6 +11,11 @@ Globals:
   Function:
     Runtime: python3.9
     Timeout: 180
+    Environment:
+        Variables:
+          TOPIC_ARN: !Ref MessageQueueTopic
+    Layers:
+        - !Ref MessageQueueDepends
 
 Resources:
   CompositionStore:
@@ -47,9 +52,6 @@ Resources:
     Properties:
       Handler: function_a.lambda_handler
       FunctionName: MessageQueueFunctionA
-      Environment:
-        Variables:
-          TOPIC_ARN: !Ref MessageQueueTopic
       Policies:
         - SNSPublishMessagePolicy:
             TopicName: !Ref MessageQueueTopic
@@ -67,9 +69,6 @@ Resources:
     Properties:
       Handler: function_b.lambda_handler
       FunctionName: MessageQueueFunctionB
-      Environment:
-        Variables:
-          TOPIC_ARN: !Ref MessageQueueTopic
       Policies:
         - SNSPublishMessagePolicy:
             TopicName: !Ref MessageQueueTopic
@@ -101,8 +100,6 @@ Resources:
             FilterPolicy:
               caller:
                 - MessageQueueFunctionB
-      Layers:
-        - !Ref MessageQueueDepends
 
   MessageQueueDepends:
     Type: AWS::Serverless::LayerVersion

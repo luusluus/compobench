@@ -10,33 +10,22 @@ from compositions.aws_helpers.s3 import S3BucketHelper
 
 aws_region = 'eu-central-1'
 result_key = 'result.json'
-bucket_name = 'message-queue-store'
+bucket_name = 'storage-based-store'
 
-client = boto3_client('sns', region_name=aws_region)
 
-topics = client.list_topics()['Topics']
-
-first_topic = topics[0]['TopicArn']
+s3_bucket_helper = S3BucketHelper(aws_region=aws_region)
 
 
 # Publish a message to the first topic to start the workflow
 try:
-    client.publish(
-        TopicArn=first_topic,
-        MessageAttributes={
-            'caller': {
-                'DataType': 'String',
-                'StringValue': 'Client',
-            },
-            'last_function':{
-                'DataType': 'String',
-                'StringValue': 'MessageQueueFunctionC'
-            }
-        },
-        Message=json.dumps({'result': ''})
-    )
+    s3_bucket_helper.write_json_to_bucket(
+        bucket_name=bucket_name, 
+        json_object={
+            'workflow': ['function_b', 'function_c'],
+            'result': ''
+        }, 
+        object_key='function_a_result.json')
 
-    s3_bucket_helper = S3BucketHelper(aws_region=aws_region)
 
     s3_bucket_helper.poll_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 

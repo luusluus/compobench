@@ -1,0 +1,12 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "storage-based"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1dl7e6dfrw4b3"
+s3_prefix = "storage-based"
+region = "eu-central-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "S3BucketName=\"storage-based-store\""
+image_repositories = []
