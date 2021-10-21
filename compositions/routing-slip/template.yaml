@@ -11,6 +11,11 @@ Globals:
   Function:
     Runtime: python3.9
     Timeout: 180
+    Environment:
+      Variables:
+        BUCKET_NAME: !Ref S3BucketName
+    Layers:
+        - !Ref RoutingSlipDepends
 
 Resources:
   CompositionStore:
@@ -26,6 +31,8 @@ Resources:
       Policies:
         - LambdaInvokePolicy:
             FunctionName: RoutingSlipFunctionB
+        - S3WritePolicy:
+            BucketName: !Ref S3BucketName
 
   RoutingSlipFunctionB:
     Type: AWS::Serverless::Function
@@ -35,20 +42,17 @@ Resources:
       Policies:
         - LambdaInvokePolicy:
             FunctionName: RoutingSlipFunctionC
+        - S3WritePolicy:
+            BucketName: !Ref S3BucketName
 
   RoutingSlipFunctionC:
     Type: AWS::Serverless::Function
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: RoutingSlipFunctionC
-      Environment:
-        Variables:
-          BUCKET_NAME: !Ref S3BucketName
       Policies:
         - S3WritePolicy:
-            BucketName: !Ref S3BucketName
-      Layers:
-        - !Ref RoutingSlipDepends
+              BucketName: !Ref S3BucketName
 
   RoutingSlipDepends:
     Type: AWS::Serverless::LayerVersion

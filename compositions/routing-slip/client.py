@@ -11,8 +11,9 @@ result_key = 'result_c.json'
 client = boto3_client('lambda', region_name=aws_region)
 
 payload = {
-    'composition': ['RoutingSlipFunctionB', 'RoutingSlipFunctionC']
-    }
+    'composition': ['RoutingSlipFunctionB', 'RoutingSlipFunctionC'],
+    'greet': ''    
+}
 
 response = client.invoke(
     FunctionName='RoutingSlipFunctionA',
