@@ -6,13 +6,16 @@ from compositions.aws_helpers.s3 import S3BucketHelper
 
 aws_region = 'eu-central-1'
 bucket_name = 'async-sequence-store'
-result_key = 'result_c.json'
+result_key = 'result.json'
 
 client = boto3_client('lambda', region_name=aws_region)
 
 response = client.invoke(
     FunctionName='AsyncSequenceFunctionA',
-    InvocationType='Event'
+    InvocationType='Event',
+    Payload=json.dumps({
+        'result': ''
+    })
 )
 
 if response['StatusCode'] == 202:

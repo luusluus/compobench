@@ -9,7 +9,7 @@ client = boto3_client('lambda', region_name=aws_region)
 
 # call the first function a to start the workflow
 event = {
-    'greet': ''
+    'result': ''
 }
 response = client.invoke(
     FunctionName='SequenceFunctionA',

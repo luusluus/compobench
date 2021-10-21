@@ -11,11 +11,10 @@ def compose(event, business_logic_function):
 
     sns = event['Records'][0]['Sns']
     message = json.loads(sns['Message'])
-    result = message['result']
 
     message_attributes = sns['MessageAttributes']
     last_function_name = message_attributes['last_function']['Value']
-    result = business_logic_function(result)
+    result = business_logic_function(message)
     
     if function_name == last_function_name:
         bucket_name = os.environ['BUCKET_NAME']
@@ -24,15 +23,13 @@ def compose(event, business_logic_function):
 
         s3_bucket_helper.write_json_to_bucket(
             bucket_name=bucket_name,
-            json_object={'result': result}, 
-            object_key = 'result.json')
+            json_object=result, 
+            object_key='result.json')
     else:
         print(f'Publishing message: {result} to topic {topic_arn}')
         client = boto3_client('sns', region_name=aws_region)
         client.publish(
-            Message=json.dumps({
-                'result': result
-            }),
+            Message=json.dumps(result),
             MessageAttributes={
                 'caller': {
                     'DataType': 'String',

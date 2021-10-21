@@ -1,17 +1,9 @@
-import os
-import json
+from invoke import invoke
 
-from boto3 import client as boto3_client
-from botocore.config import Config
+def compose(event, business_logic_function):
+    result = business_logic_function()
+    result['workflow_id'] = event['workflow_id']
 
-def compose(function_name, data):
-    aws_region = os.environ['AWS_REGION']
-
-    client = boto3_client('lambda', region_name=aws_region)
-
-    print(f'Asynchronously invoking {function_name}')
+    coordinator_function_name = 'AsyncCoordinatorFunctionCoordinator'
     
-    client.invoke(
-        FunctionName=function_name,
-        InvocationType='Event',
-        Payload=json.dumps(data))
+    invoke(function_name=coordinator_function_name, payload=result)

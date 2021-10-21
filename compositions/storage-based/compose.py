@@ -10,7 +10,7 @@ def compose(event, business_logic_function):
 
     s3_object = s3_bucket_helper.get_object_from_bucket(bucket_name=bucket_name, object_key=object_key)
 
-    result = business_logic_function(s3_object['result'])
+    result = business_logic_function(s3_object)
 
     workflow = s3_object['workflow']
     if len(workflow) == 0:
@@ -19,10 +19,8 @@ def compose(event, business_logic_function):
         next_function_name = workflow.pop(0)
         result_key = f'{next_function_name}_result.json'
 
+    result['workflow'] = workflow
     s3_bucket_helper.write_json_to_bucket(
         bucket_name=bucket_name,
-        json_object={
-            'result': result,
-            'workflow': workflow
-        }, 
-        object_key = result_key)
+        json_object=result, 
+        object_key=result_key)

@@ -1,18 +1,20 @@
 
 import os
 from botocore.exceptions import ClientError
-from compose import compose
+
+from invoke import invoke
 from s3 import S3BucketHelper
 
 def lambda_handler(event, context):
     # always in payload
+    aws_region = os.environ['AWS_REGION']
     workflow_id = event['workflow_id']
 
     object_key = workflow_id + '.json'
 
     # read workflow state from S3 using workflow_id
     bucket_name = os.environ['BUCKET_NAME']
-    s3_bucket_helper = S3BucketHelper(aws_region=os.environ['AWS_REGION'])
+    s3_bucket_helper = S3BucketHelper(aws_region=aws_region)
     try:
         workflow_state = s3_bucket_helper.get_object_from_bucket(bucket_name=bucket_name, object_key=object_key)
         print(workflow_state)
@@ -55,13 +57,8 @@ def lambda_handler(event, context):
             'current_result': new_result
         }
         s3_bucket_helper.write_json_to_bucket(bucket_name=bucket_name, json_object=new_workflow_state, object_key=object_key)
-        compose(
-            function_name=function_name, 
-            data={
-            'workflow_id': workflow_id
-        })
-    
-    # { 'workflow': [{'function': 'FunctionA', 'state': 'finished', ....}]}
-    # { 'workflow': ['FunctionA', 'FunctionB'], 'prev_function': 'FunctionA', 'payload': '....' }
+
+        payload = { 'workflow_id': workflow_id }
+        invoke(function_name=function_name, payload=payload)
 
 

@@ -6,13 +6,13 @@ from compositions.aws_helpers.s3 import S3BucketHelper
 
 aws_region = 'eu-central-1'
 bucket_name = 'routing-slip-store'
-result_key = 'result_c.json'
+result_key = 'result.json'
 
 client = boto3_client('lambda', region_name=aws_region)
 
 payload = {
     'composition': ['RoutingSlipFunctionB', 'RoutingSlipFunctionC'],
-    'greet': ''    
+    'result': ''
 }
 
 response = client.invoke(

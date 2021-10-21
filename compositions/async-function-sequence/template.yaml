@@ -11,7 +11,12 @@ Globals:
   Function:
     Runtime: python3.9
     Timeout: 180
-
+    Layers:
+      - !Ref AsyncSequenceDepends
+    Environment:
+      Variables:
+        BUCKET_NAME: !Ref S3BucketName
+        
 Resources:
   CompositionStore:
       Type: AWS::S3::Bucket
@@ -41,14 +46,9 @@ Resources:
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: AsyncSequenceFunctionC
-      Environment:
-        Variables:
-          BUCKET_NAME: !Ref S3BucketName
       Policies:
         - S3WritePolicy:
             BucketName: !Ref S3BucketName
-      Layers:
-        - !Ref AsyncSequenceDepends
 
   AsyncSequenceDepends:
     Type: AWS::Serverless::LayerVersion
