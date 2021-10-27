@@ -32,8 +32,7 @@ while True:
         print(json.loads(response['output']))
         break
     elif status == "RUNNING":
-        print(f"Execution {execution_arn} is still running, waiting")
-        sleep(10)
+        sleep(3)
     else:
         print(f"Execution {execution_arn} failed with status {status}")
         break
