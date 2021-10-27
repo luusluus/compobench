@@ -1,0 +1,23 @@
+{
+    "Comment": "A state machine that chains greets from each function.",
+    "StartAt": "WorkflowFunctionA",
+    "States": {
+        "WorkflowFunctionA": {
+            "Type": "Task",
+            "Resource": "${WorkflowFunctionAArn}",
+            "Next": "WorkflowFunctionB"
+        },
+        "WorkflowFunctionB": {
+            "Type": "Task",
+            "Resource": "${WorkflowFunctionBArn}",
+            "Next": "WorkflowFunctionC"
+        },
+        "WorkflowFunctionC": {
+            "Type": "Task",
+            "Resource": "${WorkflowFunctionCArn}",
+            "OutputPath": "$.greet",
+            "End": true
+        }
+    }
+}
+
