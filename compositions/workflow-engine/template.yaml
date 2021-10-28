@@ -3,8 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   workflow-engine
 
-  Sample SAM Template for workflow-engine
-
 Parameters:
   S3BucketName:
     Type: String

@@ -57,6 +57,7 @@ Resources:
   RoutingSlipDepends:
     Type: AWS::Serverless::LayerVersion
     Properties:
+      LayerName: RoutingSlipDepends
       CompatibleRuntimes:
           - python3.9
       ContentUri: ../aws_helpers

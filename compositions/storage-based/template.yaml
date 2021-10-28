@@ -95,6 +95,7 @@ Resources:
   StorageBasedDepends:
     Type: AWS::Serverless::LayerVersion
     Properties:
+      LayerName: StorageBasedDepends
       CompatibleRuntimes:
           - python3.9
       ContentUri: ../aws_helpers

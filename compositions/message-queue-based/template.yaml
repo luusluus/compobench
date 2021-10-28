@@ -104,6 +104,7 @@ Resources:
   MessageQueueDepends:
     Type: AWS::Serverless::LayerVersion
     Properties:
+      LayerName: MessageQueueDepends
       CompatibleRuntimes:
           - python3.9
       ContentUri: ../aws_helpers

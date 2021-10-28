@@ -1,0 +1,151 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  blackboard-based
+
+Globals:
+  Function:
+    Runtime: python3.9
+    Timeout: 180
+    Layers:
+      - !Ref BlackboardDepends
+    Environment:
+      Variables:
+        DEFINITION_TABLE: !Ref BlackboardWorkflowDefinitionTable
+        EXECUTION_TABLE: !Ref BlackboardWorkflowExecutionTable
+
+Resources:
+  BlackboardWorkflowDefinitionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      AttributeDefinitions:
+        -
+          AttributeName: WorkflowId
+          AttributeType: N
+        -
+          AttributeName: StepId
+          AttributeType: N
+      KeySchema:
+        -
+          AttributeName: WorkflowId # partition key
+          KeyType: HASH
+        -
+          AttributeName: StepId # sort key
+          KeyType: RANGE
+
+  BlackboardWorkflowExecutionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      AttributeDefinitions:
+        -
+          AttributeName: WorkflowInstanceId
+          AttributeType: S
+        -
+          AttributeName: StepId
+          AttributeType: N
+      KeySchema:
+        -
+          AttributeName: WorkflowInstanceId # partition key
+          KeyType: HASH
+        -
+          AttributeName: StepId # sort key
+          KeyType: RANGE
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+
+  BlackboardFunctionController:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: BlackboardFunctionController
+      Handler: controller.lambda_handler
+      Events:
+        DDBEvent:
+          Type: DynamoDB
+          Properties: 
+            Stream: !GetAtt BlackboardWorkflowExecutionTable.StreamArn
+            StartingPosition: LATEST # read only new records
+            MaximumRetryAttempts: 3
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref BlackboardFunctionA
+        - LambdaInvokePolicy:
+            FunctionName: !Ref BlackboardFunctionB
+        - LambdaInvokePolicy:
+            FunctionName: !Ref BlackboardFunctionC
+        - DynamoDBReadPolicy:
+            TableName: !Ref BlackboardWorkflowExecutionTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref BlackboardWorkflowDefinitionTable
+
+  BlackboardFunctionA:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: BlackboardFunctionA
+      Handler: function_a.lambda_handler
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref BlackboardWorkflowExecutionTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref BlackboardWorkflowExecutionTable
+
+  BlackboardFunctionB:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: BlackboardFunctionB
+      Handler: function_b.lambda_handler
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref BlackboardWorkflowExecutionTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref BlackboardWorkflowExecutionTable
+
+
+  BlackboardFunctionC:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: BlackboardFunctionC
+      Handler: function_c.lambda_handler
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref BlackboardWorkflowExecutionTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref BlackboardWorkflowExecutionTable
+
+  DynamoDBMigration:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      DependsOn: BlackboardWorkflowDefinitionTable
+      ServiceToken: !GetAtt DynamoDBMigrationFunction.Arn
+      BlackboardWorkflowDefinitionTable: !Ref BlackboardWorkflowDefinitionTable
+
+  DynamoDBMigrationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DynamoDBMigrationFunction
+      Timeout: 30
+      Handler: dynamodb_migration.lambda_handler
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref BlackboardWorkflowDefinitionTable
+
+  BlackboardDepends:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: BlackboardDepends
+      CompatibleRuntimes:
+          - python3.9
+      ContentUri: ../aws_helpers
+      Description: Utility Functions for Blackboard Based Composition
+      LicenseInfo: MIT
+    Metadata:
+      BuildMethod: python3.9
+
+

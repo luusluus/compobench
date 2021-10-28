@@ -70,6 +70,7 @@ Resources:
   AsyncCoordinatorDepends:
     Type: AWS::Serverless::LayerVersion
     Properties:
+      LayerName: AsyncCoordinatorDepends
       CompatibleRuntimes:
           - python3.9
       ContentUri: ../aws_helpers

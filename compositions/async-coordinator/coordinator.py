@@ -2,7 +2,7 @@
 import os
 from botocore.exceptions import ClientError
 
-from invoke import invoke
+from aws_lambda import LambdaHelper
 from s3 import S3BucketHelper
 
 def lambda_handler(event, context):
@@ -59,6 +59,7 @@ def lambda_handler(event, context):
         s3_bucket_helper.write_json_to_bucket(bucket_name=bucket_name, json_object=new_workflow_state, object_key=object_key)
 
         payload = { 'workflow_id': workflow_id }
-        invoke(function_name=function_name, payload=payload)
+        lambda_helper = LambdaHelper(aws_region=aws_region)
+        lambda_helper.invoke_lambda_async(function_name=function_name, payload=payload)
 
 
