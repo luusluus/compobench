@@ -49,7 +49,7 @@ while retries < 5:
         print(item['Output']['result'])
         break
     except NoItemException:
-        wait = retries * 1
+        wait = retries * 3
         print('Waiting {} secs and retry attempt: {}'.format(wait, retries))
         sleep(wait)
         retries += 1
