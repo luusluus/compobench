@@ -30,7 +30,7 @@ query_result = definition_table_helper.query(
         partition_key_value=1
     )
 
-workflow = query_result['Items']
+workflow = query_result
 last_step = int(workflow[-1]['StepId'])
 
 execution_table = 'BlackboardWorkflowExecutionTable'

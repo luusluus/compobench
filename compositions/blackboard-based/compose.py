@@ -11,11 +11,9 @@ def compose(event, business_logic_function):
     step_id = event['step_id']
     previous_step_id = event['previous_step_id']
 
-    table_name = os.environ['EXECUTION_TABLE']
-
     workflow_execution_table = DynamoDBTableHelper(
         aws_region=os.environ['AWS_REGION'],
-        table_name=table_name)
+        table_name=os.environ['EXECUTION_TABLE'])
 
     read_key = {
         'WorkflowInstanceId': workflow_instance_id,

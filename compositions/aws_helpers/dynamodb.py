@@ -28,11 +28,17 @@ class DynamoDBTableHelper:
 
     # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Client.query
     def query(self, partition_key_name: str, partition_key_value):
-        return self._table.query(
+        query_result = self._table.query(
             KeyConditionExpression=Key(partition_key_name).eq(partition_key_value)
         )
+        return query_result['Items']
 
-        return items
+    def batch_write(self, items):
+        with self._table.batch_writer() as batch:
+            for item in items:
+                batch.put_item(
+                    Item=item
+                )
 
 class DynamoDBHelper:
     def __init__(self, aws_region):

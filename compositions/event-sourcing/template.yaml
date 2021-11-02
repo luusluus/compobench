@@ -1,0 +1,113 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  EventSourcing-based
+
+Globals:
+  Function:
+    Runtime: python3.9
+    Timeout: 180
+    Layers:
+      - !Ref EventSourcingDepends
+    Environment:
+      Variables:
+        EVENT_HISTORY_TABLE: !Ref EventHistoryTable
+
+Resources:
+  EventHistoryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      AttributeDefinitions:
+        -
+          AttributeName: WorkflowInstanceId
+          AttributeType: S
+        -
+          AttributeName: EventId
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: WorkflowInstanceId # partition key
+          KeyType: HASH
+        -
+          AttributeName: EventId # sort key
+          KeyType: RANGE
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+
+  EventSourcingOrchestrator:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: EventSourcingOrchestrator
+      Handler: handler.lambda_handler
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref EventSourcingFunctionA
+        - LambdaInvokePolicy:
+            FunctionName: !Ref EventSourcingFunctionB
+        - LambdaInvokePolicy:
+            FunctionName: !Ref EventSourcingFunctionC
+        - DynamoDBWritePolicy:
+            TableName: !Ref EventHistoryTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref EventHistoryTable
+
+  EventSourcingDispatcher:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: EventSourcingDispatcher
+      Handler: dispatcher.lambda_handler
+      Events:
+        DDBEvent:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt EventHistoryTable.StreamArn
+            StartingPosition: TRIM_HORIZON
+            MaximumRetryAttempts: 1
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref EventSourcingOrchestrator
+
+  EventSourcingFunctionA:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: EventSourcingFunctionA
+      Handler: function_a.lambda_handler
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref EventHistoryTable
+
+  EventSourcingFunctionB:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: EventSourcingFunctionB
+      Handler: function_b.lambda_handler
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref EventHistoryTable
+
+  EventSourcingFunctionC:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: EventSourcingFunctionC
+      Handler: function_c.lambda_handler
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref EventHistoryTable
+
+  EventSourcingDepends:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: EventSourcingDepends
+      CompatibleRuntimes:
+          - python3.9
+      ContentUri: ../aws_helpers
+      Description: Utility Functions for EventSourcing Based Composition
+      LicenseInfo: MIT
+    Metadata:
+      BuildMethod: python3.9
+
+

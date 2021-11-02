@@ -2,14 +2,10 @@ import os
 from dynamodb import DynamoDBTableHelper, NoItemException
 from aws_lambda import LambdaHelper
 
-class WorkflowFinished(Exception):
-    pass
-
 class NoValidWorkflowEvent(Exception):
     pass
 
 def lambda_handler(event, context):
-    print(event)
     aws_region = os.environ['AWS_REGION']
     table_name = os.environ['DEFINITION_TABLE']
     workflow_definition_table = DynamoDBTableHelper(
@@ -23,8 +19,8 @@ def lambda_handler(event, context):
         partition_key_value=1
     )
 
-    workflow = query_result['Items']
-    workflow_definition = query_result['Items'][0]
+    workflow = query_result
+    workflow_definition = query_result[0]
 
     workflow_id = int(workflow_definition['WorkflowId'])
     try:
@@ -49,7 +45,9 @@ def lambda_handler(event, context):
 
             function_name = next((step['StepFunction'] for step in workflow if int(step['StepId']) == step_id), None)
             if not function_name:
-                raise WorkflowFinished
+                print('workflow finished')
+                return
+
         else:
             # not a valid event
             raise NoValidWorkflowEvent
@@ -63,8 +61,6 @@ def lambda_handler(event, context):
                 'step_id': step_id,
                 'previous_step_id': previous_step_id
             })
-    except WorkflowFinished:
-        print('workflow finished')
     except NoValidWorkflowEvent:
         print('not a valid workflow event')
         raise
