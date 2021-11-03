@@ -19,6 +19,8 @@ Resources:
             FunctionName: CoordinatorFunctionB
         - LambdaInvokePolicy:
             FunctionName: CoordinatorFunctionC
+      Layers:
+        - !Ref CoordinatorDepends
   CoordinatorFunctionA:
     Type: AWS::Serverless::Function
     Properties:
@@ -34,3 +36,15 @@ Resources:
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: CoordinatorFunctionC
+
+  CoordinatorDepends:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: CoordinatorDepends
+      CompatibleRuntimes:
+          - python3.9
+      ContentUri: ../aws_helpers
+      Description: Utility Functions for Async Coordinator Composition
+      LicenseInfo: MIT
+    Metadata:
+      BuildMethod: python3.9

@@ -1,10 +1,17 @@
-
-import os
 from compose import compose
 
 def lambda_handler(event, context):
-    result_a = compose(function_name='CoordinatorFunctionA', data={})
-    result_b = compose(function_name='CoordinatorFunctionB', data={})
-    result_c = compose(function_name='CoordinatorFunctionC', data={})
+    workflow = event['workflow']
+    function_input = event['input']
 
-    return result_a + result_b + result_c
+    result = {
+        'result': function_input
+    }
+
+    for step in workflow:
+        response = compose(function_name=step, payload=result)
+        result = {
+            'result': response
+        }
+
+    return result

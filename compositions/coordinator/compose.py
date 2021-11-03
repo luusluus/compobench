@@ -1,19 +1,7 @@
 import os
-import json
+from aws_lambda import LambdaHelper
 
-from boto3 import client as boto3_client
-from botocore.config import Config
-
-def compose(function_name, data):
+def compose(function_name, payload):
     aws_region = os.environ['AWS_REGION']
-
-    client = boto3_client('lambda', region_name=aws_region)
-
-    print(f'Synchronously invoking {function_name}')
-    
-    response = client.invoke(
-        FunctionName=function_name,
-        InvocationType='RequestResponse',
-        Payload=json.dumps(data))
-
-    return json.load(response['Payload'])
+    lambda_helper = LambdaHelper(aws_region=aws_region)
+    return lambda_helper.invoke_lambda(function_name=function_name, payload=payload)

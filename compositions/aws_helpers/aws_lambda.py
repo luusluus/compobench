@@ -14,8 +14,10 @@ class LambdaHelper:
             Payload=json.dumps(payload))
 
     def invoke_lambda(self, function_name, payload):
-        self._client.invoke(
-            FunctionName='function_name',
+        print(f'Synchronously invoking {function_name}')
+        response = self._client.invoke(
+            FunctionName=function_name,
             InvocationType='RequestResponse',
-            Payload=payload
+            Payload=json.dumps(payload)
         )
+        return json.load(response['Payload'])

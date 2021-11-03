@@ -11,6 +11,8 @@ Globals:
   Function:
     Runtime: python3.9
     Timeout: 180
+    Layers:
+      - !Ref AsyncCoordinatorDepends
 
 Resources:
   AsyncCoordinatorCompositionStore:
@@ -18,11 +20,10 @@ Resources:
     Properties:
       BucketName: !Ref S3BucketName
 
-
   AsyncCoordinatorFunctionCoordinator:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: coordinator.lambda_handler
+      Handler: handler.lambda_handler
       FunctionName: AsyncCoordinatorFunctionCoordinator
       Policies:
         - LambdaInvokePolicy:
@@ -38,8 +39,6 @@ Resources:
       Environment:
         Variables:
           BUCKET_NAME: !Ref S3BucketName
-      Layers:
-        - !Ref AsyncCoordinatorDepends
 
   AsyncCoordinatorFunctionA:
     Type: AWS::Serverless::Function
