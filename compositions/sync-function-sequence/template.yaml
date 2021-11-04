@@ -5,6 +5,8 @@ Globals:
   Function:
     Runtime: python3.8
     Timeout: 180
+    Layers:
+      - !Ref SequenceDepends
 
 Resources:  
   SequenceFunctionA:
@@ -28,3 +30,15 @@ Resources:
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: SequenceFunctionC
+
+  SequenceDepends:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: SequenceDepends
+      CompatibleRuntimes:
+          - python3.8
+      ContentUri: ../aws_helpers
+      Description: Utility Functions for Synchronous Sequence Composition
+      LicenseInfo: MIT
+    Metadata:
+      BuildMethod: python3.8
