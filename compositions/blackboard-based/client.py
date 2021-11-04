@@ -9,9 +9,7 @@ lambda_helper = LambdaHelper(aws_region=aws_region)
 
 # invoke controller once to start workflow
 workflow_instance_id = str(uuid.uuid4())
-payload = {
-    'workflow_instance_id': workflow_instance_id
-}
+payload = {'workflow_instance_id': workflow_instance_id}
 lambda_helper.invoke_lambda_async(
     function_name='BlackboardFunctionController', 
     payload=payload)
