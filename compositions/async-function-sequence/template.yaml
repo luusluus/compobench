@@ -9,7 +9,7 @@ Parameters:
 
 Globals:
   Function:
-    Runtime: python3.9
+    Runtime: python3.8
     Timeout: 180
     Layers:
       - !Ref AsyncSequenceDepends
@@ -55,9 +55,9 @@ Resources:
     Properties:
       LayerName: AsyncSequenceDepends
       CompatibleRuntimes:
-          - python3.9
+          - python3.8
       ContentUri: ../aws_helpers
       Description: Utility Functions for Async Sequence Composition
       LicenseInfo: MIT
     Metadata:
-      BuildMethod: python3.9
+      BuildMethod: python3.8

@@ -5,7 +5,7 @@ Description: >
 
 Globals:
   Function:
-    Runtime: python3.9
+    Runtime: python3.8
     Timeout: 180
     Layers:
       - !Ref BlackboardDepends
@@ -141,11 +141,11 @@ Resources:
     Properties:
       LayerName: BlackboardDepends
       CompatibleRuntimes:
-          - python3.9
+          - python3.8
       ContentUri: ../aws_helpers
       Description: Utility Functions for Blackboard Based Composition
       LicenseInfo: MIT
     Metadata:
-      BuildMethod: python3.9
+      BuildMethod: python3.8
 
 

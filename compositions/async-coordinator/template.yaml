@@ -9,7 +9,7 @@ Parameters:
 
 Globals:
   Function:
-    Runtime: python3.9
+    Runtime: python3.8
     Timeout: 180
     Layers:
       - !Ref AsyncCoordinatorDepends
@@ -71,9 +71,9 @@ Resources:
     Properties:
       LayerName: AsyncCoordinatorDepends
       CompatibleRuntimes:
-          - python3.9
+          - python3.8
       ContentUri: ../aws_helpers
       Description: Utility Functions for Async Coordinator Composition
       LicenseInfo: MIT
     Metadata:
-      BuildMethod: python3.9
+      BuildMethod: python3.8
