@@ -1,9 +1,6 @@
 import os
-import json
 
-from boto3 import client as boto3_client
-from botocore.config import Config
-
+from aws_lambda import LambdaHelper
 from s3 import S3BucketHelper
 
 def compose(event, function_name, business_logic_function):
@@ -20,11 +17,7 @@ def compose(event, function_name, business_logic_function):
     else:
         aws_region = os.environ['AWS_REGION']
 
-        client = boto3_client('lambda', region_name=aws_region)
-
-        print(f'asynchronously invoking {function_name}')
-        
-        client.invoke(
-            FunctionName=function_name,
-            InvocationType='Event',
-            Payload=json.dumps(result))
+        lambda_helper = LambdaHelper(aws_region=aws_region)
+        lambda_helper.invoke_lambda_async(
+            function_name=function_name, 
+            payload=result)
