@@ -25,7 +25,7 @@ cd compositions/sync-function-sequence
 
 ### Build
 ```
-sam build
+sam build --cached --beta-features
 ```
 
 ### Invoke One Lambda Locally with HTTP
