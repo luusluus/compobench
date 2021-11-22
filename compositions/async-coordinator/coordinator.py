@@ -5,6 +5,11 @@ from botocore.exceptions import ClientError
 from aws_lambda import LambdaHelper
 from s3 import S3BucketHelper
 
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.core import patch_all
+
+patch_all()
+
 class Coordinator:
     def __init__(self, workflow_id, workflow_data={}):
         self._lambda_helper = LambdaHelper(aws_region=os.environ['AWS_REGION'])
@@ -14,6 +19,9 @@ class Coordinator:
 
         self._state = self.__retrieve_workflow_state(workflow_data=workflow_data)
 
+        subsegment = xray_recorder.begin_subsegment('Identification')
+        subsegment.put_annotation('workflow_id', workflow_id)
+        xray_recorder.end_subsegment()
 
     def __schedule_next_function(self, function_name, function_input):
         self._lambda_helper.invoke_lambda_async(

@@ -1,5 +1,3 @@
-import json
-
 from .TraceParser import TraceParser
 # makespan 
 
@@ -15,8 +13,7 @@ class SynchronousSequenceTraceParser(TraceParser):
     # TODO: get more fine-grained overhead. Startup overhead, and communication overhead
     def parse_trace(self, trace):
         all_function_data = {}
-        for segment in trace['Segments']:
-            document = json.loads(segment['Document'])
+        for document in trace:
             if document['origin'] == "AWS::Lambda::Function":
                 all_function_data[document['name']] = {}
                 for subsegment in document['subsegments']:
@@ -35,6 +32,7 @@ class SynchronousSequenceTraceParser(TraceParser):
                         all_function_data[document['name']]['end_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(end_time)
 
                         all_function_data[document['name']]['execution_time'] = end_time - start_time
+                        all_function_data[document['name']]['trace_id'] = document['trace_id']
 
                     # The Overhead subsegment represents the phase that occurs between the time when the runtime sends 
                     # the response and the signal for the next invoke. 

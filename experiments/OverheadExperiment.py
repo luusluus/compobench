@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta, timezone
 import json
 import time
+import uuid
+
 from boto3 import client as boto3_client
 
-
 from XRayClient import XRayClient
-from ExperimentData import ExperimentData
+from ExperimentData import ExperimentData, InvocationType
 
 class OverheadExperiment:
     def __init__(self, experiment_data: ExperimentData):
@@ -14,6 +15,8 @@ class OverheadExperiment:
         self._experiment_data = experiment_data
 
         self._xray_client = XRayClient()
+
+        self._workflow_ids = []
 
     def invoke_lambda(self, invocation_type, function_name, payload):
         response = self._lambda_client.invoke(
@@ -36,7 +39,12 @@ class OverheadExperiment:
         print(f'starting experiment: {self._experiment_data.name}')
         start = datetime.utcnow()
         print(start)
+            
         for i in range(self._experiment_data.amount_of_workflows):
+            workflow_id = str(uuid.uuid4())
+            self._workflow_ids.append(workflow_id)
+            print(f'workflow id: {workflow_id}')
+            self._experiment_data.payload['workflow_id'] = workflow_id
             self.invoke_lambda(
                 function_name=self._experiment_data.first_function_name,
                 payload=self._experiment_data.payload,
@@ -57,7 +65,7 @@ class OverheadExperiment:
             end=end
         )
 
-        print(f'fetched {len(traces)} traces')
+        # print(f'fetched {len(traces)} traces')
 
         self._experiment_data.parser.parse(traces=traces)
 

@@ -7,6 +7,9 @@ from aws_xray_sdk.core import patch_all
 patch_all()
 
 def lambda_handler(event, context):
+    subsegment = xray_recorder.begin_subsegment('Identification')
+    subsegment.put_annotation('workflow_id', event['workflow_id'])
+    xray_recorder.end_subsegment()
     return compose(event=event, function_name='SequenceFunctionC', business_logic_function=hello_world)
 
 def hello_world(prev_hello_world):

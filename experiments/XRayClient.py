@@ -17,8 +17,8 @@ class XRayClient:
 
         trace_ids = [summary['Id'] for summary in summaries['TraceSummaries']]
 
-        for summary in summaries['TraceSummaries']:
-            print(f'{summary["ResponseTime"]} | {summary["Duration"]} | {summary["Id"]}')
+        # for summary in summaries['TraceSummaries']:
+        #     print(f'{summary["ResponseTime"]} | {summary["Duration"]} | {summary["Id"]}')
 
         try:
             batch_size = 5
