@@ -17,8 +17,8 @@ class XRayClient:
 
         trace_ids = [summary['Id'] for summary in summaries['TraceSummaries']]
 
-        # for summary in summaries['TraceSummaries']:
-        #     print(f'{summary["ResponseTime"]} | {summary["Duration"]} | {summary["Id"]}')
+        for summary in summaries['TraceSummaries']:
+            print(f'{summary["ResponseTime"]} | {summary["Duration"]} | {summary["Id"]}')
 
         try:
             batch_size = 5
@@ -29,12 +29,19 @@ class XRayClient:
                     TraceIds=trace_ids[i: i + batch_size]
                 )
                 all_traces.extend(traces['Traces'])
-            
-            return all_traces
+
+            return self._merge_summaries_with_traces(traces=all_traces, summaries=summaries['TraceSummaries'])
         except ClientError as e:
             if e.response['Error']['Code'] == 'InvalidRequestException':
                 raise
             
 
+    def _merge_summaries_with_traces(self, traces, summaries):
+        for trace in traces:
+            trace_id = trace['Id']
 
+            response_time = next(summary['ResponseTime'] for summary in summaries if summary["Id"] == trace_id)
+
+            trace['ResponseTime'] = response_time
+        return traces
 

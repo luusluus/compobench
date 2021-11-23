@@ -31,6 +31,9 @@ class OverheadExperiment:
                 print(result['result'])
             else:
                 print(result)
+
+        elif response['StatusCode'] == 202:
+            print(response)
         else:
             print('Something wrong')
             print(response)
@@ -53,7 +56,7 @@ class OverheadExperiment:
         end = datetime.utcnow()
         print(end)
         # wait until all traces appear in XRay API
-        time.sleep(10)
+        time.sleep(20)
         # Correct for minute drift between my local machine and XRay API
         self.process_results(
             start=start - timedelta(minutes=1), 
@@ -65,9 +68,9 @@ class OverheadExperiment:
             end=end
         )
 
-        # print(f'fetched {len(traces)} traces')
+        print(f'fetched {len(traces)} traces')
 
-        self._experiment_data.parser.parse(traces=traces)
+        self._experiment_data.parser.parse(traces=traces, invocation_type=self._experiment_data.invocation_type)
 
     def get_results(self, is_dataframe: bool):
         if is_dataframe:

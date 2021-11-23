@@ -1,4 +1,3 @@
-from parsers.TraceParser import TraceParser
 
 class InvocationType:
     Synchronous = 'RequestResponse'
@@ -12,7 +11,7 @@ class ExperimentData:
         payload: dict,
         amount_of_workflows: int,
         invocation_type: InvocationType,
-        parser: TraceParser
+        parser
     ):
         self.name = name
         self.first_function_name = first_function_name

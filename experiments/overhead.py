@@ -28,7 +28,7 @@ all_experiment_data = []
 #         'workflow': ['CoordinatorFunctionA', 'CoordinatorFunctionB', 'CoordinatorFunctionC'],
 #         'input': ''
 #     },
-#     amount_of_workflows = 1, 
+#     amount_of_workflows = 10, 
 #     invocation_type = InvocationType.Synchronous,
 #     parser=CoordinatorTraceParser.CoordinatorTraceParser()
 # )
@@ -54,11 +54,10 @@ all_experiment_data.append(compiled_experiment_data)
 #         'workflow': ['AsyncCoordinatorFunctionA', 'AsyncCoordinatorFunctionB', 'AsyncCoordinatorFunctionC'],
 #         'input': '',
 #     },
-#     amount_of_workflows = 1, 
+#     amount_of_workflows = 10, 
 #     invocation_type = InvocationType.Asynchronous,
 #     parser=AsyncCoordinatorTraceParser.AsyncCoordinatorTraceParser()
 # )
-
 # all_experiment_data.append(async_coordinator_experiment_data)
 
 for experiment_data in all_experiment_data:
@@ -67,6 +66,6 @@ for experiment_data in all_experiment_data:
     print(experiment.get_results(is_dataframe=True))
     results = experiment.get_results(is_dataframe=False)
 
-    print(json.dumps(results, sort_keys=True, indent=4, default=str))
+    # print(json.dumps(results, sort_keys=True, indent=4, default=str))
     # wait before next experiment
     # time.sleep(60)
