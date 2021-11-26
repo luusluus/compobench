@@ -5,29 +5,21 @@ from botocore.exceptions import ClientError
 from aws_lambda import LambdaHelper
 from s3 import S3BucketHelper
 
-from aws_xray_sdk.core import xray_recorder
-from aws_xray_sdk.core import patch_all
-
-patch_all()
 
 class Coordinator:
-    def __init__(self, workflow_id, workflow_data={}):
+    def __init__(self, workflow_instance_id, workflow_data={}):
         self._lambda_helper = LambdaHelper(aws_region=os.environ['AWS_REGION'])
         self._s3_bucket_helper = S3BucketHelper(aws_region=os.environ['AWS_REGION'])
         self._bucket_name = os.environ['BUCKET_NAME']
-        self._workflow_id = workflow_id
+        self._workflow_instance_id = workflow_instance_id
 
         self._state = self.__retrieve_workflow_state(workflow_data=workflow_data)
-
-        subsegment = xray_recorder.begin_subsegment('Identification')
-        subsegment.put_annotation('workflow_id', workflow_id)
-        xray_recorder.end_subsegment()
 
     def __schedule_next_function(self, function_name, function_input):
         self._lambda_helper.invoke_lambda_async(
             function_name=function_name, 
             payload={
-                'workflow_id': self._workflow_id,
+                'workflow_instance_id': self._workflow_instance_id,
                 'result': function_input
             })
 
@@ -35,7 +27,7 @@ class Coordinator:
         self._s3_bucket_helper.write_json_to_bucket(
             bucket_name=self._bucket_name,
             json_object=new_workflow_state, 
-            object_key=f'{self._workflow_id}.json')
+            object_key=f'{self._workflow_instance_id}.json')
 
     def is_end_workflow(self, event):
         if self._state['prev_invoked_function'] == self._state['workflow'][-1]:
@@ -45,7 +37,7 @@ class Coordinator:
             self._s3_bucket_helper.write_json_to_bucket(
                 bucket_name=self._bucket_name,
                 json_object={'result': current_result}, 
-                object_key = f'result_{self._workflow_id}.json')
+                object_key = f'result_{self._workflow_instance_id}.json')
 
             return True
         return False
@@ -66,11 +58,11 @@ class Coordinator:
         except ValueError:
             function_name = workflow[0]
 
-        workflow_id = event['workflow_id']
+        workflow_instance_id = event['workflow_instance_id']
 
         current_result = self.__parse_function_result(event=event)
         new_workflow_state = {
-            'workflow_id': workflow_id,
+            'workflow_instance_id': workflow_instance_id,
             'workflow': self._state['workflow'],
             'prev_invoked_function': function_name,
             'current_result': current_result
@@ -81,11 +73,11 @@ class Coordinator:
             function_input=current_result)
 
     def __retrieve_workflow_state(self, workflow_data):
-        # read workflow state from S3 using workflow_id
+        # read workflow state from S3 using workflow_instance_id
         try:
             return self._s3_bucket_helper.get_object_from_bucket(
                 bucket_name=self._bucket_name, 
-                object_key=f'{self._workflow_id}.json')
+                object_key=f'{self._workflow_instance_id}.json')
 
         except ClientError as e:
             # NoSuchKey Exception

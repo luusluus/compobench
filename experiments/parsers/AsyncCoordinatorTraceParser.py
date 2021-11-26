@@ -12,6 +12,9 @@ from .TraceParser import TraceParser
 # get segment of function a, as workflow starts and ends here.
 
 class AsyncCoordinatorTraceParser(TraceParser):
+    def __init__(self, coordinator_name):
+        super().__init__()
+        self.coordinator_name = coordinator_name
     # TODO: get more fine-grained overhead. Startup overhead, and communication overhead
     def get_coordinator_data(self, traces):
         all_function_data = {}
@@ -19,7 +22,7 @@ class AsyncCoordinatorTraceParser(TraceParser):
         for trace in traces:
             for segment in trace['Segments']:
                 document = json.loads(segment['Document'])
-                if document['origin'] == "AWS::Lambda::Function" and document['name'] == 'AsyncCoordinatorFunctionCoordinator':
+                if document['origin'] == "AWS::Lambda::Function" and document['name'] == self.coordinator_name:
                     i = i + 1
                     for subsegment in document['subsegments']:
                         # get invocation start time
@@ -34,9 +37,11 @@ class AsyncCoordinatorTraceParser(TraceParser):
                                     else:
                                         start_time = response_time
                                     if 'function_name' in subsubsegment['aws']:
-                                        name = 'AsyncCoordinatorFunctionCoordinator' + f'_{i}_' + subsubsegment['aws']['operation'] + '_' + subsubsegment['aws']['function_name']
+                                        name = self.coordinator_name + f'_{i}_' + subsubsegment['aws']['operation'] + '_' + subsubsegment['aws']['function_name']
                                     elif 'bucket_name' in subsubsegment['aws']:
-                                        name = 'AsyncCoordinatorFunctionCoordinator' + f'_{i}_' + subsubsegment['aws']['operation'] + '_' + subsubsegment['aws']['bucket_name']
+                                        name = self.coordinator_name + f'_{i}_' + subsubsegment['aws']['operation'] + '_' + subsubsegment['aws']['bucket_name']
+                                    elif 'table_name' in subsubsegment['aws']:
+                                        name = self.coordinator_name + f'_{i}_' + subsubsegment['aws']['operation'] + '_' + subsubsegment['aws']['table_name']
 
                                     if name not in all_function_data:
                                         all_function_data[name] = {}
@@ -58,7 +63,7 @@ class AsyncCoordinatorTraceParser(TraceParser):
         for trace in traces:
             for segment in trace['Segments']:
                 document = json.loads(segment['Document'])
-                if document['origin'] == "AWS::Lambda::Function" and not document['name'] == 'AsyncCoordinatorFunctionCoordinator':
+                if document['origin'] == "AWS::Lambda::Function" and not document['name'] == self.coordinator_name:
                     all_function_data[document['name']] = {}
                     for subsegment in document['subsegments']:
                         # get invocation start time
@@ -88,6 +93,7 @@ class AsyncCoordinatorTraceParser(TraceParser):
         return all_function_data
 
     def parse_traces(self, traces):
-        functions_data = self.get_functions_data(traces=traces)
-        coordinator_data = self.get_coordinator_data(traces=traces)
-        return {**functions_data, **coordinator_data}
+        return self.get_functions_data(traces=traces)
+        # coordinator_data = self.get_coordinator_data(traces=traces)
+        # return {**functions_data, **coordinator_data}
+    

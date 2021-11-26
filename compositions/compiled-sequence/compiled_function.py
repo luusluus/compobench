@@ -14,7 +14,8 @@ def function_c():
 
 def lambda_handler(event, context):
     subsegment = xray_recorder.begin_subsegment('Identification')
-    subsegment.put_annotation('workflow_id', event['workflow_id'])
+    subsegment.put_annotation('workflow_instance_id', event['workflow_instance_id'])
+    result = function_a() + function_b() + function_c()
     xray_recorder.end_subsegment()
-
-    return function_a() + function_b() + function_c()
+    
+    return result

@@ -45,9 +45,9 @@ class Controller:
         else:
         # not a valid event
             raise NoValidWorkflowEvent
-        
+
         self._state = {
-                'instance_id': workflow_instance_id,
+                'workflow_instance_id': workflow_instance_id,
                 'next_function_name': next_function_name,
                 'step_id': step_id,
                 'previous_step_id': previous_step_id
@@ -57,7 +57,7 @@ class Controller:
         self._lambda_helper.invoke_lambda_async(
             function_name=self._state['next_function_name'], 
             payload={
-                'instance_id': self._state['instance_id'],
+                'workflow_instance_id': self._state['workflow_instance_id'],
                 'workflow_id': self._workflow_id,
                 'step_id': self._state['step_id'],
                 'previous_step_id': self._state['previous_step_id']

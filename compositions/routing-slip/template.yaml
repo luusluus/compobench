@@ -11,6 +11,7 @@ Globals:
   Function:
     Runtime: python3.8
     Timeout: 180
+    Tracing: Active
     Environment:
       Variables:
         BUCKET_NAME: !Ref S3BucketName

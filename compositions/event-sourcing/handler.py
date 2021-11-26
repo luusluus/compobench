@@ -1,6 +1,11 @@
 import os
 import time
 
+from aws_xray_sdk.core import patch_all
+from aws_xray_sdk.core import xray_recorder
+
+patch_all()
+
 import event_definitions
 from orchestrator import Orchestrator
 workflow_name = 'SimpleSequence'
@@ -8,12 +13,11 @@ workflow = ['EventSourcingFunctionA', 'EventSourcingFunctionB', 'EventSourcingFu
 
 
 def lambda_handler(event, context):
-    print(event)
+    workflow_instance_id = event['workflow_instance_id']
+    print(f'workflow instance id: {workflow_instance_id}')
+
     # start a new workflow
     if 'input' in event:
-        workflow_instance_id = event['workflow_instance_id']
-        print(f'workflow instance id: {workflow_instance_id}')
-
         orchestrator = Orchestrator(
             is_start=True,
             workflow_data={
@@ -29,9 +33,6 @@ def lambda_handler(event, context):
 
     else:
         # continue workflow
-        workflow_instance_id = event['workflow_instance_id']
-        print(f'workflow instance id: {workflow_instance_id}')
-
         orchestrator = Orchestrator(
             workflow_data={
                 'instance_id': workflow_instance_id,

@@ -5,10 +5,7 @@ from datetime import datetime
 from collections import OrderedDict
 from operator import getitem
 
-import sys
-sys.path.append("..")
 
-from ExperimentData import InvocationType
 class TraceParser(ABC):
     def __init__(self):
         self._all_results = []
@@ -20,10 +17,9 @@ class TraceParser(ABC):
     def get_aggregate_results_df(self):
         return pd.DataFrame(self._aggregate_results)
 
-    def parse(self, traces, invocation_type: InvocationType):
+    def parse(self, traces, is_sync: bool):
         workflows = self.group_traces_by_workflow_id(traces=traces)
-
-        self.calculate_overheads(workflows=workflows, invocation_type=invocation_type)
+        self.calculate_overheads(workflows=workflows, is_sync=is_sync)
 
     def convert_unix_timestamp_to_datetime_utc(self, unix_timestamp):
         return datetime.utcfromtimestamp(unix_timestamp).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
@@ -56,20 +52,20 @@ class TraceParser(ABC):
                     for subsegment in document['subsegments']:
                         if 'subsegments' in subsegment:
                             for subsubsegment in subsegment['subsegments']:
-                                if subsubsegment['name'] == 'Identification':
-                                    workflow_id = subsubsegment['annotations']['workflow_id']
-                                    if workflow_id not in grouped_traces:
-                                        grouped_traces[workflow_id] = []
+                                if subsubsegment['name'] == 'Business Logic':
+                                    workflow_instance_id = subsubsegment['annotations']['workflow_instance_id']
+                                    if workflow_instance_id not in grouped_traces:
+                                        grouped_traces[workflow_instance_id] = []
                                     
                                     document['trace_id'] = trace['Id']
-                                    grouped_traces[workflow_id].append(trace)
+                                    grouped_traces[workflow_instance_id].append(trace)
 
         # remove duplicates in list
         grouped_traces = self.remove_duplicate_traces(grouped_traces=grouped_traces)
         # print(json.dumps(grouped_traces, sort_keys=True, indent=4, default=str))
         # order traces by start time
-        for workflow_id, traces in grouped_traces.items():
-            grouped_traces[workflow_id] = sorted(traces, key=lambda t: json.loads(min(t['Segments'], key=lambda x: json.loads(x['Document'])['start_time'])['Document'])['start_time'])
+        for workflow_instance_id, traces in grouped_traces.items():
+            grouped_traces[workflow_instance_id] = sorted(traces, key=lambda t: json.loads(min(t['Segments'], key=lambda x: json.loads(x['Document'])['start_time'])['Document'])['start_time'])
 
         with open('data.json', 'w') as fp:
             json.dump(grouped_traces, fp,  indent=4, default=str)
@@ -89,8 +85,8 @@ class TraceParser(ABC):
         return sum(trace['Duration'] for trace in traces)
 
 
-    def calculate_overheads(self, workflows, invocation_type: InvocationType):
-        for workflow_id, traces in workflows.items():
+    def calculate_overheads(self, workflows, is_sync: bool):
+        for workflow_instance_id, traces in workflows.items():
             all_function_data = self.parse_traces(traces=traces)
             all_function_data = OrderedDict(sorted(all_function_data.items(),
                 key = lambda x: getitem(x[1], 'start_time')))
@@ -98,11 +94,12 @@ class TraceParser(ABC):
             with open('result.json', 'w') as fp:
                 json.dump(all_function_data, fp,  indent=4, default=str)
 
-            if invocation_type == InvocationType.Synchronous:
+            # FIXME: Check if function start is sync or async
+            if is_sync:
                 makespan = self.get_response_time(traces=traces) # makespan
                 # duration = self.get_duration(traces=traces)
 
-            elif invocation_type == InvocationType.Asynchronous:
+            else:
                 # response_time = self.get_response_time_async(traces=traces)
                 makespan = self.get_duration(traces=traces)
             
@@ -112,12 +109,12 @@ class TraceParser(ABC):
 
             all_function_data['makespan'] = makespan
             all_function_data['overhead'] = overhead
-            all_function_data['workflow_id'] = workflow_id
+            all_function_data['workflow_instance_id'] = workflow_instance_id
 
             aggregate_function_data = {}
             aggregate_function_data['makespan'] = makespan
             aggregate_function_data['overhead'] = overhead
-            aggregate_function_data['workflow_id'] = workflow_id
+            aggregate_function_data['workflow_instance_id'] = workflow_instance_id
 
             self._all_results.append(all_function_data)
             self._aggregate_results.append(aggregate_function_data)

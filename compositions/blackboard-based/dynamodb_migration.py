@@ -6,8 +6,6 @@ from botocore.exceptions import ClientError
 from dynamodb import DynamoDBTableHelper
 
 def lambda_handler(event, context):
-    print(event)
-    # event['ResourceProperties']['BlackboardWorkflowDefinitionTable']
     response_data = {}
     try:
         if event['RequestType'] == 'Delete':

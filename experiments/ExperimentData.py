@@ -1,21 +1,14 @@
-
-class InvocationType:
-    Synchronous = 'RequestResponse'
-    Asynchronous = 'Event'
-
+from executors.WorkflowExecutor import WorkflowExecutor
+from parsers.TraceParser import TraceParser
 class ExperimentData:
     def __init__(
         self,
         name: str,
-        first_function_name: str,
-        payload: dict,
         amount_of_workflows: int,
-        invocation_type: InvocationType,
-        parser
+        workflow_executor: WorkflowExecutor,
+        parser: TraceParser
     ):
         self.name = name
-        self.first_function_name = first_function_name
-        self.payload = payload
         self.amount_of_workflows = amount_of_workflows
-        self.invocation_type = invocation_type
+        self.workflow_executor = workflow_executor
         self.parser = parser

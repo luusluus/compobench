@@ -1,6 +1,6 @@
 import os
-from aws_lambda import LambdaHelper
 
+from aws_lambda import LambdaHelper
 import event_definitions
 
     # NOTE: Constraint from AWS Lambda and DynamoDB. 
@@ -12,7 +12,6 @@ def lambda_handler(event, context):
     workflows_data = filter_completed_workflows(event=event)
     # check if last event is caused by a business logic function
     workflows_data = filter_orchestrator_caused_events(workflows_data=workflows_data)
-    print(workflows_data)
     # invoke orchestrators 
     invoke_orchestrators(workflows_data=workflows_data)
 
@@ -21,7 +20,6 @@ def filter_completed_workflows(event):
     for record in event['Records']:
         key = record['dynamodb']['Keys']
         workflow_instance_id = key['WorkflowInstanceId']['S']
-
         if 'workflow_instance_id' not in workflows_data:
             workflows_data[workflow_instance_id] = {}
 

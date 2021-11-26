@@ -3,10 +3,10 @@ import pytz
 from datetime import datetime
 from dynamodb import DynamoDBTableHelper, NoItemException
 
-def compose(event, business_logic_function):
-    print(event)
+from aws_xray_sdk.core import xray_recorder
 
-    workflow_instance_id = event['instance_id']
+def compose(event, business_logic_function):
+    workflow_instance_id = event['workflow_instance_id']
     workflow_id = event['workflow_id']
     step_id = event['step_id']
     previous_step_id = event['previous_step_id']
@@ -19,7 +19,6 @@ def compose(event, business_logic_function):
         'WorkflowInstanceId': workflow_instance_id,
         'StepId': int(previous_step_id)
     }
-    print(read_key)
     try:
         previous_step = workflow_execution_table.get_item(key=read_key)
         step_input = previous_step['Input']
@@ -30,9 +29,14 @@ def compose(event, business_logic_function):
             'result': ''
         }
 
-    print(step_output)
-    output_item = business_logic_function(step_output)
-
+    subsegment = xray_recorder.begin_subsegment('Identification')
+    result = business_logic_function(step_output['result'])
+    subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
+    xray_recorder.end_subsegment()
+    
+    output_item = {
+        'result': result
+    }
     item = {
         'WorkflowInstanceId': workflow_instance_id,
         'WorkflowId': workflow_id,
