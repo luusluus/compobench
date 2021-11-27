@@ -14,11 +14,11 @@ def compose(event, business_logic_function):
     s3_object = s3_bucket_helper.get_object_from_bucket(bucket_name=bucket_name, object_key=object_key)
 
     workflow_instance_id = s3_object['workflow_instance_id']
-    subsegment = xray_recorder.begin_subsegment('Identification')
+    subsegment = xray_recorder.begin_subsegment('Business Logic')
+    result = business_logic_function(s3_object['result'])
     subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
     xray_recorder.end_subsegment()
 
-    result = business_logic_function(s3_object['result'])
     result_object = {
         'result': result,
         'workflow_instance_id': workflow_instance_id

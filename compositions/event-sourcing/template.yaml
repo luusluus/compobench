@@ -6,7 +6,6 @@ Description: >
 Globals:
   Function:
     Runtime: python3.8
-    Tracing: Active
     Timeout: 180
     Layers:
       - !Ref EventSourcingDepends
@@ -44,6 +43,8 @@ Resources:
     Properties:
       FunctionName: EventSourcingOrchestrator
       Handler: handler.lambda_handler
+      Tracing: Active
+
       Policies:
         - LambdaInvokePolicy:
             FunctionName: !Ref EventSourcingFunctionA
@@ -75,6 +76,7 @@ Resources:
   EventSourcingFunctionA:
     Type: AWS::Serverless::Function
     Properties:
+      Tracing: Active
       FunctionName: EventSourcingFunctionA
       Handler: function_a.lambda_handler
       Policies:
@@ -84,6 +86,7 @@ Resources:
   EventSourcingFunctionB:
     Type: AWS::Serverless::Function
     Properties:
+      Tracing: Active
       FunctionName: EventSourcingFunctionB
       Handler: function_b.lambda_handler
       Policies:
@@ -93,6 +96,7 @@ Resources:
   EventSourcingFunctionC:
     Type: AWS::Serverless::Function
     Properties:
+      Tracing: Active
       FunctionName: EventSourcingFunctionC
       Handler: function_c.lambda_handler
       Policies:

@@ -7,6 +7,10 @@ import event_definitions
     # No way to specify in AWS CloudFormation or SAM to filter DynamoDB event
     # Have to pay one extra lambda invocation to filter this.
 
+# from aws_xray_sdk.core import patch_all
+
+# patch_all()
+
 def lambda_handler(event, context):
     # split and filter events based on workflow_instance_id to dispatch events to each orchestrator
     workflows_data = filter_completed_workflows(event=event)

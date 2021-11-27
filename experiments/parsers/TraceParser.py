@@ -2,8 +2,7 @@ from abc import ABC, abstractmethod
 import json
 import pandas as pd
 from datetime import datetime
-from collections import OrderedDict
-from operator import getitem
+
 
 
 class TraceParser(ABC):
@@ -87,35 +86,31 @@ class TraceParser(ABC):
 
     def calculate_overheads(self, workflows, is_sync: bool):
         for workflow_instance_id, traces in workflows.items():
-            all_function_data = self.parse_traces(traces=traces)
-            all_function_data = OrderedDict(sorted(all_function_data.items(),
-                key = lambda x: getitem(x[1], 'start_time')))
+            parsed_traces = self.parse_traces(traces=traces)
 
             with open('result.json', 'w') as fp:
-                json.dump(all_function_data, fp,  indent=4, default=str)
+                json.dump(parsed_traces, fp,  indent=4, default=str)
 
             # FIXME: Check if function start is sync or async
             if is_sync:
-                makespan = self.get_response_time(traces=traces) # makespan
-                # duration = self.get_duration(traces=traces)
+                makespan = parsed_traces['response_time'] # makespan
 
             else:
-                # response_time = self.get_response_time_async(traces=traces)
-                makespan = self.get_duration(traces=traces)
+                makespan = parsed_traces['duration']
             
             overhead = makespan
-            for key, value in all_function_data.items():
-                overhead -= value['execution_time']
+            for function_data in parsed_traces['function_data']:
+                overhead -= function_data['execution_time']
 
-            all_function_data['makespan'] = makespan
-            all_function_data['overhead'] = overhead
-            all_function_data['workflow_instance_id'] = workflow_instance_id
+            aggregate_data = {
+                'makespan': makespan,
+                'overhead': overhead,
+                'workflow_instance_id': workflow_instance_id,
+            }
+            # all_function_data['makespan'] = makespan
+            # all_function_data['overhead'] = overhead
+            # all_function_data['workflow_instance_id'] = workflow_instance_id
 
-            aggregate_function_data = {}
-            aggregate_function_data['makespan'] = makespan
-            aggregate_function_data['overhead'] = overhead
-            aggregate_function_data['workflow_instance_id'] = workflow_instance_id
-
-            self._all_results.append(all_function_data)
-            self._aggregate_results.append(aggregate_function_data)
+            # self._all_results.append(all_function_data)
+            self._aggregate_results.append(aggregate_data)
 

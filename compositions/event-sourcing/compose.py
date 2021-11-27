@@ -12,8 +12,6 @@ def compose(event, business_logic_function):
     result = business_logic_function(function_input)
     subsegment.put_annotation('workflow_instance_id', event['workflow_instance_id'])
     xray_recorder.end_subsegment()
-    
-
 
     eventhelper = EventHelper(
         aws_region=os.environ['AWS_REGION'], 

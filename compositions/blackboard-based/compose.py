@@ -29,7 +29,7 @@ def compose(event, business_logic_function):
             'result': ''
         }
 
-    subsegment = xray_recorder.begin_subsegment('Identification')
+    subsegment = xray_recorder.begin_subsegment('Business Logic')
     result = business_logic_function(step_output['result'])
     subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
     xray_recorder.end_subsegment()

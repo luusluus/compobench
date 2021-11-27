@@ -13,7 +13,7 @@ def function_c():
     return f'Hello world from {function_c.__name__}. '
 
 def lambda_handler(event, context):
-    subsegment = xray_recorder.begin_subsegment('Identification')
+    subsegment = xray_recorder.begin_subsegment('Business Logic')
     subsegment.put_annotation('workflow_instance_id', event['workflow_instance_id'])
     result = function_a() + function_b() + function_c()
     xray_recorder.end_subsegment()

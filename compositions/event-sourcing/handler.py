@@ -3,7 +3,6 @@ import time
 
 from aws_xray_sdk.core import patch_all
 from aws_xray_sdk.core import xray_recorder
-
 patch_all()
 
 import event_definitions
@@ -16,6 +15,9 @@ def lambda_handler(event, context):
     workflow_instance_id = event['workflow_instance_id']
     print(f'workflow instance id: {workflow_instance_id}')
 
+    subsegment = xray_recorder.begin_subsegment('Identification')
+    subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
+    xray_recorder.end_subsegment()
     # start a new workflow
     if 'input' in event:
         orchestrator = Orchestrator(
