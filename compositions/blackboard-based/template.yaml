@@ -6,8 +6,8 @@ Description: >
 Globals:
   Function:
     Runtime: python3.8
-    Timeout: 180
     Tracing: Active
+    Timeout: 180
     Layers:
       - !Ref BlackboardDepends
     Environment:
@@ -107,7 +107,6 @@ Resources:
             TableName: !Ref BlackboardWorkflowExecutionTable
         - DynamoDBReadPolicy:
             TableName: !Ref BlackboardWorkflowExecutionTable
-
 
   BlackboardFunctionC:
     Type: AWS::Serverless::Function

@@ -4,8 +4,8 @@ import uuid
 
 from OverheadExperiment import OverheadExperiment
 from ExperimentData import ExperimentData
-from parsers import CoordinatorTraceParser, SynchronousSequenceTraceParser, EventSourcingTraceParser
-from executors import FunctionWorkflowExecutor, MessageQueueBasedWorkflowExecutor, StorageBasedWorkflowExecutor, WorkflowEngineBasedWorkflowExecutor
+from parsers import CoordinatorTraceParser, SynchronousSequenceTraceParser, EventSourcingTraceParser, ClientsideSchedulingTraceParser
+from executors import FunctionWorkflowExecutor, MessageQueueBasedWorkflowExecutor, StorageBasedWorkflowExecutor, WorkflowEngineBasedWorkflowExecutor, ClientsideWorkflowExecutor
 from executors.FunctionWorkflowExecutor import LambdaInvocationType
 
 all_experiment_data = []
@@ -107,7 +107,7 @@ all_experiment_data = []
 # TODO: missing traces, require 4, only get 2 or 3 sometimes
 # blackboard_based_experiment_data=ExperimentData(
 #     name='Blackboard Based Composition',
-#     amount_of_workflows=1,
+#     amount_of_workflows=100,
 #     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor(
 #         payload={},
 #         lambda_invocation_type=LambdaInvocationType.Asynchronous, 
@@ -118,26 +118,26 @@ all_experiment_data = []
 # all_experiment_data.append(blackboard_based_experiment_data)
 
 # event sourcing
-event_sourcing_based_experiment_data=ExperimentData(
-    name='Event Sourcing Based Composition',
-    amount_of_workflows=1,
-    workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor(
-        payload={
-            'input': ''
-        }, 
-        lambda_invocation_type=LambdaInvocationType.Asynchronous, 
-        first_function_name='EventSourcingOrchestrator'
-    ),
-    parser=EventSourcingTraceParser.EventSourcingTraceParser(coordinator_function_name='EventSourcingOrchestrator')
-)
-all_experiment_data.append(event_sourcing_based_experiment_data)
+# event_sourcing_based_experiment_data=ExperimentData(
+#     name='Event Sourcing Based Composition',
+#     amount_of_workflows=1,
+#     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor(
+#         payload={
+#             'input': ''
+#         }, 
+#         lambda_invocation_type=LambdaInvocationType.Asynchronous, 
+#         first_function_name='EventSourcingOrchestrator'
+#     ),
+#     parser=EventSourcingTraceParser.EventSourcingTraceParser(coordinator_function_name='EventSourcingOrchestrator')
+# )
+# all_experiment_data.append(event_sourcing_based_experiment_data)
 
 # message queue based
 # message_queue_based_experiment_data=ExperimentData(
 #     name='Message Queue Based Composition',
 #     amount_of_workflows=10,
 #     parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
-#     workflow_executor=MessageQueueBasedWorkflowExecutor(
+#     workflow_executor=MessageQueueBasedWorkflowExecutor.MessageQueueBasedWorkflowExecutor(
 #         payload={'result': ''},
 #         message_attributes={
 #             'caller': {
@@ -153,11 +153,12 @@ all_experiment_data.append(event_sourcing_based_experiment_data)
 # )
 # all_experiment_data.append(message_queue_based_experiment_data)
 
+# storage based
 # storage_based_experiment_data=ExperimentData(
 #     name='Storage Based Composition',
 #     amount_of_workflows=10,
 #     parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
-#     workflow_executor=StorageBasedWorkflowExecutor(
+#     workflow_executor=StorageBasedWorkflowExecutor.StorageBasedWorkflowExecutor(
 #         payload={
 #             'workflow': ['function_b', 'function_c'],
 #             'result': ''
@@ -168,11 +169,12 @@ all_experiment_data.append(event_sourcing_based_experiment_data)
 # )
 # all_experiment_data.append(storage_based_experiment_data)
 
+# workflow engine based
 # workflow_engine_based_experiment=ExperimentData(
 #     name='Workflow Engine Based Composition',
 #     amount_of_workflows=10,
 #     parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
-#     workflow_executor=WorkflowEngineBasedWorkflowExecutor(
+#     workflow_executor=WorkflowEngineBasedWorkflowExecutor.WorkflowEngineBasedWorkflowExecutor(
 #         payload={
 #             'result': ''
 #         },
@@ -181,6 +183,20 @@ all_experiment_data.append(event_sourcing_based_experiment_data)
 # )
 # all_experiment_data.append(workflow_engine_based_experiment)
 
+# client side scheduling. Requires xray daemon locally or on ec2
+# ./xray -o -n eu-central-1
+client_side_based_experiment=ExperimentData(
+    name='Client-side Scheduling Based Composition',
+    amount_of_workflows=1,
+    parser=ClientsideSchedulingTraceParser.ClientsideSchedulingParser(),
+    workflow_executor=ClientsideWorkflowExecutor.ClientsideWorkflowExecutor(
+        payload={
+            'result': '',
+        },
+        workflow=['ClientSideFunctionA', 'ClientSideFunctionB', 'ClientSideFunctionC']
+    ),
+)
+all_experiment_data.append(client_side_based_experiment)
 
 for experiment_data in all_experiment_data:
     experiment = OverheadExperiment(experiment_data=experiment_data)

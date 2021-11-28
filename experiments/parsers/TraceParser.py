@@ -4,7 +4,8 @@ import pandas as pd
 from datetime import datetime
 
 
-
+class NotEnoughTracesException(Exception):
+    pass
 class TraceParser(ABC):
     def __init__(self):
         self._all_results = []
@@ -44,20 +45,30 @@ class TraceParser(ABC):
     def group_traces_by_workflow_id(self, traces):
         # TODO: add root node to grouped_traces to get full duration
         grouped_traces = {}
+        print(len(traces))
         for trace in traces:
             for segment in trace['Segments']:
                 document = json.loads(segment['Document'])
-                if document['origin'] == "AWS::Lambda::Function":
-                    for subsegment in document['subsegments']:
-                        if 'subsegments' in subsegment:
-                            for subsubsegment in subsegment['subsegments']:
-                                if subsubsegment['name'] == 'Business Logic':
-                                    workflow_instance_id = subsubsegment['annotations']['workflow_instance_id']
-                                    if workflow_instance_id not in grouped_traces:
-                                        grouped_traces[workflow_instance_id] = []
-                                    
-                                    document['trace_id'] = trace['Id']
-                                    grouped_traces[workflow_instance_id].append(trace)
+                if "origin" in document:
+                    if document["origin"] == "AWS::Lambda::Function":
+                        for subsegment in document['subsegments']:
+                            if 'subsegments' in subsegment:
+                                for subsubsegment in subsegment['subsegments']:
+                                    if subsubsegment['name'] == 'Business Logic':
+                                        workflow_instance_id = subsubsegment['annotations']['workflow_instance_id']
+                                        if workflow_instance_id not in grouped_traces:
+                                            grouped_traces[workflow_instance_id] = []
+                                        
+                                        document['trace_id'] = trace['Id']
+                                        grouped_traces[workflow_instance_id].append(trace)
+
+                elif document['name'] == 'Client':
+                    workflow_instance_id = document['annotations']['workflow_instance_id']
+                    if workflow_instance_id not in grouped_traces:
+                        grouped_traces[workflow_instance_id] = []
+                    
+                    grouped_traces[workflow_instance_id].append(trace)
+
 
         # remove duplicates in list
         grouped_traces = self.remove_duplicate_traces(grouped_traces=grouped_traces)
@@ -86,6 +97,9 @@ class TraceParser(ABC):
 
     def calculate_overheads(self, workflows, is_sync: bool):
         for workflow_instance_id, traces in workflows.items():
+            # if len(traces) < 3:
+            #     print(f'not enough traces in {workflow_instance_id}')
+            #     continue
             parsed_traces = self.parse_traces(traces=traces)
 
             with open('result.json', 'w') as fp:

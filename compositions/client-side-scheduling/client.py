@@ -1,7 +1,6 @@
 
 
 import json
-from compose import compose
 
 aws_region = 'eu-central-1'
 

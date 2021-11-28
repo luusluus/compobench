@@ -4,6 +4,7 @@ Transform: AWS::Serverless-2016-10-31
 Globals:
   Function:
     Runtime: python3.8
+    Tracing: Active
     Timeout: 180
 
 Resources:  
