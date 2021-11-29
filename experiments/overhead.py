@@ -88,20 +88,20 @@ all_experiment_data = []
 # all_experiment_data.append(routing_slip_experiment_data)
 
 # async coordinator
-# async_coordinator_experiment_data = ExperimentData(
-#     name='Asynchronous Coordinator Composition Experiment',
-#     amount_of_workflows=10,
-#     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor(
-#         payload={
-#             'workflow': ['AsyncCoordinatorFunctionA', 'AsyncCoordinatorFunctionB', 'AsyncCoordinatorFunctionC'],
-#             'input': '',
-#         }, 
-#         lambda_invocation_type=LambdaInvocationType.Asynchronous, 
-#         first_function_name='AsyncCoordinatorFunctionCoordinator'
-#     ),
-#     parser=CoordinatorTraceParser.CoordinatorTraceParser(coordinator_function_name='AsyncCoordinatorFunctionCoordinator')
-# )
-# all_experiment_data.append(async_coordinator_experiment_data)
+async_coordinator_experiment_data = ExperimentData(
+    name='Asynchronous Coordinator Composition Experiment',
+    amount_of_workflows=10,
+    workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor(
+        payload={
+            'workflow': ['AsyncCoordinatorFunctionA', 'AsyncCoordinatorFunctionB', 'AsyncCoordinatorFunctionC'],
+            'result': '',
+        }, 
+        lambda_invocation_type=LambdaInvocationType.Asynchronous, 
+        first_function_name='AsyncCoordinatorFunctionCoordinator'
+    ),
+    parser=CoordinatorTraceParser.CoordinatorTraceParser(coordinator_function_name='AsyncCoordinatorFunctionCoordinator')
+)
+all_experiment_data.append(async_coordinator_experiment_data)
 
 # blackboard based
 # TODO: missing traces, require 4, only get 2 or 3 sometimes
@@ -185,18 +185,18 @@ all_experiment_data = []
 
 # client side scheduling. Requires xray daemon locally or on ec2
 # ./xray -o -n eu-central-1
-client_side_based_experiment=ExperimentData(
-    name='Client-side Scheduling Based Composition',
-    amount_of_workflows=1,
-    parser=ClientsideSchedulingTraceParser.ClientsideSchedulingParser(),
-    workflow_executor=ClientsideWorkflowExecutor.ClientsideWorkflowExecutor(
-        payload={
-            'result': '',
-        },
-        workflow=['ClientSideFunctionA', 'ClientSideFunctionB', 'ClientSideFunctionC']
-    ),
-)
-all_experiment_data.append(client_side_based_experiment)
+# client_side_based_experiment=ExperimentData(
+#     name='Client-side Scheduling Based Composition',
+#     amount_of_workflows=10,
+#     parser=ClientsideSchedulingTraceParser.ClientsideSchedulingParser(),
+#     workflow_executor=ClientsideWorkflowExecutor.ClientsideWorkflowExecutor(
+#         payload={
+#             'result': '',
+#         },
+#         workflow=['ClientSideFunctionA', 'ClientSideFunctionB', 'ClientSideFunctionC']
+#     ),
+# )
+# all_experiment_data.append(client_side_based_experiment)
 
 for experiment_data in all_experiment_data:
     experiment = OverheadExperiment(experiment_data=experiment_data)

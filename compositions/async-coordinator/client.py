@@ -15,7 +15,7 @@ client = boto3_client('lambda', region_name=aws_region)
 
 payload = {
     'workflow': ['AsyncCoordinatorFunctionA', 'AsyncCoordinatorFunctionB', 'AsyncCoordinatorFunctionC'],
-    'input': '',
+    'result': '',
     'workflow_id': workflow_id
 }
 

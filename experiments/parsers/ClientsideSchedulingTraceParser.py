@@ -53,7 +53,6 @@ class ClientsideSchedulingParser(TraceParser):
         # Duration
         # The length of time in seconds between the start time of the root segment and 
         # the end time of the last segment that completed
-        print(json.dumps(traces, indent=4))
         for trace in traces:
             for segment in trace['Segments']:
                 document = json.loads(segment['Document'])
