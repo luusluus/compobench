@@ -57,17 +57,19 @@ class EventSourcingTraceParser(TraceParser):
         # Duration
         # The length of time in seconds between the start time of the root segment and 
         # the end time of the last segment that completed
-        summed_duration = sum(trace['Duration'] for trace in traces)
         first_trace = traces[0]
         last_trace = traces[-1]
-        first_segment = min(first_trace['Segments'], key=lambda x: json.loads(x['Document'])['start_time'])
-        last_segment = max(last_trace['Segments'], key=lambda x: json.loads(x['Document'])['end_time'])
-        start_time = json.loads(first_segment['Document'])['start_time']
-        end_time = json.loads(last_segment['Document'])['end_time']
-        duration = end_time - start_time
-        print(duration)
-        print(summed_duration)
-        return duration
+        try:
+            # summed_duration = sum(trace['Duration'] for trace in traces)
+            first_segment = min(first_trace['Segments'], key=lambda x: json.loads(x['Document'])['start_time'])
+            last_segment = max(last_trace['Segments'], key=lambda x: json.loads(x['Document'])['end_time'])
+            start_time = json.loads(first_segment['Document'])['start_time']
+            end_time = json.loads(last_segment['Document'])['end_time']
+            duration = end_time - start_time
+            return duration
+        except KeyError:
+            print(first_trace['Id'])
+            print(last_trace['Id'])
 
     def parse_traces(self, traces):
         function_data = self.get_functions_data(traces=traces)

@@ -7,14 +7,14 @@ class LambdaHelper:
         self._client = boto3_client('lambda', region_name=aws_region)
 
     def invoke_lambda_async(self, function_name, payload):
-        print(f'Asynchronously invoking {function_name}')
+        # print(f'Asynchronously invoking {function_name}')
         self._client.invoke(
             FunctionName=function_name,
             InvocationType='Event',
             Payload=json.dumps(payload))
 
     def invoke_lambda(self, function_name, payload):
-        print(f'Synchronously invoking {function_name}')
+        # print(f'Synchronously invoking {function_name}')
         response = self._client.invoke(
             FunctionName=function_name,
             InvocationType='RequestResponse',

@@ -17,29 +17,34 @@ class SynchronousSequenceTraceParser(TraceParser):
     # TODO: get more fine-grained overhead. Startup overhead, and communication overhead
     def get_functions_data(self, traces):
         all_function_data = []
+        
         for trace in traces:
-            for segment in trace['Segments']:
-                document = json.loads(segment['Document'])
-                if document['origin'] == "AWS::Lambda::Function":
-                    function_data = {
-                        'name': document['name']
-                    }
-                    for subsegment in document['subsegments']:
-                        # get invocation start time
-                        if subsegment['name'] == 'Invocation':
-                            for subsubsegment in subsegment['subsegments']:
-                                if subsubsegment['name'] == 'Business Logic':
-                                    start_time = subsubsegment['start_time']
-                                    function_data['start_time'] = start_time
-                                    function_data['start_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(start_time)
-                                
-                                    end_time = subsubsegment['end_time']
-                                    function_data['end_time'] = end_time
-                                    function_data['end_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(end_time)
+            try:
+                for segment in trace['Segments']:
+                    document = json.loads(segment['Document'])
+                    if document['origin'] == "AWS::Lambda::Function":
+                        function_data = {
+                            'name': document['name']
+                        }
+                        for subsegment in document['subsegments']:
+                            # get invocation start time
+                            if subsegment['name'] == 'Invocation':
+                                for subsubsegment in subsegment['subsegments']:
+                                    if subsubsegment['name'] == 'Business Logic':
+                                        start_time = subsubsegment['start_time']
+                                        function_data['start_time'] = start_time
+                                        function_data['start_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(start_time)
+                                    
+                                        end_time = subsubsegment['end_time']
+                                        function_data['end_time'] = end_time
+                                        function_data['end_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(end_time)
 
-                                    function_data['execution_time'] = end_time - start_time
-                                    function_data['trace_id'] = document['trace_id']
-                    all_function_data.append(function_data)
+                                        function_data['execution_time'] = end_time - start_time
+                                        function_data['trace_id'] = document['trace_id']
+                        all_function_data.append(function_data)
+            except KeyError as e:
+                print(trace['Id'])
+                print(e)
         return all_function_data
 
     def get_response_time(self, traces):

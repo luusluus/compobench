@@ -108,4 +108,9 @@ venv.bak/
 .aws-sam
 
 # json files
-*.json
+data.json
+result.json
+
+# csv files
+
+*.csv

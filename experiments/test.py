@@ -1,8 +1,5 @@
-x = {
-    'a': 1
+import json
 
-}
-
-
-if x.get('a') == 1:
-    print('yes')
+with open('executors/config.json') as json_file:
+    data = json.load(json_file)
+    print(data['sequence'])

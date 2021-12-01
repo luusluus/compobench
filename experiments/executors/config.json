@@ -1,0 +1,85 @@
+{
+    "sequence": {
+        "payload": {
+            "result": ""
+        },
+        "lambda_invocation_type": "SYNC",
+        "first_function_name": "SequenceFunctionA"
+    },
+    "coordinator": {
+        "payload": {
+            "workflow": ["CoordinatorFunctionA", "CoordinatorFunctionB", "CoordinatorFunctionC"],
+            "result": ""
+        },
+        "lambda_invocation_type": "SYNC",
+        "first_function_name": "CoordinatorFunctionCoordinator"
+    },
+    "compiled": {
+        "payload": {},
+        "lambda_invocation_type": "SYNC",
+        "first_function_name": "CompiledFunction"
+    },
+    "async_sequence": {
+        "payload": {
+            "result": ""
+        },
+        "lambda_invocation_type": "ASYNC",
+        "first_function_name": "AsyncSequenceFunctionA"
+    },
+    "routing_slip": {
+        "payload": {
+            "composition": ["RoutingSlipFunctionB", "RoutingSlipFunctionC"],
+            "result": ""
+        },
+        "lambda_invocation_type": "SYNC",
+        "first_function_name": "RoutingSlipFunctionA"
+    },
+    "async_coordinator": {
+        "payload": {
+            "workflow": ["AsyncCoordinatorFunctionA", "AsyncCoordinatorFunctionB", "AsyncCoordinatorFunctionC"],
+            "result": ""
+        },
+        "lambda_invocation_type": "ASYNC",
+        "first_function_name": "AsyncCoordinatorFunctionCoordinator"
+    },
+    "event_sourcing": {
+        "payload": {
+            "result": ""
+        },
+        "lambda_invocation_type": "ASYNC",
+        "first_function_name": "EventSourcingOrchestrator"
+    },
+    "message_queue": {
+        "payload": {
+            "result": ""
+        },
+        "message_attributes": {
+            "caller": {
+                "DataType": "String",
+                "StringValue": "Client"
+            },
+            "last_function": {
+                "DataType": "String",
+                "StringValue": "MessageQueueFunctionC"
+            }
+        }
+    },
+    "storage": {
+        "payload": {
+            "workflow": ["function_b", "function_c"],
+            "result": ""
+        },
+        "bucket_name": "storage-based-store",
+        "first_function": "function_a"
+    },
+    "workflow_engine": {
+        "payload": {
+            "result": ""
+        },
+        "stack_name": "workflow-engine"
+    },
+    "client_side": {
+        "payload": {"result": ""},
+        "workflow": ["ClientSideFunctionA", "ClientSideFunctionB", "ClientSideFunctionC"]
+    }
+}

@@ -11,11 +11,20 @@ class TraceParser(ABC):
         self._all_results = []
         self._aggregate_results = []
 
+    def reset(self):
+        self._all_results = []
+        self._aggregate_results = []
+
     def get_all_results(self):
         return self._all_results
 
-    def get_aggregate_results_df(self):
-        return pd.DataFrame(self._aggregate_results)
+    def get_aggregate_results_df(self, cold_start):
+        df = pd.DataFrame(self._aggregate_results)
+        if cold_start:
+            df['is_cold'] = 'cold'
+        else:
+            df['is_cold'] = 'warm'
+        return df
 
     def parse(self, traces, is_sync: bool):
         workflows = self.group_traces_by_workflow_id(traces=traces)
@@ -45,7 +54,6 @@ class TraceParser(ABC):
     def group_traces_by_workflow_id(self, traces):
         # TODO: add root node to grouped_traces to get full duration
         grouped_traces = {}
-        print(len(traces))
         for trace in traces:
             for segment in trace['Segments']:
                 document = json.loads(segment['Document'])
@@ -80,20 +88,6 @@ class TraceParser(ABC):
         with open('data.json', 'w') as fp:
             json.dump(grouped_traces, fp,  indent=4, default=str)
         return grouped_traces
-
-    def get_response_time(self, traces):
-        # ResponseTime / makespan
-        # The length of time in seconds between the start and end times of the root segment. 
-        # If the service performs work asynchronously, the response time measures the time before the response is sent to the user, 
-        # while the duration measures the amount of time before the last traced activity completes.
-        return sum(trace['ResponseTime'] for trace in traces)
-
-    def get_duration(self, traces):
-        # Duration
-        # The length of time in seconds between the start time of the root segment and 
-        # the end time of the last segment that completed
-        return sum(trace['Duration'] for trace in traces)
-
 
     def calculate_overheads(self, workflows, is_sync: bool):
         for workflow_instance_id, traces in workflows.items():
