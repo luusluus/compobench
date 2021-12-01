@@ -13,7 +13,7 @@ all_experiment_data = []
 # synchronous function sequence
 sync_func_seq_experiment_data = ExperimentData(
     name='sequence',
-    amount_of_workflows=100,
+    amount_of_workflows=20,
     repetitions=2,
     parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor
@@ -22,7 +22,7 @@ sync_func_seq_experiment_data = ExperimentData(
 # synchronous coordinator
 coordinator_experiment_data=ExperimentData(
     name='coordinator',
-    amount_of_workflows=100,
+    amount_of_workflows=20,
     repetitions=2,
     parser=CoordinatorTraceParser.CoordinatorTraceParser(
         coordinator_function_name='CoordinatorFunctionCoordinator'
@@ -33,7 +33,7 @@ coordinator_experiment_data=ExperimentData(
 # compiled
 compiled_experiment_data = ExperimentData(
     name='compiled',
-    amount_of_workflows=100,
+    amount_of_workflows=20,
     repetitions=2,
     parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor
@@ -42,7 +42,7 @@ compiled_experiment_data = ExperimentData(
 # async sequence
 async_sequence_experiment_data=ExperimentData(
     name='async_sequence',
-    amount_of_workflows=100,
+    amount_of_workflows=20,
     repetitions=2,
     parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor
@@ -51,7 +51,7 @@ async_sequence_experiment_data=ExperimentData(
 # routing slip
 routing_slip_experiment_data=ExperimentData(
     name='routing_slip',
-    amount_of_workflows=100,
+    amount_of_workflows=20,
     repetitions=2,
     parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor
@@ -60,7 +60,7 @@ routing_slip_experiment_data=ExperimentData(
 # async coordinator
 async_coordinator_experiment_data = ExperimentData(
     name='async_coordinator',
-    amount_of_workflows=100,
+    amount_of_workflows=20,
     repetitions=2,
     parser=CoordinatorTraceParser.CoordinatorTraceParser(coordinator_function_name='AsyncCoordinatorFunctionCoordinator'),
     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor
@@ -70,7 +70,7 @@ async_coordinator_experiment_data = ExperimentData(
 # FIXME: missing traces, require 4, only get 2 or 3 sometimes
 # blackboard_based_experiment_data=ExperimentData(
 #     name='Blackboard Based Composition',
-#     amount_of_workflows=100,
+#     amount_of_workflows=20,
 #     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor(
 #         payload={},
 #         lambda_invocation_type=LambdaInvocationType.Asynchronous, 
@@ -83,7 +83,7 @@ async_coordinator_experiment_data = ExperimentData(
 # event sourcing
 event_sourcing_based_experiment_data=ExperimentData(
     name='event_sourcing',
-    amount_of_workflows=100,
+    amount_of_workflows=20,
     repetitions=2,
     parser=EventSourcingTraceParser.EventSourcingTraceParser(coordinator_function_name='EventSourcingOrchestrator'),
     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor
@@ -92,7 +92,7 @@ event_sourcing_based_experiment_data=ExperimentData(
 # message queue based
 message_queue_based_experiment_data=ExperimentData(
     name='message_queue',
-    amount_of_workflows=100,
+    amount_of_workflows=20,
     repetitions=2,
     parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
     workflow_executor=MessageQueueBasedWorkflowExecutor.MessageQueueBasedWorkflowExecutor
@@ -101,7 +101,7 @@ message_queue_based_experiment_data=ExperimentData(
 # storage based
 storage_based_experiment_data=ExperimentData(
     name='storage',
-    amount_of_workflows=100,
+    amount_of_workflows=20,
     repetitions=2,
     parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
     workflow_executor=StorageBasedWorkflowExecutor.StorageBasedWorkflowExecutor
@@ -110,7 +110,7 @@ storage_based_experiment_data=ExperimentData(
 # workflow engine based
 workflow_engine_based_experiment=ExperimentData(
     name='workflow_engine',
-    amount_of_workflows=100,
+    amount_of_workflows=20,
     repetitions=2,
     parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
     workflow_executor=WorkflowEngineBasedWorkflowExecutor.WorkflowEngineBasedWorkflowExecutor
@@ -128,17 +128,17 @@ client_side_based_experiment=ExperimentData(
 
 
 # comment out experiments
-all_experiment_data.append(sync_func_seq_experiment_data)
-all_experiment_data.append(coordinator_experiment_data)
-all_experiment_data.append(compiled_experiment_data)
-all_experiment_data.append(async_sequence_experiment_data)
-all_experiment_data.append(routing_slip_experiment_data)
-all_experiment_data.append(async_coordinator_experiment_data)
-all_experiment_data.append(event_sourcing_based_experiment_data)
-all_experiment_data.append(message_queue_based_experiment_data)
-all_experiment_data.append(storage_based_experiment_data)
-all_experiment_data.append(workflow_engine_based_experiment)
-all_experiment_data.append(client_side_based_experiment)
+# all_experiment_data.append(sync_func_seq_experiment_data)
+# all_experiment_data.append(coordinator_experiment_data)
+# all_experiment_data.append(compiled_experiment_data)
+# all_experiment_data.append(async_sequence_experiment_data)
+# all_experiment_data.append(routing_slip_experiment_data)
+# all_experiment_data.append(async_coordinator_experiment_data)
+# all_experiment_data.append(event_sourcing_based_experiment_data)
+# all_experiment_data.append(message_queue_based_experiment_data)
+# all_experiment_data.append(storage_based_experiment_data)
+# all_experiment_data.append(workflow_engine_based_experiment)
+# all_experiment_data.append(client_side_based_experiment)
 
 for experiment_data in all_experiment_data:
     experiment = OverheadExperiment(experiment_data=experiment_data)

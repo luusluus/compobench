@@ -9,7 +9,7 @@
     "coordinator": {
         "payload": {
             "workflow": ["CoordinatorFunctionA", "CoordinatorFunctionB", "CoordinatorFunctionC"],
-            "result": ""
+            "input": ""
         },
         "lambda_invocation_type": "SYNC",
         "first_function_name": "CoordinatorFunctionCoordinator"

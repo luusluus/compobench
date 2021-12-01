@@ -12,7 +12,7 @@ class XRayWrapper:
         self.xray_client = boto3.client('xray')
         self.WAIT_TIME_SEC = 10
 
-    def _get_trace_summaries(self, start, end):
+    def get_trace_summaries(self, start, end):
         retries = 1
         while retries <= 5:
             try:
@@ -26,29 +26,46 @@ class XRayWrapper:
                 return response["TraceSummaries"]
             except Exception:
                 wait = retries * self.WAIT_TIME_SEC
-                print('Waiting {} secs and retry attempt: {}'.format(wait, retries))
+                print('Waiting {} secs and retry fetch trace attempt: {}'.format(wait, retries))
                 time.sleep(wait)
                 retries += 1
         raise NoTracesFoundException
 
+    def filter_trace_summaries(self, start, end, workflow_instance_ids):
+        retries = 1
+        while retries <= 5:
+            summaries = self.get_trace_summaries(start, end)
+            try:
+                summaries_selected = []
+                print(f'fetched {len(summaries)} traces')
+                # print(json.dumps(summaries["TraceSummaries"], indent=4))
+                for summary in summaries:
+                    if summary['Annotations']:
+                        workflow_instance_id = summary["Annotations"]["workflow_instance_id"][0]["AnnotationValue"]["StringValue"]
+                        if workflow_instance_id in workflow_instance_ids:
+                            summaries_selected.append({
+                                'response_time': summary["ResponseTime"],
+                                'duration': summary["Duration"],
+                                'trace_id': summary["Id"],
+                                'workflow_instance_id': workflow_instance_id
+                            })
+
+                print(f'filtered to {len(summaries_selected)} traces')
+                if len(summaries_selected) == 0:
+                    raise NoTracesFoundException
+                return summaries_selected, summaries
+            except Exception:
+                wait = retries * self.WAIT_TIME_SEC
+                print('Waiting {} secs and retry trace filter attempt: {}'.format(wait, retries))
+                time.sleep(wait)
+                retries += 1
+
+        raise NoTracesFoundException
 
     def batch_get_traces(self, start, end, workflow_instance_ids):
-        summaries = self._get_trace_summaries(start, end)
-        summaries_selected = []
-        print(f'fetched {len(summaries)} traces')
-        # print(json.dumps(summaries["TraceSummaries"], indent=4))
-        for summary in summaries:
-            if summary['Annotations']:
-                workflow_instance_id = summary["Annotations"]["workflow_instance_id"][0]["AnnotationValue"]["StringValue"]
-                if workflow_instance_id in workflow_instance_ids:
-                    summaries_selected.append({
-                        'response_time': summary["ResponseTime"],
-                        'duration': summary["Duration"],
-                        'trace_id': summary["Id"],
-                        'workflow_instance_id': workflow_instance_id
-                    })
-        print(f'filtered to {len(summaries_selected)} traces')
-        df = pd.DataFrame(summaries_selected)
+        filtered_summaries, summaries = self.filter_trace_summaries(start, end, workflow_instance_ids)
+        
+        df = pd.DataFrame(filtered_summaries)
         df.set_index('trace_id', inplace=True)
         print(df)
 
@@ -63,13 +80,13 @@ class XRayWrapper:
                 )
                 all_traces.extend(traces['Traces'])
 
-            return self._merge_summaries_with_traces(traces=all_traces, summaries=summaries)
+            return self.merge_summaries_with_traces(traces=all_traces, summaries=summaries)
         except ClientError as e:
             if e.response['Error']['Code'] == 'InvalidRequestException':
                 raise
             
 
-    def _merge_summaries_with_traces(self, traces, summaries):
+    def merge_summaries_with_traces(self, traces, summaries):
         for trace in traces:
             trace_id = trace['Id']
             response_time = next(summary['ResponseTime'] for summary in summaries if summary["Id"] == trace_id)
