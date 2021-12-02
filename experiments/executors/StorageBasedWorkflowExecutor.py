@@ -16,7 +16,7 @@ class StorageBasedWorkflowExecutor(WorkflowExecutor):
         
         payload["workflow_instance_id"] = self.workflow_instance_id
         self.s3_client.put_object(
-            Body=json.dumps(self._payload),
-            Bucket=self.bucket_name,
-            Key=f'{self.first_function}/{self._payload["workflow_instance_id"]}.json'
+            Body=json.dumps(payload),
+            Bucket=bucket_name,
+            Key=f'{first_function}/{payload["workflow_instance_id"]}.json'
         )

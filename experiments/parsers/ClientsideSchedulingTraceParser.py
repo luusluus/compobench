@@ -1,7 +1,3 @@
-import json
-from collections import OrderedDict
-from operator import getitem
-
 from .TraceParser import TraceParser
 # makespan 
 
@@ -18,7 +14,7 @@ class ClientsideSchedulingParser(TraceParser):
         all_function_data = []
         for trace in traces:
             for segment in trace['Segments']:
-                document = json.loads(segment['Document'])
+                document = segment['Document']
                 if 'origin' in document:
                     if document['origin'] == "AWS::Lambda::Function":
                         function_data = {
@@ -27,18 +23,16 @@ class ClientsideSchedulingParser(TraceParser):
                         for subsegment in document['subsegments']:
                             # get invocation start time
                             if subsegment['name'] == 'Invocation':
-                                for subsubsegment in subsegment['subsegments']:
-                                    if subsubsegment['name'] == 'Business Logic':
-                                        start_time = subsubsegment['start_time']
-                                        function_data['start_time'] = start_time
-                                        function_data['start_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(start_time)
-                                    
-                                        end_time = subsubsegment['end_time']
-                                        function_data['end_time'] = end_time
-                                        function_data['end_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(end_time)
+                                start_time = subsegment['start_time']
+                                function_data['start_time'] = start_time
+                                function_data['start_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(start_time)
+                            
+                                end_time = subsegment['end_time']
+                                function_data['end_time'] = end_time
+                                function_data['end_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(end_time)
 
-                                        function_data['execution_time'] = end_time - start_time
-                                        function_data['trace_id'] = document['trace_id']
+                                function_data['execution_time'] = end_time - start_time
+                                function_data['trace_id'] = document['trace_id']
                         all_function_data.append(function_data)
         return all_function_data
 
@@ -55,7 +49,7 @@ class ClientsideSchedulingParser(TraceParser):
         # the end time of the last segment that completed
         for trace in traces:
             for segment in trace['Segments']:
-                document = json.loads(segment['Document'])
+                document = segment['Document']
                 if 'origin' not in document:
                     return trace['Duration']
 

@@ -31,7 +31,7 @@
             "composition": ["RoutingSlipFunctionB", "RoutingSlipFunctionC"],
             "result": ""
         },
-        "lambda_invocation_type": "SYNC",
+        "lambda_invocation_type": "ASYNC",
         "first_function_name": "RoutingSlipFunctionA"
     },
     "async_coordinator": {
@@ -41,6 +41,13 @@
         },
         "lambda_invocation_type": "ASYNC",
         "first_function_name": "AsyncCoordinatorFunctionCoordinator"
+    },
+    "blackboard": {
+        "payload": {
+            "result": ""
+        },
+        "lambda_invocation_type": "ASYNC",
+        "first_function_name": "BlackboardFunctionController"
     },
     "event_sourcing": {
         "payload": {

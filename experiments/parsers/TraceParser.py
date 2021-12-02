@@ -51,6 +51,22 @@ class TraceParser(ABC):
             results[workflow] = result
         return results
 
+    def order_grouped_traces_by_start_time(self, grouped_traces):
+        for workflow_instance_id, traces in grouped_traces.items():
+            for trace in traces:
+                segments = []
+                for segment in trace['Segments']:
+                    document = json.loads(segment['Document'])
+                
+                    segments.append({
+                        'Id': segment['Id'],
+                        'Document': document
+                    })
+
+                segments = sorted(segments, key=lambda x: x['Document']['start_time'])
+                trace['Segments'] = segments
+        return grouped_traces
+
     def group_traces_by_workflow_id(self, traces):
         # TODO: add root node to grouped_traces to get full duration
         grouped_traces = {}
@@ -62,7 +78,7 @@ class TraceParser(ABC):
                         for subsegment in document['subsegments']:
                             if 'subsegments' in subsegment:
                                 for subsubsegment in subsegment['subsegments']:
-                                    if subsubsegment['name'] == 'Business Logic':
+                                    if subsubsegment['name'] == 'Identification':
                                         workflow_instance_id = subsubsegment['annotations']['workflow_instance_id']
                                         if workflow_instance_id not in grouped_traces:
                                             grouped_traces[workflow_instance_id] = []
@@ -82,8 +98,7 @@ class TraceParser(ABC):
         grouped_traces = self.remove_duplicate_traces(grouped_traces=grouped_traces)
         # print(json.dumps(grouped_traces, sort_keys=True, indent=4, default=str))
         # order traces by start time
-        for workflow_instance_id, traces in grouped_traces.items():
-            grouped_traces[workflow_instance_id] = sorted(traces, key=lambda t: json.loads(min(t['Segments'], key=lambda x: json.loads(x['Document'])['start_time'])['Document'])['start_time'])
+        grouped_traces = self.order_grouped_traces_by_start_time(grouped_traces)
 
         with open('data.json', 'w') as fp:
             json.dump(grouped_traces, fp,  indent=4, default=str)

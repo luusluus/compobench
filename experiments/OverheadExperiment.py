@@ -32,7 +32,7 @@ class OverheadExperiment:
             if i == 1:
                 cold_start = False
 
-            print(f'Starting experiment: {self._experiment_data.name}. Repetition: {i}')
+            print(f'Starting experiment: {self._experiment_data.name}. Repetition: {i + 1}')
             workflow_instance_ids = []
             start = datetime.utcnow()
             for i in range(self._experiment_data.amount_of_workflows):

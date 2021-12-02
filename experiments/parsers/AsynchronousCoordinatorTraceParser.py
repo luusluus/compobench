@@ -9,16 +9,19 @@ from .TraceParser import TraceParser
 
 # get segment of function a, as workflow starts and ends here.
 
-class SynchronousSequenceTraceParser(TraceParser):
+class AsynchronousCoordinatorTraceParser(TraceParser):
+    def __init__(self, coordinator_function_name):
+        super().__init__()
+        self._coordinator_function_name = coordinator_function_name
     # TODO: get more fine-grained overhead. Startup overhead, and communication overhead
     def get_functions_data(self, traces):
         all_function_data = []
         
         for trace in traces:
             try:
-                for idx, segment in enumerate(trace['Segments']):
+                for segment in trace['Segments']:
                     document = segment['Document']
-                    if document['origin'] == "AWS::Lambda::Function":
+                    if document['origin'] == "AWS::Lambda::Function" and not document['name'] == self._coordinator_function_name:
                         function_data = {
                             'name': document['name']
                         }
@@ -28,17 +31,18 @@ class SynchronousSequenceTraceParser(TraceParser):
                                 start_time = subsegment['start_time']
                                 function_data['start_time'] = start_time
                                 function_data['start_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(start_time)
-                                function_data['trace_id'] = document['trace_id']
+                                
                                 # get second from last trace to get last invoked function data
-                                if idx == len(trace['Segments']) - 1:
-                                        end_time = subsegment['end_time']
-                                else:
-                                    for subsubsegment in subsegment['subsegments']:
-                                        if subsubsegment['name'] == 'Lambda':
-                                            end_time = subsubsegment['start_time']
-                                function_data['end_time'] = end_time
-                                function_data['end_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(end_time)
-                                function_data['execution_time'] = end_time - start_time
+
+                                for subsubsegment in sorted(subsegment['subsegments'], key=lambda x: x['start_time']):
+                                    name = subsubsegment['name']
+                                    if name == 'Lambda' or name == 'S3' or name == 'DynamoDB':
+                                        end_time = subsubsegment['start_time']
+                                        function_data['end_time'] = end_time
+                                        function_data['end_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(end_time)
+                                        function_data['execution_time'] = end_time - start_time
+
+                            function_data['trace_id'] = document['trace_id']
 
                         all_function_data.append(function_data)
             except KeyError as e:

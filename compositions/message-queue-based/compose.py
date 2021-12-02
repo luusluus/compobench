@@ -14,7 +14,7 @@ def compose(event, business_logic_function):
     sns = event['Records'][0]['Sns']
     message = json.loads(sns['Message'])
 
-    subsegment = xray_recorder.begin_subsegment('Business Logic')
+    subsegment = xray_recorder.begin_subsegment('Identification')
     result = business_logic_function(message['result'])
     subsegment.put_annotation('workflow_instance_id', message['workflow_instance_id'])
     xray_recorder.end_subsegment()

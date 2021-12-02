@@ -1,26 +1,14 @@
+import json
+
 from .TraceParser import TraceParser
-# makespan 
 
-# T_makespan =  t_end - t_start
-
-# overhead
-
-# T_overhead = T_makespan - sum(T_end_invocation_i - T_start_invocation_i) 
-
-# get segment of function a, as workflow starts and ends here.
-
-class CoordinatorTraceParser(TraceParser):
-    def __init__(self, coordinator_function_name):
-        super().__init__()
-        self._coordinator_function_name = coordinator_function_name
-
-    # TODO: get more fine-grained overhead. Startup overhead, and communication overhead
+class CompiledTraceParser(TraceParser):
     def get_functions_data(self, traces):
         all_function_data = []
         for trace in traces:
             for segment in trace['Segments']:
                 document = segment['Document']
-                if document['origin'] == "AWS::Lambda::Function" and not document['name'] == self._coordinator_function_name:
+                if document['origin'] == "AWS::Lambda::Function":
                     function_data = {
                         'name': document['name']
                     }

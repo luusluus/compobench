@@ -7,7 +7,7 @@ from s3 import S3BucketHelper
 
 def compose(event, function_name, business_logic_function):
     workflow_instance_id = event['workflow_instance_id']
-    subsegment = xray_recorder.begin_subsegment('Business Logic')
+    subsegment = xray_recorder.begin_subsegment('Identification')
     result = business_logic_function(event['result'])
     subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
     xray_recorder.end_subsegment()

@@ -9,14 +9,14 @@ from .TraceParser import TraceParser
 
 # get segment of function a, as workflow starts and ends here.
 
-class SynchronousSequenceTraceParser(TraceParser):
+class AsynchronousSequenceTraceParser(TraceParser):
     # TODO: get more fine-grained overhead. Startup overhead, and communication overhead
     def get_functions_data(self, traces):
         all_function_data = []
         
         for trace in traces:
             try:
-                for idx, segment in enumerate(trace['Segments']):
+                for segment in trace['Segments']:
                     document = segment['Document']
                     if document['origin'] == "AWS::Lambda::Function":
                         function_data = {
@@ -28,17 +28,20 @@ class SynchronousSequenceTraceParser(TraceParser):
                                 start_time = subsegment['start_time']
                                 function_data['start_time'] = start_time
                                 function_data['start_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(start_time)
-                                function_data['trace_id'] = document['trace_id']
+                                
                                 # get second from last trace to get last invoked function data
-                                if idx == len(trace['Segments']) - 1:
-                                        end_time = subsegment['end_time']
-                                else:
-                                    for subsubsegment in subsegment['subsegments']:
-                                        if subsubsegment['name'] == 'Lambda':
-                                            end_time = subsubsegment['start_time']
+                                for subsubsegment in sorted(subsegment['subsegments'], key=lambda x: x['start_time']):
+                                    service_name = subsubsegment['name'] 
+                                    if service_name == 'Lambda' or service_name == 'S3' or service_name == 'SNS':
+                                        end_time = subsubsegment['start_time']
+                                        break
+                                        
                                 function_data['end_time'] = end_time
                                 function_data['end_time_utc'] = self.convert_unix_timestamp_to_datetime_utc(end_time)
                                 function_data['execution_time'] = end_time - start_time
+
+                                function_data['trace_id'] = document['trace_id']
+
 
                         all_function_data.append(function_data)
             except KeyError as e:
