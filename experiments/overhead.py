@@ -9,8 +9,8 @@ from parsers import CoordinatorTraceParser, AsynchronousCoordinatorTraceParser, 
 from executors import FunctionWorkflowExecutor, MessageQueueBasedWorkflowExecutor, StorageBasedWorkflowExecutor, WorkflowEngineBasedWorkflowExecutor, ClientsideWorkflowExecutor
 
 all_experiment_data = []
-ROUNDS = 1
-AMOUNT_WORKFLOWS_PER_ROUND = 20
+ROUNDS = 5
+AMOUNT_WORKFLOWS_PER_ROUND = 50
 # synchronous function sequence
 sync_func_seq_experiment_data = ExperimentData(
     name='sequence',
@@ -125,17 +125,17 @@ client_side_based_experiment=ExperimentData(
 
 
 # comment out experiments
-# all_experiment_data.append(sync_func_seq_experiment_data)
-# all_experiment_data.append(coordinator_experiment_data)
-# all_experiment_data.append(compiled_experiment_data)
-# all_experiment_data.append(async_sequence_experiment_data)
-# all_experiment_data.append(routing_slip_experiment_data)
-# all_experiment_data.append(async_coordinator_experiment_data)
-# all_experiment_data.append(event_sourcing_based_experiment_data)
-# all_experiment_data.append(message_queue_based_experiment_data)
-# all_experiment_data.append(storage_based_experiment_data)
-# all_experiment_data.append(workflow_engine_based_experiment)
-# all_experiment_data.append(client_side_based_experiment)
+all_experiment_data.append(sync_func_seq_experiment_data)
+all_experiment_data.append(coordinator_experiment_data)
+all_experiment_data.append(compiled_experiment_data)
+all_experiment_data.append(async_sequence_experiment_data)
+all_experiment_data.append(routing_slip_experiment_data)
+all_experiment_data.append(async_coordinator_experiment_data)
+all_experiment_data.append(event_sourcing_based_experiment_data)
+all_experiment_data.append(message_queue_based_experiment_data)
+all_experiment_data.append(storage_based_experiment_data)
+all_experiment_data.append(workflow_engine_based_experiment)
+all_experiment_data.append(client_side_based_experiment)
 
 # all_experiment_data.append(blackboard_based_experiment_data)
 
@@ -154,4 +154,5 @@ for i in range(ROUNDS):
         
     # wait an hour before next experiment
     if ROUNDS > 1:
-        time.sleep(60 * 60)
+        print('sleeping 15 minutes')
+        time.sleep(60 * 15)

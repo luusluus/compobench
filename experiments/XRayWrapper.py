@@ -10,11 +10,11 @@ class NoTracesFoundException(Exception):
 class XRayWrapper:
     def __init__(self):
         self.xray_client = boto3.client('xray')
-        self.WAIT_TIME_SEC = 10
+        self.WAIT_TIME_SEC = 30
 
     def get_trace_summaries(self, start, end):
         retries = 1
-        while retries <= 5:
+        while retries <= 10:
             try:
                 response = self.xray_client.get_trace_summaries(
                         StartTime=start,
