@@ -18,13 +18,16 @@ class XRayWrapper:
             try:
                 response = self.xray_client.get_trace_summaries(
                         StartTime=start,
-                        EndTime=end
+                        EndTime=end,
+                        TimeRangeType='Event',
+                        Sampling=False
                 )
                 if len(response["TraceSummaries"]) == 0:
-                    raise NoTracesFoundException
+                    raise NoTracesFoundException("No traces found")
                 
                 return response["TraceSummaries"]
-            except Exception:
+            except Exception as e:
+                print(e)
                 wait = retries * self.WAIT_TIME_SEC
                 print('Waiting {} secs and retry fetch trace attempt: {}'.format(wait, retries))
                 time.sleep(wait)

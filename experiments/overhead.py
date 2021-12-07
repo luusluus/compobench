@@ -10,7 +10,7 @@ from executors import FunctionWorkflowExecutor, MessageQueueBasedWorkflowExecuto
 
 all_experiment_data = []
 ROUNDS = 5
-AMOUNT_WORKFLOWS_PER_ROUND = 50
+AMOUNT_WORKFLOWS_PER_ROUND = 30
 # synchronous function sequence
 sync_func_seq_experiment_data = ExperimentData(
     name='sequence',
@@ -134,8 +134,8 @@ all_experiment_data.append(async_coordinator_experiment_data)
 all_experiment_data.append(event_sourcing_based_experiment_data)
 all_experiment_data.append(message_queue_based_experiment_data)
 all_experiment_data.append(storage_based_experiment_data)
-all_experiment_data.append(workflow_engine_based_experiment)
-all_experiment_data.append(client_side_based_experiment)
+# all_experiment_data.append(workflow_engine_based_experiment)
+# all_experiment_data.append(client_side_based_experiment)
 
 # all_experiment_data.append(blackboard_based_experiment_data)
 
