@@ -114,3 +114,6 @@ result.json
 # csv files
 
 *.csv
+
+# nodejs
+node_modules/
