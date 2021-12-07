@@ -134,8 +134,8 @@ all_experiment_data.append(async_coordinator_experiment_data)
 all_experiment_data.append(event_sourcing_based_experiment_data)
 all_experiment_data.append(message_queue_based_experiment_data)
 all_experiment_data.append(storage_based_experiment_data)
-# all_experiment_data.append(workflow_engine_based_experiment)
-# all_experiment_data.append(client_side_based_experiment)
+all_experiment_data.append(workflow_engine_based_experiment)
+all_experiment_data.append(client_side_based_experiment)
 
 # all_experiment_data.append(blackboard_based_experiment_data)
 
