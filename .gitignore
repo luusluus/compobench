@@ -117,3 +117,6 @@ result.json
 
 # nodejs
 node_modules/
+
+# test files
+test.py
