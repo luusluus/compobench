@@ -33,7 +33,7 @@ class ClientsideWorkflowThread(Thread):
 
             result += response
 
-        print(result)
+        # print(result)
         xray_recorder.end_segment()
 
 class ClientsideWorkflowExecutor(WorkflowExecutor):
