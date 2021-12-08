@@ -32,17 +32,14 @@ python3 overhead.py
 ```
 
 ## Throughput Performance
-
-
-Install npm and node
+Install hey
 ```
-sudo apt update
-curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
-sudo apt -y install nodejs
+sudo apt-get update
+sudo apt-get install hey
 ```
 
-Install Artillery
+Run throughput experiment
 ```
-npm install -g artillery
-npm install artillery-plugin-aws-sigv4
+cd experiments/throughput
+python3 throughput.py
 ```
