@@ -1,6 +1,6 @@
 from executors.WorkflowExecutor import WorkflowExecutor
 from parsers.TraceParser import TraceParser
-class ExperimentData:
+class OverheadExperimentData:
     def __init__(
         self,
         name: str,

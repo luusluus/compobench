@@ -4,7 +4,7 @@ import uuid
 from pathlib import Path
 
 from OverheadExperiment import OverheadExperiment
-from ExperimentData import ExperimentData
+from ExperimentData import OverheadExperimentData
 from parsers import CoordinatorTraceParser, AsynchronousCoordinatorTraceParser, SynchronousSequenceTraceParser, ClientsideSchedulingTraceParser, CompiledTraceParser, AsynchronousSequenceTraceParser
 from executors import FunctionWorkflowExecutor, MessageQueueBasedWorkflowExecutor, StorageBasedWorkflowExecutor, WorkflowEngineBasedWorkflowExecutor, ClientsideWorkflowExecutor
 
@@ -12,7 +12,7 @@ all_experiment_data = []
 ROUNDS = 5
 AMOUNT_WORKFLOWS_PER_ROUND = 30
 # synchronous function sequence
-sync_func_seq_experiment_data = ExperimentData(
+sync_func_seq_experiment_data = OverheadExperimentData(
     name='sequence',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,
@@ -21,7 +21,7 @@ sync_func_seq_experiment_data = ExperimentData(
 )
 
 # synchronous coordinator
-coordinator_experiment_data=ExperimentData(
+coordinator_experiment_data=OverheadExperimentData(
     name='coordinator',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,
@@ -32,7 +32,7 @@ coordinator_experiment_data=ExperimentData(
 )
 
 # compiled
-compiled_experiment_data = ExperimentData(
+compiled_experiment_data = OverheadExperimentData(
     name='compiled',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,
@@ -41,7 +41,7 @@ compiled_experiment_data = ExperimentData(
 )
 
 # async sequence
-async_sequence_experiment_data=ExperimentData(
+async_sequence_experiment_data=OverheadExperimentData(
     name='async_sequence',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,
@@ -50,7 +50,7 @@ async_sequence_experiment_data=ExperimentData(
 )
 
 # routing slip
-routing_slip_experiment_data=ExperimentData(
+routing_slip_experiment_data=OverheadExperimentData(
     name='routing_slip',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,
@@ -59,7 +59,7 @@ routing_slip_experiment_data=ExperimentData(
 )
 
 # async coordinator
-async_coordinator_experiment_data = ExperimentData(
+async_coordinator_experiment_data = OverheadExperimentData(
     name='async_coordinator',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,
@@ -69,7 +69,7 @@ async_coordinator_experiment_data = ExperimentData(
 
 # blackboard based
 # FIXME: missing traces, require 4, only get 2 or 3 sometimes
-blackboard_based_experiment_data=ExperimentData(
+blackboard_based_experiment_data=OverheadExperimentData(
     name='blackboard',
     amount_of_workflows=1,
     repetitions=2,
@@ -78,7 +78,7 @@ blackboard_based_experiment_data=ExperimentData(
 )
 
 # event sourcing
-event_sourcing_based_experiment_data=ExperimentData(
+event_sourcing_based_experiment_data=OverheadExperimentData(
     name='event_sourcing',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,
@@ -87,7 +87,7 @@ event_sourcing_based_experiment_data=ExperimentData(
 )
 
 # message queue based
-message_queue_based_experiment_data=ExperimentData(
+message_queue_based_experiment_data=OverheadExperimentData(
     name='message_queue',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,
@@ -96,7 +96,7 @@ message_queue_based_experiment_data=ExperimentData(
 )
 
 # storage based
-storage_based_experiment_data=ExperimentData(
+storage_based_experiment_data=OverheadExperimentData(
     name='storage',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,
@@ -105,7 +105,7 @@ storage_based_experiment_data=ExperimentData(
 )
 
 # workflow engine based
-workflow_engine_based_experiment=ExperimentData(
+workflow_engine_based_experiment=OverheadExperimentData(
     name='workflow_engine',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,
@@ -115,7 +115,7 @@ workflow_engine_based_experiment=ExperimentData(
 
 # client side scheduling. Requires xray daemon locally or on ec2
 # ./xray -o -n eu-central-1
-client_side_based_experiment=ExperimentData(
+client_side_based_experiment=OverheadExperimentData(
     name='client_side',
     amount_of_workflows=AMOUNT_WORKFLOWS_PER_ROUND,
     repetitions=2,

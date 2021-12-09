@@ -8,11 +8,11 @@ import pandas as pd
 from boto3 import client as boto3_client
 
 from XRayWrapper import XRayWrapper
-from ExperimentData import ExperimentData
+from ExperimentData import OverheadExperimentData
 from executors.FunctionWorkflowExecutor import FunctionWorkflowExecutor
 
 class OverheadExperiment:
-    def __init__(self, experiment_data: ExperimentData):
+    def __init__(self, experiment_data: OverheadExperimentData):
         aws_region = 'eu-central-1'
         self._lambda_client = boto3_client('lambda', region_name=aws_region)
         self._experiment_data = experiment_data

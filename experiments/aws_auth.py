@@ -68,7 +68,7 @@ class AWSRequestsAuth(requests.auth.AuthBase):
 
 
 
-    def get_aws_request_headers(self, url, payload, method):
+    def get_aws_request_headers(self, url, payload, method, invocation_type='RequestResponse'):
         """
         Returns a dictionary containing the necessary headers for Amazon's
         signature version 4 signing process. An example return value might
@@ -98,6 +98,9 @@ class AWSRequestsAuth(requests.auth.AuthBase):
         if self.aws_token:
             canonical_headers += 'x-amz-security-token:' + self.aws_token + '\n'
 
+        if invocation_type == 'Event':
+            canonical_headers += 'x-amz-invocation-type:' + 'event' + '\n'
+
         # Create the list of signed headers. This lists the headers
         # in the canonical_headers list, delimited with ";" and in alpha order.
         # Note: The request can include any headers; canonical_headers and
@@ -106,6 +109,9 @@ class AWSRequestsAuth(requests.auth.AuthBase):
         signed_headers = 'host;x-amz-date'
         if self.aws_token:
             signed_headers += ';x-amz-security-token'
+
+        if invocation_type == 'Event':
+            signed_headers += ';x-amz-invocation-type'
 
         # Create payload hash (hash of the request body content). For GET
         # requests, the payload is an empty string ('').
@@ -158,10 +164,13 @@ class AWSRequestsAuth(requests.auth.AuthBase):
         headers = {
             'Authorization': authorization_header,
             'x-amz-date': amzdate,
-            'x-amz-content-sha256': payload_hash
+            'x-amz-content-sha256': payload_hash,
         }
         if self.aws_token:
             headers['X-Amz-Security-Token'] = self.aws_token
+
+        if invocation_type == 'Event':
+            headers['X-Amz-Invocation-Type'] = invocation_type
         return headers
 
     @classmethod
