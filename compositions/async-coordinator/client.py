@@ -14,9 +14,8 @@ result_key = f'result_{workflow_id}.json'
 client = boto3_client('lambda', region_name=aws_region)
 
 payload = {
-    'workflow': ['AsyncCoordinatorFunctionA', 'AsyncCoordinatorFunctionB', 'AsyncCoordinatorFunctionC'],
-    'result': '',
-    'workflow_id': workflow_id
+    'workflow': ['AsyncCoordinatorFunctionA', 'AsyncCoordinatorFunctionB', 'AsyncCoordinatorFunctionC', 'AsyncCoordinatorFunctionD'],
+    'sleep': 2
 }
 
 # call the first function a to start the workflow
@@ -32,7 +31,7 @@ if response['StatusCode'] == 202:
     s3_bucket_helper.poll_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 
     response = s3_bucket_helper.get_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
-    print(response['result'])
+    print(response)
 
     s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 

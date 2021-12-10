@@ -48,6 +48,15 @@ Resources:
       Handler: function_c.lambda_handler
       FunctionName: AsyncSequenceFunctionC
       Policies:
+        - LambdaInvokePolicy:
+            FunctionName: AsyncSequenceFunctionD
+
+  AsyncSequenceFunctionD:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_d.lambda_handler
+      FunctionName: AsyncSequenceFunctionD
+      Policies:
         - S3WritePolicy:
             BucketName: !Ref S3BucketName
 
