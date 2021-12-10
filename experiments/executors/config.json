@@ -4,7 +4,17 @@
             "result": ""
         },
         "lambda_invocation_type": "SYNC",
-        "first_function_name": "SequenceFunctionA"
+        "first_function_name": "SequenceFunctionA",
+        "rps":[
+                {
+                    "rps": 50, 
+                    "concurrent_workers": 25
+                },
+                {
+                    "rps": 100, 
+                    "concurrent_workers": 50
+                }
+        ]
     },
     "coordinator": {
         "payload": {

@@ -20,7 +20,11 @@ class XRayWrapper:
                         StartTime=start,
                         EndTime=end,
                         TimeRangeType='Event',
-                        Sampling=False
+                        Sampling=True,
+                        SamplingStrategy={
+                            'Name': 'FixedRate',
+                            'Value': 1
+                        }
                 )
                 if len(response["TraceSummaries"]) == 0:
                     raise NoTracesFoundException("No traces found")

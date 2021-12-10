@@ -9,3 +9,9 @@ setup(
     version='1.0',
     install_requires=required
 )
+
+setup(
+    name='experiments',
+    version='1.0',
+    install_requires=required
+)

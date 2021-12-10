@@ -1,61 +1,28 @@
-import subprocess
-from aws_auth import AWSRequestsAuth
-import json
-import boto3
-import uuid
+import time
+from pathlib import Path
 
+from ThroughputExperiment import ThroughputExperiment
+from experiments.ExperimentData import ThroughputExperimentData
+from experiments.parsers import SynchronousSequenceTraceParser
+from experiments.throughput.executors import FunctionWorkflowExecutor
 
-session = boto3.Session()
-credentials = session.get_credentials()
-access_key = credentials.access_key
-secret_key = credentials.secret_key
+all_experiment_data = []
 
-function_name = 'AsyncSequenceFunctionA'
-payload = {
-    'result': '',
-    'workflow_instance_id': str(uuid.uuid4())
-}
+sequence_experiment_data = ThroughputExperimentData(
+        name='sequence',
+        parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
+        workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor
+    )
 
-auth = AWSRequestsAuth(aws_access_key=access_key,
-                       aws_secret_access_key=secret_key,
-                       aws_host='lambda.eu-central-1.amazonaws.com',
-                       aws_region='eu-central-1',
-                       aws_service='lambda')
+all_experiment_data.append(sequence_experiment_data)
 
-url = f'https://lambda.eu-central-1.amazonaws.com/2015-03-31/functions/{function_name}/invocations'
-headers = auth.get_aws_request_headers(
-    url=url, 
-    payload=json.dumps(payload),
-    method='POST')
+for experiment_data in all_experiment_data:
+    experiment = ThroughputExperiment(experiment_data=experiment_data)
+    experiment.start()
+    results_df = experiment.get_results()
+    print(results_df)
+    name = experiment.get_experiment_name()
+    results_df['composition'] = name
 
-# print(headers)
-
-hey_command = [
-    'hey',
-    '-c',
-    '10',
-    '-z',
-    '10s',
-    '-q',
-    '1',
-    '-m',
-    'POST',
-    # '-o',
-    # 'csv',
-    '-d',
-    json.dumps(payload)
-]
-for key, value in headers.items():
-    hey_command.append('-H')
-    hey_command.append(f'{key}: {value}')
-
-hey_command.append(url)
-# print(' '.join(hey_command))
-process = subprocess.Popen(hey_command, stdout=subprocess.PIPE)
-
-output, error = process.communicate()
-
-print(output.decode('utf-8'))
-f = open('./out.csv', 'wb')
-f.write(output)
-f.close()
+    Path(f'results/{name}').mkdir(parents=True, exist_ok=True)
+    results_df.to_csv(f'results/{name}/{int(time.time())}.csv', index=False)
