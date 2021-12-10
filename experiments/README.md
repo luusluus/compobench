@@ -30,16 +30,3 @@ Run overhead experiment
 cd experiments/overhead
 python3 overhead.py
 ```
-
-## Throughput Performance
-Install hey
-```
-sudo apt-get update
-sudo apt-get install hey
-```
-
-Run throughput experiment
-```
-cd experiments/throughput
-python3 throughput.py
-```
