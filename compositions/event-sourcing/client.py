@@ -12,7 +12,6 @@ lambda_helper = LambdaHelper(aws_region=aws_region)
 # invoke controller once to start workflow
 payload = {
     'input': '',
-    'sleep': 2
 }
 lambda_helper.invoke_lambda_async(
     function_name='EventSourcingOrchestrator', 
