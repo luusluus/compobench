@@ -18,7 +18,6 @@ Resources:
       Policies:
         - LambdaInvokePolicy:
             FunctionName: SequenceFunctionB
-  
   SequenceFunctionB:
     Type: AWS::Serverless::Function
     Properties:
@@ -27,21 +26,11 @@ Resources:
       Policies:
         - LambdaInvokePolicy:
             FunctionName: SequenceFunctionC
-  
   SequenceFunctionC:
     Type: AWS::Serverless::Function
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: SequenceFunctionC
-      Policies:
-        - LambdaInvokePolicy:
-            FunctionName: SequenceFunctionD
-
-  SequenceFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: function_d.lambda_handler
-      FunctionName: SequenceFunctionD
 
   SequenceDepends:
     Type: AWS::Serverless::LayerVersion

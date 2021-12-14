@@ -21,16 +21,16 @@ try:
     s3_bucket_helper.write_json_to_bucket(
         bucket_name=bucket_name, 
         json_object={
-            'workflow': ['function_b', 'function_c', 'function_d'],
-            'sleep': 2
+            'workflow': ['function_b', 'function_c'],
+            'result': ''
         }, 
-        object_key='function_a/result.json')
+        object_key='function_a_result.json')
 
 
     s3_bucket_helper.poll_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 
     response = s3_bucket_helper.get_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
-    print(response)
+    print(response['result'])
 
     s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 

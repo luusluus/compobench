@@ -33,7 +33,6 @@ Resources:
         WorkflowFunctionAArn: !GetAtt WorkflowFunctionA.Arn
         WorkflowFunctionBArn: !GetAtt WorkflowFunctionB.Arn
         WorkflowFunctionCArn: !GetAtt WorkflowFunctionC.Arn
-        WorkflowFunctionDArn: !GetAtt WorkflowFunctionD.Arn
         S3PutObject: !Sub arn:${AWS::Partition}:states:::aws-sdk:s3:putObject
         S3Bucket: !Ref WorkflowCompositionStore
       
@@ -44,8 +43,6 @@ Resources:
             FunctionName: !Ref WorkflowFunctionB
         - LambdaInvokePolicy:
             FunctionName: !Ref WorkflowFunctionC
-        - LambdaInvokePolicy:
-            FunctionName: !Ref WorkflowFunctionD
         - S3WritePolicy:
             BucketName: !Ref S3BucketName
 
@@ -66,10 +63,4 @@ Resources:
     Properties:
       FunctionName: WorkflowFunctionC
       Handler: function_c.lambda_handler
-
-  WorkflowFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: WorkflowFunctionD
-      Handler: function_d.lambda_handler
 

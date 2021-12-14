@@ -1,5 +1,4 @@
 import os
-import uuid
 from compose import compose
 
 from aws_xray_sdk.core import patch_all
@@ -7,5 +6,8 @@ from aws_xray_sdk.core import patch_all
 patch_all()
 
 def lambda_handler(event, context):
-    event['workflow_instance_id'] = str(uuid.uuid4())
-    compose(event=event)
+    compose(event=event, business_logic_function=hello_world)
+
+def hello_world(prev_hello_world: str):
+    function_name = os.path.basename(__file__).split('.')[0]
+    return prev_hello_world + f'Hello world from {function_name}. '

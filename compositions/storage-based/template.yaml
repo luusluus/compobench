@@ -75,28 +75,6 @@ Resources:
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: StorageBasedFunctionC
-      Policies:
-        - S3WritePolicy:
-            BucketName: !Ref S3BucketName
-        - S3ReadPolicy:
-            BucketName: !Ref S3BucketName
-      Events:
-        S3Event:
-          Type: S3
-          Properties:
-            Bucket: !Ref CompositionStore
-            Events: s3:ObjectCreated:Put
-            Filter:
-              S3Key:
-                Rules:
-                - Name: prefix
-                  Value: function_c/
-
-  StorageBasedFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: function_d.lambda_handler
-      FunctionName: StorageBasedFunctionD
       
       Policies:
         - S3WritePolicy:
@@ -113,7 +91,7 @@ Resources:
               S3Key:
                 Rules:
                 - Name: prefix
-                  Value: function_d/
+                  Value: function_c/
 
                   
   StorageBasedDepends:

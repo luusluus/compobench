@@ -1,10 +1,10 @@
 import os
-import time
+
 from aws_xray_sdk.core import xray_recorder
 
 from s3 import S3BucketHelper
 
-def compose(event):
+def compose(event, business_logic_function):
     s3_record = event['Records'][0]['s3']
     bucket_name = s3_record['bucket']['name']
     object_key = s3_record['object']['key']
@@ -13,18 +13,14 @@ def compose(event):
 
     s3_object = s3_bucket_helper.get_object_from_bucket(bucket_name=bucket_name, object_key=object_key)
 
-    if 'workflow_instance_id' in event:
-        workflow_instance_id = event['workflow_instance_id']
-    elif 'workflow_instance_id' in s3_object:
-        workflow_instance_id = s3_object['workflow_instance_id']
-    
+    workflow_instance_id = s3_object['workflow_instance_id']
     subsegment = xray_recorder.begin_subsegment('Identification')
+    result = business_logic_function(s3_object['result'])
     subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
-    time.sleep(s3_object['sleep'])
     xray_recorder.end_subsegment()
 
     result_object = {
-        'sleep': s3_object['sleep'],
+        'result': result,
         'workflow_instance_id': workflow_instance_id
     }
 

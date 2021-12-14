@@ -1,19 +1,18 @@
 import os
-import time
 
 from aws_xray_sdk.core import xray_recorder
 
 from aws_lambda import LambdaHelper
 
-def compose(event, function_name):
+def compose(event, function_name, business_logic_function):
     subsegment = xray_recorder.begin_subsegment('Identification')
-    time.sleep(event['sleep'])
+    result = business_logic_function(event['result'])
     subsegment.put_annotation('workflow_instance_id', event['workflow_instance_id'])
     xray_recorder.end_subsegment()
 
     payload = {
-        'workflow_instance_id': event['workflow_instance_id'],
-        'sleep': event['sleep']
+        'result': business_logic_function(event['result']),
+        'workflow_instance_id': event['workflow_instance_id']
     }
     if function_name == '':
         return payload

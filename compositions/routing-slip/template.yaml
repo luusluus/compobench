@@ -52,17 +52,6 @@ Resources:
       Handler: function_c.lambda_handler
       FunctionName: RoutingSlipFunctionC
       Policies:
-        - LambdaInvokePolicy:
-            FunctionName: RoutingSlipFunctionD
-        - S3WritePolicy:
-            BucketName: !Ref S3BucketName
-
-  RoutingSlipFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: function_d.lambda_handler
-      FunctionName: RoutingSlipFunctionD
-      Policies:
         - S3WritePolicy:
               BucketName: !Ref S3BucketName
 

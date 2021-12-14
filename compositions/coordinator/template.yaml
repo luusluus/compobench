@@ -20,8 +20,6 @@ Resources:
             FunctionName: CoordinatorFunctionB
         - LambdaInvokePolicy:
             FunctionName: CoordinatorFunctionC
-        - LambdaInvokePolicy:
-            FunctionName: CoordinatorFunctionD
       Layers:
         - !Ref CoordinatorDepends
   CoordinatorFunctionA:
@@ -39,11 +37,6 @@ Resources:
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: CoordinatorFunctionC
-  CoordinatorFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: function_d.lambda_handler
-      FunctionName: CoordinatorFunctionD
 
   CoordinatorDepends:
     Type: AWS::Serverless::LayerVersion

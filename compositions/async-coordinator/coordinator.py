@@ -7,11 +7,12 @@ from s3 import S3BucketHelper
 
 
 class Coordinator:
-    def __init__(self, workflow_instance_id):
+    def __init__(self, workflow_instance_id, workflow_data={}):
         self._lambda_helper = LambdaHelper(aws_region=os.environ['AWS_REGION'])
         self._s3_bucket_helper = S3BucketHelper(aws_region=os.environ['AWS_REGION'])
         self._bucket_name = os.environ['BUCKET_NAME']
         self._workflow_instance_id = workflow_instance_id
+
 
     def __schedule_next_function(self, function_name, workflow_state):
         self._lambda_helper.invoke_lambda_async(
@@ -24,7 +25,7 @@ class Coordinator:
 
             self._s3_bucket_helper.write_json_to_bucket(
                 bucket_name=self._bucket_name,
-                json_object=event, 
+                json_object={'result': event.get('result')}, 
                 object_key = f'result_{self._workflow_instance_id}.json')
 
             return True
@@ -46,7 +47,7 @@ class Coordinator:
             'workflow_instance_id': workflow_instance_id,
             'workflow': event['workflow'],
             'prev_invoked_function': function_name,
-            'sleep': event['sleep']
+            'result': event.get('result')
         }
         self.__schedule_next_function(
             workflow_state=new_workflow_state,

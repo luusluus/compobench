@@ -49,8 +49,6 @@ Resources:
             FunctionName: !Ref EventSourcingFunctionB
         - LambdaInvokePolicy:
             FunctionName: !Ref EventSourcingFunctionC
-        - LambdaInvokePolicy:
-            FunctionName: !Ref EventSourcingFunctionD
         - DynamoDBWritePolicy:
             TableName: !Ref EventHistoryTable
         - DynamoDBReadPolicy:
@@ -98,16 +96,6 @@ Resources:
       Tracing: Active
       FunctionName: EventSourcingFunctionC
       Handler: function_c.lambda_handler
-      Policies:
-        - DynamoDBWritePolicy:
-            TableName: !Ref EventHistoryTable
-  
-  EventSourcingFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Tracing: Active
-      FunctionName: EventSourcingFunctionD
-      Handler: function_d.lambda_handler
       Policies:
         - DynamoDBWritePolicy:
             TableName: !Ref EventHistoryTable

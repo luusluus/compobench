@@ -8,7 +8,7 @@ client = boto3_client('lambda', region_name=aws_region)
 
 # call the first function a to start the workflow
 event = {
-    'sleep': 2
+    'result': ''
 }
 response = client.invoke(
     FunctionName='SequenceFunctionA',
@@ -18,7 +18,7 @@ response = client.invoke(
 
 if response['StatusCode'] == 200:
     result = json.load(response['Payload'])
-    print(result)
+    print(result['result'])
 
 
 

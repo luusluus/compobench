@@ -7,8 +7,7 @@ client = boto3_client('lambda', region_name=aws_region)
 # call the first function a to start the workflow
 response = client.invoke(
     FunctionName='CompiledFunction',
-    InvocationType='RequestResponse',
-    Payload=json.dumps({'sleep': 2})
+    InvocationType='RequestResponse'
 )
 
 if response['StatusCode'] == 200:
