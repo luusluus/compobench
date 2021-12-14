@@ -30,10 +30,10 @@ try:
             },
             'last_function':{
                 'DataType': 'String',
-                'StringValue': 'MessageQueueFunctionC'
+                'StringValue': 'MessageQueueFunctionD'
             }
         },
-        Message=json.dumps({'result': ''})
+        Message=json.dumps({'sleep': 2})
     )
 
     s3_bucket_helper = S3BucketHelper(aws_region=aws_region)
@@ -41,7 +41,7 @@ try:
     s3_bucket_helper.poll_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 
     response = s3_bucket_helper.get_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
-    print(response['result'])
+    print(response)
 
     s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 

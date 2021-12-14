@@ -1,6 +1,6 @@
 from uuid import uuid4
 import json
-from time import sleep
+import time
 
 from boto3 import client as boto3_client
 
@@ -17,9 +17,13 @@ state_machine_arn = state_machine_resources[0]["PhysicalResourceId"]
 
 step_functions_client = boto3_client('stepfunctions', region_name=aws_region)
 
-input = ''
+payload = {
+    'sleep': 2
+}
 response = step_functions_client.start_execution(
-            stateMachineArn=state_machine_arn, name=f"integ-test-{uuid4()}", input=json.dumps(input)
+            stateMachineArn=state_machine_arn, 
+            name=f"integ-test-{uuid4()}", 
+            input=json.dumps(payload)
         )
 execution_arn = response["executionArn"]
 
@@ -30,7 +34,7 @@ while True:
         print(json.loads(response['output']))
         break
     elif status == "RUNNING":
-        sleep(3)
+        time.sleep(3)
     else:
         print(f"Execution {execution_arn} failed with status {status}")
         break

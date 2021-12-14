@@ -87,6 +87,23 @@ Resources:
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: MessageQueueFunctionC
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !Ref MessageQueueTopic
+      Events:
+        SNSEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref MessageQueueTopic
+            FilterPolicy:
+              caller:
+                - MessageQueueFunctionB
+                
+  MessageQueueFunctionD:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_d.lambda_handler
+      FunctionName: MessageQueueFunctionD
       Environment:
         Variables:
           BUCKET_NAME: !Ref S3BucketName
@@ -100,7 +117,7 @@ Resources:
             Topic: !Ref MessageQueueTopic
             FilterPolicy:
               caller:
-                - MessageQueueFunctionB
+                - MessageQueueFunctionC
 
   MessageQueueDepends:
     Type: AWS::Serverless::LayerVersion

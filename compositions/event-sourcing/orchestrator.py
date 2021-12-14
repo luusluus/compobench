@@ -14,13 +14,13 @@ class Orchestrator:
 
         self._workflow_instance_id = workflow_data['instance_id']
         self._workflow = workflow_data['workflow']
+        self._sleep_time = workflow_data['sleep']
         self._state = {}
 
         if is_start:
             self._eventhelper.start_execution(name=workflow_data['name'])
             self._eventhelper.write_events_batch()
         self._eventhelper.start_orchestrator()
-        
 
     def determine_next_step(self):
         function_states = self._state['function_states']
@@ -54,6 +54,7 @@ class Orchestrator:
             payload={
                 'workflow_instance_id': self._workflow_instance_id,
                 'input': function_input,
+                'sleep': self._sleep_time
             })
 
     def replay_events(self):

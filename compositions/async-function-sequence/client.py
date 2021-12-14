@@ -14,7 +14,7 @@ response = client.invoke(
     FunctionName='AsyncSequenceFunctionA',
     InvocationType='Event',
     Payload=json.dumps({
-        'result': ''
+        'sleep': 2
     })
 )
 
@@ -24,7 +24,7 @@ if response['StatusCode'] == 202:
     s3_bucket_helper.poll_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 
     response = s3_bucket_helper.get_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
-    print(response['result'])
+    print(response)
 
     s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 else:

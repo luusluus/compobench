@@ -28,6 +28,7 @@ class Controller:
     def determine_next_step(self, event):
         # start a new workflow
         if 'workflow_instance_id' in event:
+            print(event['workflow_instance_id'])
             # parse first step
             first_step = self._workflow_data[0]
             workflow_instance_id = event['workflow_instance_id']

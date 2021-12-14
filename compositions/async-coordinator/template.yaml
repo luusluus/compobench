@@ -33,6 +33,8 @@ Resources:
             FunctionName: AsyncCoordinatorFunctionB
         - LambdaInvokePolicy:
             FunctionName: AsyncCoordinatorFunctionC
+        - LambdaInvokePolicy:
+            FunctionName: AsyncCoordinatorFunctionD
         - S3WritePolicy:
             BucketName: !Ref S3BucketName
         - S3ReadPolicy:
@@ -63,6 +65,15 @@ Resources:
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: AsyncCoordinatorFunctionC
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: AsyncCoordinatorFunctionCoordinator
+
+  AsyncCoordinatorFunctionD:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function_d.lambda_handler
+      FunctionName: AsyncCoordinatorFunctionD
       Policies:
         - LambdaInvokePolicy:
             FunctionName: AsyncCoordinatorFunctionCoordinator
