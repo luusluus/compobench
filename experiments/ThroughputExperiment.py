@@ -10,8 +10,8 @@ import boto3
 import pandas as pd
 
 from aws_auth import AWSRequestsAuth
-from experiments.XRayWrapper import XRayWrapper
-from experiments.ExperimentData import ThroughputExperimentData
+from XRayWrapper import XRayWrapper
+from ExperimentData import ThroughputExperimentData
 
 class ThroughputExperiment:
     def __init__(self, experiment_data: ThroughputExperimentData):

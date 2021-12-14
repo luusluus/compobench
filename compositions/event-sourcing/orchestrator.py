@@ -18,6 +18,7 @@ class Orchestrator:
 
         if is_start:
             self._eventhelper.start_execution(name=workflow_data['name'])
+            self._eventhelper.write_events_batch()
         self._eventhelper.start_orchestrator()
         
 
