@@ -15,6 +15,6 @@ sudo apt-get install hey
 
 Run throughput experiment
 ```
-cd experiments/throughput
+cd experiments
 python3 throughput.py
 ```
