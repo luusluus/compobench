@@ -119,4 +119,4 @@ result.json
 node_modules/
 
 # test files
-test.py
+test*.py
