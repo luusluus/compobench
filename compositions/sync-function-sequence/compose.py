@@ -1,5 +1,4 @@
 import os
-import time
 
 from aws_xray_sdk.core import xray_recorder
 
@@ -7,13 +6,11 @@ from aws_lambda import LambdaHelper
 
 def compose(event, function_name):
     subsegment = xray_recorder.begin_subsegment('Identification')
-    time.sleep(event['sleep'])
     subsegment.put_annotation('workflow_instance_id', event['workflow_instance_id'])
     xray_recorder.end_subsegment()
 
     payload = {
         'workflow_instance_id': event['workflow_instance_id'],
-        'sleep': event['sleep']
     }
     if function_name == '':
         return payload

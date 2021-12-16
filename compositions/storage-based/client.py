@@ -22,7 +22,7 @@ try:
         bucket_name=bucket_name, 
         json_object={
             'workflow': ['function_b', 'function_c', 'function_d'],
-            'sleep': 2
+            'sleep': 8
         }, 
         object_key='function_a/result.json')
 

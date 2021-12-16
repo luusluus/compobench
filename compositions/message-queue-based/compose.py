@@ -1,6 +1,5 @@
 import os
 import json
-import time
 
 from aws_xray_sdk.core import xray_recorder
 
@@ -22,7 +21,6 @@ def compose(event):
 
 
     subsegment = xray_recorder.begin_subsegment('Identification')
-    time.sleep(message['sleep'])
     subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
     xray_recorder.end_subsegment()
     
@@ -31,7 +29,6 @@ def compose(event):
 
 
     result_object = {
-        'sleep': message['sleep'],
         'workflow_instance_id': workflow_instance_id
     }
     

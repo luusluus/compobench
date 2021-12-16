@@ -1,5 +1,6 @@
 import os
 import uuid
+import time
 from aws_lambda import LambdaHelper
 
 from aws_xray_sdk.core import patch_all
@@ -10,6 +11,7 @@ patch_all()
 def lambda_handler(event, context):
     if 'workflow_instance_id' not in event:
         event['workflow_instance_id'] = str(uuid.uuid4())
+        time.sleep(event['sleep'])
 
     subsegment = xray_recorder.begin_subsegment('Identification')
     workflow_instance_id = event['workflow_instance_id']

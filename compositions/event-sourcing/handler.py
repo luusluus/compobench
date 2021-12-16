@@ -9,11 +9,11 @@ import event_definitions
 from orchestrator import Orchestrator
 workflow_name = 'SimpleSequence'
 workflow = ['EventSourcingFunctionA', 'EventSourcingFunctionB', 'EventSourcingFunctionC', 'EventSourcingFunctionD']
-sleep_time = 2
 
 def lambda_handler(event, context):
     if 'workflow_instance_id' not in event:
         event['workflow_instance_id'] = str(uuid.uuid4())
+        time.sleep(event['sleep'])
 
     subsegment = xray_recorder.begin_subsegment('Identification')
     subsegment.put_annotation('workflow_instance_id', event['workflow_instance_id'])

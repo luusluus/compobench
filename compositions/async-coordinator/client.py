@@ -15,7 +15,7 @@ client = boto3_client('lambda', region_name=aws_region)
 
 payload = {
     'workflow': ['AsyncCoordinatorFunctionA', 'AsyncCoordinatorFunctionB', 'AsyncCoordinatorFunctionC', 'AsyncCoordinatorFunctionD'],
-    'sleep': 2
+    'sleep': 8
 }
 
 # call the first function a to start the workflow

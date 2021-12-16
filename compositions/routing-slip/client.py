@@ -12,7 +12,7 @@ client = boto3_client('lambda', region_name=aws_region)
 
 payload = {
     'composition': ['RoutingSlipFunctionB', 'RoutingSlipFunctionC', 'RoutingSlipFunctionD'],
-    'sleep': 2
+    'sleep': 8
 }
 
 response = client.invoke(

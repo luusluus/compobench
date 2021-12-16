@@ -18,7 +18,7 @@ state_machine_arn = state_machine_resources[0]["PhysicalResourceId"]
 step_functions_client = boto3_client('stepfunctions', region_name=aws_region)
 
 payload = {
-    'sleep': 2
+    'sleep': 8
 }
 response = step_functions_client.start_execution(
             stateMachineArn=state_machine_arn, 

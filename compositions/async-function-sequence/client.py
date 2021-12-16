@@ -14,7 +14,7 @@ response = client.invoke(
     FunctionName='AsyncSequenceFunctionA',
     InvocationType='Event',
     Payload=json.dumps({
-        'sleep': 2
+        'sleep': 8
     })
 )
 

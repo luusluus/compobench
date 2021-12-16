@@ -1,5 +1,4 @@
 import os
-import time
 from aws_xray_sdk.core import xray_recorder
 
 from s3 import S3BucketHelper
@@ -20,11 +19,9 @@ def compose(event):
     
     subsegment = xray_recorder.begin_subsegment('Identification')
     subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
-    time.sleep(s3_object['sleep'])
     xray_recorder.end_subsegment()
 
     result_object = {
-        'sleep': s3_object['sleep'],
         'workflow_instance_id': workflow_instance_id
     }
 

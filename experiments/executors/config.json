@@ -1,21 +1,21 @@
 {
     "sequence": {
         "payload": {
-            "result": ""
+            "sleep": 8
         },
         "lambda_invocation_type": "SYNC",
         "first_function_name": "SequenceFunctionA",
         "rps":[
                 {
-                    "rps": 5, 
-                    "concurrent_workers": 5
+                    "rps": 2.5, 
+                    "concurrent_workers": 25
                 }
         ]
     },
     "coordinator": {
         "payload": {
             "workflow": ["CoordinatorFunctionA", "CoordinatorFunctionB", "CoordinatorFunctionC"],
-            "input": ""
+            "sleep": 2
         },
         "lambda_invocation_type": "SYNC",
         "first_function_name": "CoordinatorFunctionCoordinator"
@@ -27,7 +27,7 @@
     },
     "async_sequence": {
         "payload": {
-            "result": ""
+            "sleep": 2
         },
         "lambda_invocation_type": "ASYNC",
         "first_function_name": "AsyncSequenceFunctionA"
@@ -35,7 +35,7 @@
     "routing_slip": {
         "payload": {
             "composition": ["RoutingSlipFunctionB", "RoutingSlipFunctionC"],
-            "result": ""
+            "sleep": 2
         },
         "lambda_invocation_type": "ASYNC",
         "first_function_name": "RoutingSlipFunctionA"
@@ -43,28 +43,29 @@
     "async_coordinator": {
         "payload": {
             "workflow": ["AsyncCoordinatorFunctionA", "AsyncCoordinatorFunctionB", "AsyncCoordinatorFunctionC"],
-            "result": ""
+            "sleep": 2
         },
         "lambda_invocation_type": "ASYNC",
         "first_function_name": "AsyncCoordinatorFunctionCoordinator"
     },
     "blackboard": {
         "payload": {
-            "result": ""
+            "sleep": 2
         },
         "lambda_invocation_type": "ASYNC",
         "first_function_name": "BlackboardFunctionController"
     },
     "event_sourcing": {
         "payload": {
-            "result": ""
+            "result": "",
+            "sleep": 2
         },
         "lambda_invocation_type": "ASYNC",
         "first_function_name": "EventSourcingOrchestrator"
     },
     "message_queue": {
         "payload": {
-            "result": ""
+            "sleep": 2
         },
         "message_attributes": {
             "caller": {
@@ -80,14 +81,14 @@
     "storage": {
         "payload": {
             "workflow": ["function_b", "function_c"],
-            "result": ""
+            "sleep": 2
         },
         "bucket_name": "storage-based-store",
         "first_function": "function_a"
     },
     "workflow_engine": {
         "payload": {
-            "result": ""
+            "sleep": 2
         },
         "stack_name": "workflow-engine"
     },

@@ -8,7 +8,7 @@ client = boto3_client('lambda', region_name=aws_region)
 response = client.invoke(
     FunctionName='CompiledFunction',
     InvocationType='RequestResponse',
-    Payload=json.dumps({'sleep': 2})
+    Payload=json.dumps({'sleep': 8})
 )
 
 if response['StatusCode'] == 200:

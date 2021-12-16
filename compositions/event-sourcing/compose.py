@@ -1,5 +1,4 @@
 import os
-import time
 from aws_xray_sdk.core import xray_recorder
 
 from event_helper import EventHelper
@@ -10,7 +9,6 @@ def compose(event, business_logic_function):
 
     subsegment = xray_recorder.begin_subsegment('Identification')
     result = business_logic_function(function_input)
-    time.sleep(event['sleep'])
     subsegment.put_annotation('workflow_instance_id', event['workflow_instance_id'])
     xray_recorder.end_subsegment()
 

@@ -33,7 +33,7 @@ try:
                 'StringValue': 'MessageQueueFunctionD'
             }
         },
-        Message=json.dumps({'sleep': 2})
+        Message=json.dumps({'sleep': 8})
     )
 
     s3_bucket_helper = S3BucketHelper(aws_region=aws_region)
