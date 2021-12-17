@@ -37,6 +37,7 @@ class ThroughputExperiment:
             time.sleep(10)
             # start throughput measurement
             print('measurement phase')
+            print(f'RPS: {load["rps"]}')
             start = datetime.utcnow()
 
             executor.start(
@@ -65,9 +66,9 @@ class ThroughputExperiment:
                 filtered_summaries.append({
                     'Id': trace_summary['Id'],
                     'Duration': trace_summary['Duration'],
-                    'HasFault': trace_summary['HasFault'],
-                    'HasError': trace_summary['HasError'],
-                    'HasThrottle': trace_summary['HasThrottle'],
+                    'HasFault': int(trace_summary['HasFault']),
+                    'HasError': int(trace_summary['HasError']),
+                    'HasThrottle': int(trace_summary['HasThrottle']),
                     'RPS': rps
                 })
 

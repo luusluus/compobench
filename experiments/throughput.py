@@ -22,7 +22,7 @@ for experiment_data in all_experiment_data:
     experiment = ThroughputExperiment(experiment_data=experiment_data)
     experiment.start()
     results_df = experiment.get_results()
-    print(results_df)
+    # print(results_df)
     name = experiment.get_experiment_name()
     results_df['composition'] = name
 
