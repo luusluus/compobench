@@ -14,58 +14,53 @@
     },
     "coordinator": {
         "payload": {
-            "workflow": ["CoordinatorFunctionA", "CoordinatorFunctionB", "CoordinatorFunctionC"],
-            "sleep": 2
+            "workflow": ["CoordinatorFunctionA", "CoordinatorFunctionB", "CoordinatorFunctionC", "CoordinatorFunctionD"],
+            "sleep": 8
         },
         "lambda_invocation_type": "SYNC",
         "first_function_name": "CoordinatorFunctionCoordinator"
     },
     "compiled": {
-        "payload": {},
+        "payload": {
+            "sleep": 8
+        },
         "lambda_invocation_type": "SYNC",
         "first_function_name": "CompiledFunction"
     },
     "async_sequence": {
         "payload": {
-            "sleep": 2
+            "sleep": 8
         },
         "lambda_invocation_type": "ASYNC",
         "first_function_name": "AsyncSequenceFunctionA"
     },
     "routing_slip": {
         "payload": {
-            "composition": ["RoutingSlipFunctionB", "RoutingSlipFunctionC"],
-            "sleep": 2
+            "composition": ["RoutingSlipFunctionB", "RoutingSlipFunctionC", "RoutingSlipFunctionD"],
+            "sleep": 8
         },
         "lambda_invocation_type": "ASYNC",
         "first_function_name": "RoutingSlipFunctionA"
     },
     "async_coordinator": {
         "payload": {
-            "workflow": ["AsyncCoordinatorFunctionA", "AsyncCoordinatorFunctionB", "AsyncCoordinatorFunctionC"],
-            "sleep": 2
+            "workflow": ["AsyncCoordinatorFunctionA", "AsyncCoordinatorFunctionB", "AsyncCoordinatorFunctionC", "AsyncCoordinatorFunctionD"],
+            "sleep": 8
         },
         "lambda_invocation_type": "ASYNC",
         "first_function_name": "AsyncCoordinatorFunctionCoordinator"
     },
-    "blackboard": {
-        "payload": {
-            "sleep": 2
-        },
-        "lambda_invocation_type": "ASYNC",
-        "first_function_name": "BlackboardFunctionController"
-    },
     "event_sourcing": {
         "payload": {
             "result": "",
-            "sleep": 2
+            "sleep": 8
         },
         "lambda_invocation_type": "ASYNC",
         "first_function_name": "EventSourcingOrchestrator"
     },
     "message_queue": {
         "payload": {
-            "sleep": 2
+            "sleep": 8
         },
         "message_attributes": {
             "caller": {
@@ -74,26 +69,22 @@
             },
             "last_function": {
                 "DataType": "String",
-                "StringValue": "MessageQueueFunctionC"
+                "StringValue": "MessageQueueFunctionD"
             }
         }
     },
     "storage": {
         "payload": {
-            "workflow": ["function_b", "function_c"],
-            "sleep": 2
+            "workflow": ["function_b", "function_c", "function_d"],
+            "sleep": 8
         },
         "bucket_name": "storage-based-store",
         "first_function": "function_a"
     },
     "workflow_engine": {
         "payload": {
-            "sleep": 2
+            "sleep": 8
         },
         "stack_name": "workflow-engine"
-    },
-    "client_side": {
-        "payload": {"result": ""},
-        "workflow": ["ClientSideFunctionA", "ClientSideFunctionB", "ClientSideFunctionC"]
     }
 }
