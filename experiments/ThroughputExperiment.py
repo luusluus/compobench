@@ -27,7 +27,7 @@ class ThroughputExperiment:
         for load in workload:
             # warm-up phase
             # executor = self._experiment_data.workflow_executor(self._experiment_data.name)
-
+            print('warm up phase')
             executor.start(
                 concurrent_workers=load['concurrent_workers'],
                 duration='10s',
@@ -36,6 +36,7 @@ class ThroughputExperiment:
 
             time.sleep(10)
             # start throughput measurement
+            print('measurement phase')
             start = datetime.utcnow()
 
             executor.start(

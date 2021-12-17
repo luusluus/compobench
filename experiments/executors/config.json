@@ -7,8 +7,28 @@
         "first_function_name": "SequenceFunctionA",
         "rps":[
                 {
-                    "rps": 2.5, 
-                    "concurrent_workers": 25
+                    "rps": 15, 
+                    "concurrent_workers": 150
+                },
+                {
+                    "rps": 20, 
+                    "concurrent_workers": 200
+                },
+                {
+                    "rps": 25, 
+                    "concurrent_workers": 250
+                },
+                {
+                    "rps": 30, 
+                    "concurrent_workers": 300
+                },
+                {
+                    "rps": 35, 
+                    "concurrent_workers": 350
+                },
+                {
+                    "rps": 40, 
+                    "concurrent_workers": 400
                 }
         ]
     },
