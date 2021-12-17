@@ -28,12 +28,13 @@ class ThroughputExperiment:
             # warm-up phase
             # executor = self._experiment_data.workflow_executor(self._experiment_data.name)
 
-            # executor.start(
-            #     concurrent_workers=load['concurrent_workers'],
-            #     duration='10s',
-            #     rate_limit=-1
-            # )
+            executor.start(
+                concurrent_workers=load['concurrent_workers'],
+                duration='10s',
+                rate_limit=-1
+            )
 
+            time.sleep(10)
             # start throughput measurement
             start = datetime.utcnow()
 
