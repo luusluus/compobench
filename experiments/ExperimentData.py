@@ -6,10 +6,10 @@ class ThroughputExperimentData:
         self,
         name: str,
         workflow_executor: WorkflowExecutor,
-        parser: TraceParser,
+        # parser: TraceParser,
         duration: str
     ):
         self.name = name
-        self.parser = parser
+        # self.parser = parser
         self.workflow_executor = workflow_executor
         self.duration = duration

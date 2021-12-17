@@ -3,7 +3,6 @@ from pathlib import Path
 
 from ThroughputExperiment import ThroughputExperiment
 from ExperimentData import ThroughputExperimentData
-from parsers import SynchronousSequenceTraceParser
 from executors import FunctionWorkflowExecutor
 
 THROUGHPUT_DURATION = '10s' # hey param, 10 seconds
@@ -11,7 +10,12 @@ all_experiment_data = []
 
 sequence_experiment_data = ThroughputExperimentData(
         name='sequence',
-        parser=SynchronousSequenceTraceParser.SynchronousSequenceTraceParser(),
+        workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor,
+        duration=THROUGHPUT_DURATION
+    )
+
+coordinator_experiment_data = ThroughputExperimentData(
+        name='coordinator',
         workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor,
         duration=THROUGHPUT_DURATION
     )
