@@ -20,7 +20,7 @@ coordinator_experiment_data = ThroughputExperimentData(
         duration=THROUGHPUT_DURATION
     )
 
-all_experiment_data.append(sequence_experiment_data)
+# all_experiment_data.append(sequence_experiment_data)
 all_experiment_data.append(coordinator_experiment_data)
 
 for experiment_data in all_experiment_data:
