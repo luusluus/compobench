@@ -40,7 +40,7 @@ class ThroughputExperiment:
             print(f'RPS: {load["rps"]}')
             start = datetime.utcnow()
 
-            executor.start(
+            output = executor.start(
                 concurrent_workers=load['concurrent_workers'],
                 duration='10s',
                 rate_limit=-1
@@ -48,10 +48,14 @@ class ThroughputExperiment:
 
             end = datetime.utcnow() + timedelta(seconds=10)
 
+            f = open(f'results/{self._experiment_data.name}/{int(time.time())}_{load["rps"]}_rps.csv', "a")
+            f.write(output)
+            f.close()
+
             print(start)
             print(end)
             # wait until all traces appear in XRay API
-            time.sleep(20)
+            time.sleep(30)
 
             trace_summaries = self._xray_wrapper.get_trace_summaries(start=start, end=end)
 

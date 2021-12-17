@@ -33,7 +33,6 @@ class WorkflowExecutor(ABC):
         process = subprocess.Popen(hey_command, stdout=subprocess.PIPE)
 
         output, error = process.communicate()
-        print(error)
         return output.decode('utf-8')
 
     def build_hey_command(self, url, payload, concurrent_workers, duration, rate_limit):

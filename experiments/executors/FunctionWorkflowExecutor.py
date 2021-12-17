@@ -18,8 +18,6 @@ class FunctionWorkflowExecutor(WorkflowExecutor):
 
         url = f'https://lambda.eu-central-1.amazonaws.com/2015-03-31/functions/{first_function_name}/invocations'
 
-        # print(url)
-
         hey_command = self.build_hey_command(
             url=url, 
             payload=payload, 
@@ -27,8 +25,9 @@ class FunctionWorkflowExecutor(WorkflowExecutor):
             duration=duration,
             rate_limit=rate_limit)
 
-        # print(' '.join(hey_command))
-
         output = self.execute_hey(hey_command=hey_command)
         print(output)
+
+        return output
+
 
