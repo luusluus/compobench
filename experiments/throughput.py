@@ -38,5 +38,5 @@ for experiment_data in all_experiment_data:
         },
         inplace=True)
 
-    Path(f'results/{name}').mkdir(parents=True, exist_ok=True)
+    Path(f'results/{experiment_data.name}').mkdir(parents=True, exist_ok=True)
     results_df.to_csv(f'results/{experiment_data.name}/{int(time.time())}.csv', index=False)
