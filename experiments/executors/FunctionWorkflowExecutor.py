@@ -25,9 +25,7 @@ class FunctionWorkflowExecutor(WorkflowExecutor):
             duration=duration,
             rate_limit=rate_limit)
 
-        output = self.execute_hey(hey_command=hey_command)
-        print(output)
+        return self.execute_hey(hey_command=hey_command)
 
-        return output
 
 

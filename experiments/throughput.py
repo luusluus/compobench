@@ -20,16 +20,23 @@ coordinator_experiment_data = ThroughputExperimentData(
         duration=THROUGHPUT_DURATION
     )
 
-# all_experiment_data.append(sequence_experiment_data)
-all_experiment_data.append(coordinator_experiment_data)
+all_experiment_data.append(sequence_experiment_data)
+# all_experiment_data.append(coordinator_experiment_data)
 
 for experiment_data in all_experiment_data:
     experiment = ThroughputExperiment(experiment_data=experiment_data)
     experiment.start()
     results_df = experiment.get_results()
-    # print(results_df)
-    name = experiment.get_experiment_name()
-    results_df['composition'] = name
+    
+    results_df.rename(columns={
+            'response-time': 'response_time', 
+            'DNS+dialup': 'dns_dialup',
+            'Request-write': 'request_write',
+            'Response-delay': 'response_delay',
+            'Response-read': 'response_read',
+            'status-code': 'status_code',
+        },
+        inplace=True)
 
     Path(f'results/{name}').mkdir(parents=True, exist_ok=True)
     results_df.to_csv(f'results/{name}/{int(time.time())}.csv', index=False)

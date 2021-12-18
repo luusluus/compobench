@@ -56,8 +56,8 @@ class WorkflowExecutor(ABC):
         hey_command.extend([
             '-m',
             'POST',
-            # '-o',
-            # 'csv',
+            '-o',
+            'csv',
             '-d',
             json.dumps(payload)
         ])

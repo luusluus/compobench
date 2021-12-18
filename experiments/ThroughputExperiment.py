@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+from io import StringIO
 import json
 import time
 import uuid
@@ -27,14 +28,15 @@ class ThroughputExperiment:
         for load in workload:
             # warm-up phase
             # executor = self._experiment_data.workflow_executor(self._experiment_data.name)
-            print('warm up phase')
-            executor.start(
-                concurrent_workers=load['concurrent_workers'],
-                duration='10s',
-                rate_limit=-1
-            )
+            print(f'composition: {self._experiment_data.name}')
+            # print('warm up phase')
+            # executor.start(
+            #     concurrent_workers=load['concurrent_workers'],
+            #     duration='10s',
+            #     rate_limit=-1
+            # )
 
-            time.sleep(10)
+            # time.sleep(10)
             # start throughput measurement
             print('measurement phase')
             print(f'RPS: {load["rps"]}')
@@ -48,35 +50,15 @@ class ThroughputExperiment:
 
             end = datetime.utcnow() + timedelta(seconds=10)
 
-            f = open(f'results/{self._experiment_data.name}/{int(time.time())}_{load["rps"]}_rps.csv', "a")
-            f.write(output)
-            f.close()
-
-            print(start)
-            print(end)
-            # wait until all traces appear in XRay API
-            time.sleep(30)
-
-            trace_summaries = self._xray_wrapper.get_trace_summaries(start=start, end=end)
-
-            result_df = self.process_results(trace_summaries=trace_summaries, rps=load['rps'])
-
+            result_df = self.process_results(output=output, rps=load['rps'])
             self._results = self._results.append(result_df)
 
-    def process_results(self, trace_summaries, rps):
-        filtered_summaries = []
-        for trace_summary in trace_summaries:
-            if 'Duration' in trace_summary:
-                filtered_summaries.append({
-                    'Id': trace_summary['Id'],
-                    'Duration': trace_summary['Duration'],
-                    'HasFault': int(trace_summary['HasFault']),
-                    'HasError': int(trace_summary['HasError']),
-                    'HasThrottle': int(trace_summary['HasThrottle']),
-                    'RPS': rps
-                })
+    def process_results(self, output, rps):
+        df = pd.read_csv(StringIO(output))
+        df['composition'] = self._experiment_data.name
+        df['rps'] = rps
 
-        return pd.DataFrame(filtered_summaries)
+        return df
 
     def get_results(self):
         return self._results.reset_index(drop=True)
