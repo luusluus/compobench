@@ -78,7 +78,33 @@
             "sleep": 8
         },
         "lambda_invocation_type": "ASYNC",
-        "first_function_name": "AsyncSequenceFunctionA"
+        "first_function_name": "AsyncSequenceFunctionA",
+        "rps": [
+            {
+                "rps": 40, 
+                "concurrent_workers": 400
+            },
+            {
+                "rps": 45, 
+                "concurrent_workers": 450
+            },
+            {
+                "rps": 50, 
+                "concurrent_workers": 500
+            },
+            {
+                "rps": 55, 
+                "concurrent_workers": 550
+            },
+            {
+                "rps": 60, 
+                "concurrent_workers": 600
+            },
+            {
+                "rps": 65, 
+                "concurrent_workers": 650
+            }
+        ]
     },
     "routing_slip": {
         "payload": {

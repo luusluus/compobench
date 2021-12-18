@@ -20,8 +20,15 @@ coordinator_experiment_data = ThroughputExperimentData(
         duration=THROUGHPUT_DURATION
     )
 
+async_sequence_experiment_data = ThroughputExperimentData(
+        name='async_sequence',
+        workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor,
+        duration=THROUGHPUT_DURATION
+    )
+
 # all_experiment_data.append(sequence_experiment_data)
-all_experiment_data.append(coordinator_experiment_data)
+# all_experiment_data.append(coordinator_experiment_data)
+all_experiment_data.append(async_sequence_experiment_data)
 
 for experiment_data in all_experiment_data:
     experiment = ThroughputExperiment(experiment_data=experiment_data)
