@@ -26,17 +26,17 @@ class ThroughputExperiment:
         executor = self._experiment_data.workflow_executor(self._experiment_data.name)
         workload = executor.get_workload()
         for load in workload:
-            # warm-up phase
-            # executor = self._experiment_data.workflow_executor(self._experiment_data.name)
             print(f'composition: {self._experiment_data.name}')
-            # print('warm up phase')
-            # executor.start(
-            #     concurrent_workers=load['concurrent_workers'],
-            #     duration='10s',
-            #     rate_limit=-1
-            # )
+            # warm-up phase
+            executor = self._experiment_data.workflow_executor(self._experiment_data.name)
+            print('warm up phase')
+            executor.start(
+                concurrent_workers=load['concurrent_workers'],
+                duration='10s',
+                rate_limit=-1
+            )
 
-            # time.sleep(10)
+            time.sleep(10)
             # start throughput measurement
             print('measurement phase')
             print(f'RPS: {load["rps"]}')
