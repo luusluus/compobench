@@ -12,11 +12,7 @@ response = client.invoke(
     FunctionName='WorkflowProxyFunction',
     InvocationType='RequestResponse',
     Payload=json.dumps({
-        'sleep': 2,
-        'waiter_config': {
-            'delay': 1,
-            'max_attempts': 30
-        }
+        'sleep': 2
     })
 )
 

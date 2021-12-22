@@ -10,6 +10,7 @@ client = boto3_client('lambda', region_name=aws_region)
 
 payload = {
     'workflow': ['function_b', 'function_c'],
+    'full_workflow': ['function_a', 'function_b', 'function_c'],
     'sleep': 2,
     'waiter_config': {
         'delay': 1,

@@ -16,7 +16,17 @@ response = client.invoke(
         'waiter_config': {
             'delay': 1,
             'max_attempts': 30
-        }
+        },
+        "message_attributes": {
+                "caller": {
+                    "DataType": "String",
+                    "StringValue": "ProxyClient"
+                },
+                "last_function": {
+                    "DataType": "String",
+                    "StringValue": "MessageQueueFunctionC"
+                }
+            }
     })
 )
 

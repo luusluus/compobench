@@ -12,4 +12,4 @@ response = client.invoke(
 )
 
 if response['StatusCode'] == 200:
-    print(json.load(response['Payload']))
+    print(response)

@@ -24,16 +24,7 @@ def lambda_handler(event, context):
     first_topic = topics[0]['TopicArn']
     client.publish(
         TopicArn=first_topic,
-        MessageAttributes={
-            'caller': {
-                'DataType': 'String',
-                'StringValue': 'ProxyClient',
-            },
-            'last_function':{
-                'DataType': 'String',
-                'StringValue': 'MessageQueueFunctionC'
-            }
-        },
+        MessageAttributes=event['message_attributes'],
         Message=json.dumps({
             'sleep': event['sleep'],
             'workflow_instance_id': workflow_instance_id

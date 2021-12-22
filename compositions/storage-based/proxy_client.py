@@ -25,7 +25,7 @@ def lambda_handler(event, context):
             'sleep': event['sleep'],
             'workflow_instance_id': workflow_instance_id
         }, 
-        object_key='function_a/result.json')
+        object_key=f'function_a/{workflow_instance_id}.json')
 
     time.sleep(event['sleep'] * 3 + 2)
 
@@ -38,6 +38,10 @@ def lambda_handler(event, context):
                 'MaxAttempts': waiter_config['max_attempts']
             }
         )
+
+    for function in event['full_workflow']:
+        object_key = f'{function}/{workflow_instance_id}.json'
+        s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=object_key)
 
     s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 

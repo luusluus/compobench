@@ -9,7 +9,7 @@ from aws_auth import AWSRequestsAuth
 class WorkflowExecutor(ABC):
     def __init__(self, experiment_name: str):
         self.config = self.read_from_config()
-        self.workflow_config = self.config[experiment_name]
+        self.workflow_config = self.config['compositions'][experiment_name]
 
         credentials = boto3.Session().get_credentials()
 
@@ -27,7 +27,7 @@ class WorkflowExecutor(ABC):
 
 
     def get_workload(self):
-        return self.workflow_config['rps']
+        return self.config['rps']
         
     def execute_hey(self, hey_command):
         process = subprocess.Popen(hey_command, stdout=subprocess.PIPE)

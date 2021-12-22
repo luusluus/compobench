@@ -6,8 +6,6 @@ from boto3 import client as boto3_client
 
 aws_region = 'eu-central-1'
 
-lambda_helper = LambdaHelper(aws_region=aws_region)
-
 # invoke controller once to start workflow
 payload = {
     'input': '',

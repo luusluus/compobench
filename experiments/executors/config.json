@@ -1,146 +1,102 @@
 {
-    "sequence": {
-        "payload": {
-            "sleep": 8
-        },
-        "lambda_invocation_type": "SYNC",
-        "first_function_name": "SequenceFunctionA",
-        "rps": [
-                {
-                    "rps": 40, 
-                    "concurrent_workers": 400
-                },
-                {
-                    "rps": 45, 
-                    "concurrent_workers": 450
-                },
-                {
-                    "rps": 50, 
-                    "concurrent_workers": 500
-                },
-                {
-                    "rps": 55, 
-                    "concurrent_workers": 550
-                },
-                {
-                    "rps": 60, 
-                    "concurrent_workers": 600
-                },
-                {
-                    "rps": 65, 
-                    "concurrent_workers": 650
-                }
-        ]
-    },
-    "coordinator": {
-        "payload": {
-            "workflow": ["CoordinatorFunctionA", "CoordinatorFunctionB", "CoordinatorFunctionC", "CoordinatorFunctionD"],
-            "sleep": 8
-        },
-        "lambda_invocation_type": "SYNC",
-        "first_function_name": "CoordinatorFunctionCoordinator",
-        "rps": [
-            {
-                "rps": 40, 
-                "concurrent_workers": 400
-            },
-            {
-                "rps": 45, 
-                "concurrent_workers": 450
-            },
-            {
-                "rps": 50, 
-                "concurrent_workers": 500
-            },
-            {
-                "rps": 55, 
-                "concurrent_workers": 550
-            },
-            {
-                "rps": 60, 
-                "concurrent_workers": 600
-            },
-            {
-                "rps": 65, 
-                "concurrent_workers": 650
-            }
-        ]
-    },
-    "compiled": {
-        "payload": {
-            "sleep": 8
-        },
-        "lambda_invocation_type": "SYNC",
-        "first_function_name": "CompiledFunction"
-    },
-    "async_sequence": {
-        "payload": {
-            "sleep": 2,
-            "waiter_config": {
-                "delay": 0.1,
-                "max_attempts": 300
-            }
-        },
-        "lambda_invocation_type": "ASYNC",
-        "first_function_name": "AsyncSequenceProxyFunction",
-        "rps": [
-            {
-                "rps": 40, 
-                "concurrent_workers": 1
-            }
-        ]
-    },
-    "routing_slip": {
-        "payload": {
-            "composition": ["RoutingSlipFunctionB", "RoutingSlipFunctionC", "RoutingSlipFunctionD"],
-            "sleep": 8
-        },
-        "lambda_invocation_type": "ASYNC",
-        "first_function_name": "RoutingSlipFunctionA"
-    },
-    "async_coordinator": {
-        "payload": {
-            "workflow": ["AsyncCoordinatorFunctionA", "AsyncCoordinatorFunctionB", "AsyncCoordinatorFunctionC", "AsyncCoordinatorFunctionD"],
-            "sleep": 8
-        },
-        "lambda_invocation_type": "ASYNC",
-        "first_function_name": "AsyncCoordinatorFunctionCoordinator"
-    },
-    "event_sourcing": {
-        "payload": {
-            "result": "",
-            "sleep": 8
-        },
-        "lambda_invocation_type": "ASYNC",
-        "first_function_name": "EventSourcingOrchestrator"
-    },
-    "message_queue": {
-        "payload": {
-            "sleep": 8
-        },
-        "message_attributes": {
-            "caller": {
-                "DataType": "String",
-                "StringValue": "Client"
-            },
-            "last_function": {
-                "DataType": "String",
-                "StringValue": "MessageQueueFunctionD"
-            }
+    "rps": [
+        {
+            "rps": 40, 
+            "concurrent_workers": 2
         }
-    },
-    "storage": {
-        "payload": {
-            "workflow": ["function_b", "function_c", "function_d"],
-            "sleep": 8
+    ],
+    "compositions": {
+        "sequence": {
+            "payload": {
+                "sleep": 2
+            },
+            "first_function_name": "SequenceFunctionA"
         },
-        "bucket_name": "storage-based-store",
-        "first_function": "function_a"
-    },
-    "workflow_engine": {
-        "payload": {
-            "sleep": 8
+        "coordinator": {
+            "payload": {
+                "workflow": ["CoordinatorFunctionA", "CoordinatorFunctionB", "CoordinatorFunctionC"],
+                "sleep": 2
+            },
+            "first_function_name": "CoordinatorFunctionCoordinator"
         },
-        "stack_name": "workflow-engine"
+        "compiled": {
+            "payload": {
+                "sleep": 2
+            },
+            "first_function_name": "CompiledFunction"
+        },
+        "async_sequence": {
+            "payload": {
+                "sleep": 2,
+                "waiter_config": {
+                    "delay": 1,
+                    "max_attempts": 30
+                }
+            },
+            "first_function_name": "AsyncSequenceProxyFunction"
+        },
+        "routing_slip": {
+            "payload": {
+                "composition": ["RoutingSlipFunctionB", "RoutingSlipFunctionC"],
+                "sleep": 2,
+                "waiter_config": {
+                    "delay": 1,
+                    "max_attempts": 30
+                }
+            },
+            "first_function_name": "RoutingSlipProxyFunction"
+        },
+        "async_coordinator": {
+            "payload": {
+                "workflow": ["AsyncCoordinatorFunctionA", "AsyncCoordinatorFunctionB", "AsyncCoordinatorFunctionC"],
+                "sleep": 2
+            },
+            "first_function_name": "AsyncCoordinatorProxyFunction"
+        },
+        "event_sourcing": {
+            "payload": {
+                "result": "",
+                "sleep": 2
+            },
+            "first_function_name": "EventSourcingProxyFunction"
+        },
+        "message_queue": {
+            "payload": {
+                "sleep": 2,
+                "waiter_config": {
+                    "delay": 1,
+                    "max_attempts": 30
+                }
+            },
+            "first_function_name": "MessageQueueProxyFunction",
+            "message_attributes": {
+                "caller": {
+                    "DataType": "String",
+                    "StringValue": "ProxyClient"
+                },
+                "last_function": {
+                    "DataType": "String",
+                    "StringValue": "MessageQueueFunctionC"
+                }
+            }
+        },
+        "storage": {
+            "payload": {
+                "workflow": ["function_b", "function_c"],
+                "sleep": 2,
+                "waiter_config": {
+                    "delay": 1,
+                    "max_attempts": 30
+                }
+            },
+            "first_function_name": "StorageBasedProxyFunction"
+        },
+        "workflow_engine": {
+            "payload": {
+                "sleep": 2
+            },
+            "first_function_name": "WorkflowProxyFunction"
+        }
     }
+    
 }
