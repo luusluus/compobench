@@ -52,7 +52,7 @@ sam deploy --guided
 
 For subsequent deployments
 ```
-sam deploy
+sam deploy --no-confirm-changeset
 ```
 
 ## Testing a composition
