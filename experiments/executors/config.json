@@ -49,7 +49,11 @@
         "async_coordinator": {
             "payload": {
                 "workflow": ["AsyncCoordinatorFunctionA", "AsyncCoordinatorFunctionB", "AsyncCoordinatorFunctionC"],
-                "sleep": 2
+                "sleep": 2,
+                "waiter_config": {
+                    "delay": 1,
+                    "max_attempts": 30
+                }
             },
             "first_function_name": "AsyncCoordinatorProxyFunction"
         },

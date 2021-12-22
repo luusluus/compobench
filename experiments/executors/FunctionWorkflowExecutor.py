@@ -14,7 +14,8 @@ class FunctionWorkflowExecutor(WorkflowExecutor):
         first_function_name = self.workflow_config["first_function_name"]
         payload = self.workflow_config["payload"]
 
-        url = f'https://lambda.eu-central-1.amazonaws.com/2015-03-31/functions/{first_function_name}/invocations'
+        # url = f'https://lambda.eu-central-1.amazonaws.com/2015-03-31/functions/{first_function_name}/invocations'
+        url = f'http://localhost:8000/{self.experiment_name}'
 
         hey_command = self.build_hey_command(
             url=url, 
@@ -23,6 +24,7 @@ class FunctionWorkflowExecutor(WorkflowExecutor):
             duration=duration,
             rate_limit=rate_limit)
 
+        print(' '.join(hey_command))
         return self.execute_hey(hey_command=hey_command)
 
 
