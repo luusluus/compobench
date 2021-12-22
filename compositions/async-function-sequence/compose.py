@@ -1,17 +1,16 @@
 import os
-from aws_xray_sdk.core import xray_recorder
+import time
 
 from aws_lambda import LambdaHelper
 from s3 import S3BucketHelper
 
 def compose(event, function_name):
     workflow_instance_id = event['workflow_instance_id']
-    subsegment = xray_recorder.begin_subsegment('Identification')
-    subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
-    xray_recorder.end_subsegment()
+    time.sleep(event['sleep'])
     
     payload = {
         'workflow_instance_id': workflow_instance_id,
+        'sleep': event['sleep']
     }
     if function_name == '':
         bucket_name = os.environ['BUCKET_NAME']

@@ -5,7 +5,6 @@ Globals:
   Function:
     Runtime: python3.8
     Timeout: 180
-    Tracing: Active
 
 Resources:
   CoordinatorFunctionCoordinator:
@@ -20,30 +19,26 @@ Resources:
             FunctionName: CoordinatorFunctionB
         - LambdaInvokePolicy:
             FunctionName: CoordinatorFunctionC
-        - LambdaInvokePolicy:
-            FunctionName: CoordinatorFunctionD
       Layers:
         - !Ref CoordinatorDepends
+
   CoordinatorFunctionA:
     Type: AWS::Serverless::Function
     Properties:
       Handler: function_a.lambda_handler
       FunctionName: CoordinatorFunctionA
+
   CoordinatorFunctionB:
     Type: AWS::Serverless::Function
     Properties:
       Handler: function_b.lambda_handler
       FunctionName: CoordinatorFunctionB
+
   CoordinatorFunctionC:
     Type: AWS::Serverless::Function
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: CoordinatorFunctionC
-  CoordinatorFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: function_d.lambda_handler
-      FunctionName: CoordinatorFunctionD
 
   CoordinatorDepends:
     Type: AWS::Serverless::LayerVersion

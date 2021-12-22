@@ -14,16 +14,19 @@ class S3BucketHelper():
             Key=object_key # key_name.json
         )
 
-    def poll_object_from_bucket(self, bucket_name, object_key):
+    def poll_object_from_bucket(self, 
+        bucket_name, 
+        object_key, 
+        waiter_config: dict = {
+                'Delay': 1,
+                'MaxAttempts': 30
+            }):
         waiter = self._client.get_waiter('object_exists')
 
         waiter.wait(
             Bucket=bucket_name,
             Key=object_key,
-            WaiterConfig={
-                'Delay': 1,
-                'MaxAttempts': 30
-            }
+            WaiterConfig=waiter_config
         )
 
     def get_object_from_bucket(self, bucket_name, object_key):

@@ -11,7 +11,6 @@ Globals:
   Function:
     Runtime: python3.8
     Timeout: 180
-    Tracing: Active
     Layers:
       - !Ref AsyncSequenceDepends
     Environment:
@@ -22,7 +21,18 @@ Resources:
   CompositionStore:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: !Ref S3BucketName 
+        BucketName: !Ref S3BucketName
+
+  AsyncSequenceProxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: proxy_client.lambda_handler
+      FunctionName: AsyncSequenceProxyFunction
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref S3BucketName
+        - LambdaInvokePolicy:
+            FunctionName: AsyncSequenceFunctionA
 
   AsyncSequenceFunctionA:
     Type: AWS::Serverless::Function
@@ -47,15 +57,6 @@ Resources:
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: AsyncSequenceFunctionC
-      Policies:
-        - LambdaInvokePolicy:
-            FunctionName: AsyncSequenceFunctionD
-
-  AsyncSequenceFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: function_d.lambda_handler
-      FunctionName: AsyncSequenceFunctionD
       Policies:
         - S3WritePolicy:
             BucketName: !Ref S3BucketName

@@ -12,7 +12,6 @@ Parameters:
 Globals:
   Function:
     Runtime: python3.8
-    Tracing: Active
     Timeout: 180
 
 Resources:
@@ -33,7 +32,6 @@ Resources:
         WorkflowFunctionAArn: !GetAtt WorkflowFunctionA.Arn
         WorkflowFunctionBArn: !GetAtt WorkflowFunctionB.Arn
         WorkflowFunctionCArn: !GetAtt WorkflowFunctionC.Arn
-        WorkflowFunctionDArn: !GetAtt WorkflowFunctionD.Arn
         S3PutObject: !Sub arn:${AWS::Partition}:states:::aws-sdk:s3:putObject
         S3Bucket: !Ref WorkflowCompositionStore
       
@@ -44,10 +42,23 @@ Resources:
             FunctionName: !Ref WorkflowFunctionB
         - LambdaInvokePolicy:
             FunctionName: !Ref WorkflowFunctionC
-        - LambdaInvokePolicy:
-            FunctionName: !Ref WorkflowFunctionD
         - S3WritePolicy:
             BucketName: !Ref S3BucketName
+
+  WorkflowProxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: proxy_client.lambda_handler
+      FunctionName: WorkflowProxyFunction
+      Policies:
+        - Statement:
+            -
+              Effect: Allow
+              Action:
+                - 'cloudformation:ListStackResources'
+                - 'states:StartExecution'
+                - 'states:DescribeExecution'
+              Resource: '*'
 
   WorkflowFunctionA:
     Type: AWS::Serverless::Function # More info about Function Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
@@ -66,10 +77,4 @@ Resources:
     Properties:
       FunctionName: WorkflowFunctionC
       Handler: function_c.lambda_handler
-
-  WorkflowFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: WorkflowFunctionD
-      Handler: function_d.lambda_handler
 

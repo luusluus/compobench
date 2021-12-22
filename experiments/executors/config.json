@@ -75,34 +75,18 @@
     },
     "async_sequence": {
         "payload": {
-            "sleep": 8
+            "sleep": 2,
+            "waiter_config": {
+                "delay": 0.1,
+                "max_attempts": 300
+            }
         },
         "lambda_invocation_type": "ASYNC",
-        "first_function_name": "AsyncSequenceFunctionA",
+        "first_function_name": "AsyncSequenceProxyFunction",
         "rps": [
             {
                 "rps": 40, 
-                "concurrent_workers": 400
-            },
-            {
-                "rps": 45, 
-                "concurrent_workers": 450
-            },
-            {
-                "rps": 50, 
-                "concurrent_workers": 500
-            },
-            {
-                "rps": 55, 
-                "concurrent_workers": 550
-            },
-            {
-                "rps": 60, 
-                "concurrent_workers": 600
-            },
-            {
-                "rps": 65, 
-                "concurrent_workers": 650
+                "concurrent_workers": 1
             }
         ]
     },

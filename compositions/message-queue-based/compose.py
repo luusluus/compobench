@@ -1,7 +1,6 @@
 import os
 import json
-
-from aws_xray_sdk.core import xray_recorder
+import time
 
 from boto3 import client as boto3_client
 from s3 import S3BucketHelper
@@ -14,22 +13,17 @@ def compose(event):
     sns = event['Records'][0]['Sns']
     message = json.loads(sns['Message'])
 
-    if 'workflow_instance_id' in event:
-        workflow_instance_id = event['workflow_instance_id']
-    elif 'workflow_instance_id' in message:
-        workflow_instance_id = message['workflow_instance_id']
+    workflow_instance_id = message['workflow_instance_id']
 
-
-    subsegment = xray_recorder.begin_subsegment('Identification')
-    subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
-    xray_recorder.end_subsegment()
+    time.sleep(message['sleep'])
     
     message_attributes = sns['MessageAttributes']
     last_function_name = message_attributes['last_function']['Value']
 
 
     result_object = {
-        'workflow_instance_id': workflow_instance_id
+        'workflow_instance_id': workflow_instance_id,
+        'sleep': message['sleep']
     }
     
     if function_name == last_function_name:

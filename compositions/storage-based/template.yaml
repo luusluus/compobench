@@ -11,7 +11,6 @@ Globals:
   Function:
     Runtime: python3.8
     Timeout: 180
-    Tracing: Active
     Environment:
       Variables:
         BUCKET_NAME: !Ref S3BucketName
@@ -23,6 +22,15 @@ Resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: !Ref S3BucketName 
+
+  StorageBasedProxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: proxy_client.lambda_handler
+      FunctionName: StorageBasedProxyFunction
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref S3BucketName
 
   StorageBasedFunctionA:
     Type: AWS::Serverless::Function
@@ -91,29 +99,6 @@ Resources:
                 Rules:
                 - Name: prefix
                   Value: function_c/
-
-  StorageBasedFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: function_d.lambda_handler
-      FunctionName: StorageBasedFunctionD
-      
-      Policies:
-        - S3WritePolicy:
-            BucketName: !Ref S3BucketName
-        - S3ReadPolicy:
-            BucketName: !Ref S3BucketName
-      Events:
-        S3Event:
-          Type: S3
-          Properties:
-            Bucket: !Ref CompositionStore
-            Events: s3:ObjectCreated:Put
-            Filter:
-              S3Key:
-                Rules:
-                - Name: prefix
-                  Value: function_d/
 
                   
   StorageBasedDepends:

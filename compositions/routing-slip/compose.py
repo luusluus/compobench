@@ -1,14 +1,10 @@
 import os
-from aws_xray_sdk.core import xray_recorder
 
 from aws_lambda import LambdaHelper
 from s3 import S3BucketHelper
 
 def compose(event):
     workflow_instance_id = event['workflow_instance_id']
-    subsegment = xray_recorder.begin_subsegment('Identification')
-    subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
-    xray_recorder.end_subsegment()
     
     payload = {
         'workflow_instance_id': workflow_instance_id,

@@ -10,11 +10,11 @@ Parameters:
 Globals:
   Function:
     Runtime: python3.8
-    Tracing: Active
     Timeout: 180
     Environment:
         Variables:
           TOPIC_ARN: !Ref MessageQueueTopic
+          BUCKET_NAME: !Ref S3BucketName
     Layers:
         - !Ref MessageQueueDepends
 
@@ -48,6 +48,23 @@ Resources:
       Topics:
         - !Ref MessageQueueTopic
 
+  MessageQueueProxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: proxy_client.lambda_handler
+      FunctionName: MessageQueueProxyFunction
+      Policies:
+        - Statement:
+              -
+                Effect: Allow
+                Action:
+                  - 'sns:ListTopics'
+                Resource: '*'
+        - S3CrudPolicy:
+            BucketName: !Ref S3BucketName
+        - SNSPublishMessagePolicy:
+            TopicName: !Ref MessageQueueTopic
+
   MessageQueueFunctionA:
     Type: AWS::Serverless::Function
     Properties:
@@ -63,7 +80,7 @@ Resources:
             Topic: !Ref MessageQueueTopic
             FilterPolicy:
               caller:
-                - Client
+                - ProxyClient
 
   MessageQueueFunctionB:
     Type: AWS::Serverless::Function
@@ -88,26 +105,6 @@ Resources:
       Handler: function_c.lambda_handler
       FunctionName: MessageQueueFunctionC
       Policies:
-        - SNSPublishMessagePolicy:
-            TopicName: !Ref MessageQueueTopic
-      Events:
-        SNSEvent:
-          Type: SNS
-          Properties:
-            Topic: !Ref MessageQueueTopic
-            FilterPolicy:
-              caller:
-                - MessageQueueFunctionB
-                
-  MessageQueueFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: function_d.lambda_handler
-      FunctionName: MessageQueueFunctionD
-      Environment:
-        Variables:
-          BUCKET_NAME: !Ref S3BucketName
-      Policies:
         - S3WritePolicy:
             BucketName: !Ref S3BucketName
       Events:
@@ -117,7 +114,7 @@ Resources:
             Topic: !Ref MessageQueueTopic
             FilterPolicy:
               caller:
-                - MessageQueueFunctionC
+                - MessageQueueFunctionB
 
   MessageQueueDepends:
     Type: AWS::Serverless::LayerVersion

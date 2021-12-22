@@ -1,23 +1,14 @@
 import os
 import time
 import uuid
-from aws_xray_sdk.core import patch_all
-from aws_xray_sdk.core import xray_recorder
-patch_all()
 
 import event_definitions
 from orchestrator import Orchestrator
 workflow_name = 'SimpleSequence'
-workflow = ['EventSourcingFunctionA', 'EventSourcingFunctionB', 'EventSourcingFunctionC', 'EventSourcingFunctionD']
+workflow = ['EventSourcingFunctionA', 'EventSourcingFunctionB', 'EventSourcingFunctionC']
+sleep_time = 2
 
 def lambda_handler(event, context):
-    if 'workflow_instance_id' not in event:
-        event['workflow_instance_id'] = str(uuid.uuid4())
-        time.sleep(event['sleep'])
-
-    subsegment = xray_recorder.begin_subsegment('Identification')
-    subsegment.put_annotation('workflow_instance_id', event['workflow_instance_id'])
-    xray_recorder.end_subsegment()
     # start a new workflow
     if 'input' in event:
         orchestrator = Orchestrator(

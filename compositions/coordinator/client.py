@@ -9,8 +9,8 @@ client = boto3_client('lambda', region_name=aws_region)
 
 # call the first function a to start the workflow
 payload = {
-    'workflow': ['CoordinatorFunctionA', 'CoordinatorFunctionB', 'CoordinatorFunctionC', 'CoordinatorFunctionD'],
-    'sleep': 8
+    'workflow': ['CoordinatorFunctionA', 'CoordinatorFunctionB', 'CoordinatorFunctionC'],
+    'sleep': 2
 }
 
 response = client.invoke(

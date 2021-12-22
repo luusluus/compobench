@@ -8,7 +8,7 @@ class LambdaHelper:
 
     def invoke_lambda_async(self, function_name, payload):
         # print(f'Asynchronously invoking {function_name}')
-        self._client.invoke(
+        return self._client.invoke(
             FunctionName=function_name,
             InvocationType='Event',
             Payload=json.dumps(payload))

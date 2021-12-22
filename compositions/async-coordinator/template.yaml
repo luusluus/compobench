@@ -11,7 +11,9 @@ Globals:
   Function:
     Runtime: python3.8
     Timeout: 180
-    Tracing: Active
+    Environment:
+      Variables:
+        BUCKET_NAME: !Ref S3BucketName
     Layers:
       - !Ref AsyncCoordinatorDepends
 
@@ -20,6 +22,17 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref S3BucketName
+
+  AsyncCoordinatorProxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: proxy_client.lambda_handler
+      FunctionName: AsyncCoordinatorProxyFunction
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref S3BucketName
+        - LambdaInvokePolicy:
+            FunctionName: AsyncCoordinatorFunctionCoordinator
 
   AsyncCoordinatorFunctionCoordinator:
     Type: AWS::Serverless::Function
@@ -33,15 +46,11 @@ Resources:
             FunctionName: AsyncCoordinatorFunctionB
         - LambdaInvokePolicy:
             FunctionName: AsyncCoordinatorFunctionC
-        - LambdaInvokePolicy:
-            FunctionName: AsyncCoordinatorFunctionD
         - S3WritePolicy:
             BucketName: !Ref S3BucketName
         - S3ReadPolicy:
             BucketName: !Ref S3BucketName
-      Environment:
-        Variables:
-          BUCKET_NAME: !Ref S3BucketName
+
 
   AsyncCoordinatorFunctionA:
     Type: AWS::Serverless::Function
@@ -60,20 +69,12 @@ Resources:
       Policies:
         - LambdaInvokePolicy:
             FunctionName: AsyncCoordinatorFunctionCoordinator
+
   AsyncCoordinatorFunctionC:
     Type: AWS::Serverless::Function
     Properties:
       Handler: function_c.lambda_handler
       FunctionName: AsyncCoordinatorFunctionC
-      Policies:
-        - LambdaInvokePolicy:
-            FunctionName: AsyncCoordinatorFunctionCoordinator
-
-  AsyncCoordinatorFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: function_d.lambda_handler
-      FunctionName: AsyncCoordinatorFunctionD
       Policies:
         - LambdaInvokePolicy:
             FunctionName: AsyncCoordinatorFunctionCoordinator

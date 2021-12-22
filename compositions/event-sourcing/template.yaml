@@ -35,6 +35,23 @@ Resources:
       StreamSpecification:
         StreamViewType: NEW_IMAGE
 
+  EventSourcingProxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: proxy_client.lambda_handler
+      FunctionName: EventSourcingProxyFunction
+      Policies:
+        - Statement:
+              -
+                Effect: Allow
+                Action:
+                  - 'dynamodb:ListTables'
+                Resource: '*'
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EventHistoryTable
+        - LambdaInvokePolicy:
+            FunctionName: EventSourcingOrchestrator
+
   EventSourcingOrchestrator:
     Type: AWS::Serverless::Function
     Properties:
@@ -49,8 +66,6 @@ Resources:
             FunctionName: !Ref EventSourcingFunctionB
         - LambdaInvokePolicy:
             FunctionName: !Ref EventSourcingFunctionC
-        - LambdaInvokePolicy:
-            FunctionName: !Ref EventSourcingFunctionD
         - DynamoDBWritePolicy:
             TableName: !Ref EventHistoryTable
         - DynamoDBReadPolicy:
@@ -98,16 +113,6 @@ Resources:
       Tracing: Active
       FunctionName: EventSourcingFunctionC
       Handler: function_c.lambda_handler
-      Policies:
-        - DynamoDBWritePolicy:
-            TableName: !Ref EventHistoryTable
-  
-  EventSourcingFunctionD:
-    Type: AWS::Serverless::Function
-    Properties:
-      Tracing: Active
-      FunctionName: EventSourcingFunctionD
-      Handler: function_d.lambda_handler
       Policies:
         - DynamoDBWritePolicy:
             TableName: !Ref EventHistoryTable

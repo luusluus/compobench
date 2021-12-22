@@ -14,8 +14,6 @@ class FunctionWorkflowExecutor(WorkflowExecutor):
         first_function_name = self.workflow_config["first_function_name"]
         payload = self.workflow_config["payload"]
 
-        payload['workflow_instance_id'] =  str(uuid.uuid4())
-
         url = f'https://lambda.eu-central-1.amazonaws.com/2015-03-31/functions/{first_function_name}/invocations'
 
         hey_command = self.build_hey_command(

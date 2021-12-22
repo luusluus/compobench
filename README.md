@@ -59,7 +59,7 @@ sam deploy
 First activate virtual environment
 
 ```
-source ./venv/bin/activate
+source ./venv/bin/activate && pip install -e .
 ```
 
 Go into one of the composition directories and call the client script. For example:
