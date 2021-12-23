@@ -44,7 +44,6 @@ class ThroughputExperiment:
 
             output = executor.start(
                 concurrent_workers=load['concurrent_workers'],
-                duration='10s',
                 rate_limit=-1
             )
 

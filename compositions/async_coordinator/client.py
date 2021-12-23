@@ -29,14 +29,19 @@ def invoke(sleep: int, workflow: list, waiter_config: dict):
     if status_code == 202:
         time.sleep(sleep * 3)
 
-        s3_helper.poll_object_from_bucket(
-                bucket_name=bucket_name,
-                object_key=result_key,
-                waiter_config={
-                    'Delay': waiter_config['delay'],
-                    'MaxAttempts': waiter_config['max_attempts']
-                }
-            )
-        s3_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
+        try:
+            s3_helper.poll_object_from_bucket(
+                    bucket_name=bucket_name,
+                    object_key=result_key,
+                    waiter_config={
+                        'Delay': waiter_config['delay'],
+                        'MaxAttempts': waiter_config['max_attempts']
+                    }
+                )
+            s3_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
+            status_code = 200
+        except Exception as e:
+            print(e)
+            status_code = 404
 
     return status_code

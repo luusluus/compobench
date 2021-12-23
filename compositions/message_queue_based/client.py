@@ -8,8 +8,7 @@ from botocore.exceptions import ClientError
 
 from compositions.aws_helpers.s3 import S3BucketHelper
 
-
-def invoke(sleep: int, waiter_config: dict):
+def invoke(sleep: int, waiter_config: dict, message_attributes: dict):
     aws_region = 'eu-central-1'
     s3_helper = S3BucketHelper(aws_region=aws_region)
 
@@ -24,7 +23,7 @@ def invoke(sleep: int, waiter_config: dict):
     first_topic = topics[0]['TopicArn']
     client.publish(
         TopicArn=first_topic,
-        MessageAttributes=event['message_attributes'],
+        MessageAttributes=message_attributes,
         Message=json.dumps({
             'sleep': sleep,
             'workflow_instance_id': workflow_instance_id
@@ -33,16 +32,20 @@ def invoke(sleep: int, waiter_config: dict):
 
     time.sleep(sleep * 3)
 
+    status_code = 200
     s3_bucket_helper = S3BucketHelper(aws_region=aws_region)
+    try:
+        s3_bucket_helper.poll_object_from_bucket(
+            bucket_name=bucket_name, 
+            object_key=result_key,
+            waiter_config={
+                'Delay': waiter_config['delay'],
+                'MaxAttempts': waiter_config['max_attempts']
+            })
 
-    s3_bucket_helper.poll_object_from_bucket(
-        bucket_name=bucket_name, 
-        object_key=result_key,
-        waiter_config={
-            'Delay': waiter_config['delay'],
-            'MaxAttempts': waiter_config['max_attempts']
-        })
-
-    s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
-
-    return
+        s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
+    except Exception as e:
+        print(e)
+        status_code = 404
+        
+    return status_code

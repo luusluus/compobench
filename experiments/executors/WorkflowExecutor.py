@@ -23,7 +23,7 @@ class WorkflowExecutor(ABC):
 
 
     @abstractmethod
-    def start(self, concurrent_workers, duration, rate_limit):
+    def start(self, concurrent_workers, rate_limit):
         pass
 
 

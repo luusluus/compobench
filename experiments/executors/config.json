@@ -2,28 +2,26 @@
     "rps": [
         {
             "rps": 40, 
-            "concurrent_workers": 2
+            "concurrent_workers": 1
         }
     ],
+    "duration": "10s",
     "compositions": {
         "sequence": {
             "payload": {
                 "sleep": 2
-            },
-            "first_function_name": "SequenceFunctionA"
+            }
         },
         "coordinator": {
             "payload": {
                 "workflow": ["CoordinatorFunctionA", "CoordinatorFunctionB", "CoordinatorFunctionC"],
                 "sleep": 2
-            },
-            "first_function_name": "CoordinatorFunctionCoordinator"
+            }
         },
         "compiled": {
             "payload": {
                 "sleep": 2
-            },
-            "first_function_name": "CompiledFunction"
+            }
         },
         "async_sequence": {
             "payload": {
@@ -32,8 +30,7 @@
                     "delay": 1,
                     "max_attempts": 30
                 }
-            },
-            "first_function_name": "AsyncSequenceProxyFunction"
+            }
         },
         "routing_slip": {
             "payload": {
@@ -43,8 +40,7 @@
                     "delay": 1,
                     "max_attempts": 30
                 }
-            },
-            "first_function_name": "RoutingSlipProxyFunction"
+            }
         },
         "async_coordinator": {
             "payload": {
@@ -54,15 +50,16 @@
                     "delay": 1,
                     "max_attempts": 30
                 }
-            },
-            "first_function_name": "AsyncCoordinatorProxyFunction"
+            }
         },
         "event_sourcing": {
             "payload": {
-                "result": "",
+                "input": "",
                 "sleep": 2
-            },
-            "first_function_name": "EventSourcingProxyFunction"
+            }
+        },
+        "blackboard": {
+            "payload": {}
         },
         "message_queue": {
             "payload": {
@@ -70,36 +67,34 @@
                 "waiter_config": {
                     "delay": 1,
                     "max_attempts": 30
-                }
-            },
-            "first_function_name": "MessageQueueProxyFunction",
-            "message_attributes": {
-                "caller": {
-                    "DataType": "String",
-                    "StringValue": "ProxyClient"
                 },
-                "last_function": {
-                    "DataType": "String",
-                    "StringValue": "MessageQueueFunctionC"
+                "message_attributes": {
+                    "caller": {
+                        "DataType": "String",
+                        "StringValue": "Client"
+                    },
+                    "last_function": {
+                        "DataType": "String",
+                        "StringValue": "MessageQueueFunctionC"
+                    }
                 }
             }
         },
         "storage": {
             "payload": {
                 "workflow": ["function_b", "function_c"],
+                "full_workflow": ["function_a", "function_b", "function_c"],
                 "sleep": 2,
                 "waiter_config": {
                     "delay": 1,
                     "max_attempts": 30
                 }
-            },
-            "first_function_name": "StorageBasedProxyFunction"
+            }
         },
         "workflow_engine": {
             "payload": {
                 "sleep": 2
-            },
-            "first_function_name": "WorkflowProxyFunction"
+            }
         }
     }
     

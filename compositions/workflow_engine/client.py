@@ -5,7 +5,7 @@ import time
 
 from boto3 import client as boto3_client
 
-def invoke(sleep: int, waiter_config: dict):
+def invoke(sleep: int):
     aws_region = 'eu-central-1'
     stack_name = 'workflow-engine'
 
@@ -30,16 +30,22 @@ def invoke(sleep: int, waiter_config: dict):
     execution_arn = response["executionArn"]
 
     time.sleep(sleep * 3)
+    status_code = 404
     while True:
         response = step_functions_client.describe_execution(executionArn=execution_arn)
         status = response["status"]
         if status == "SUCCEEDED":
             print(json.loads(response['output']))
+            status_code = 200
             break
         elif status == "RUNNING":
             time.sleep(1)
         else:
             print(f"Execution {execution_arn} failed with status {status}")
+            status_code = 400
             break
 
-    return
+    return status_code
+
+
+invoke(sleep=2)

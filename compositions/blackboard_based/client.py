@@ -39,6 +39,7 @@ def invoke():
     execution_table_helper = DynamoDBTableHelper(aws_region=aws_region, table_name=execution_table_name)
 
     retries = 1
+    status_code = 404
     while retries < 30:
         try:
             item = execution_table_helper.get_item(key={
@@ -46,10 +47,12 @@ def invoke():
                     'StepId': last_step
                 })
             print(item['Output']['result'])
+
+            status_code = 200
             break
         except NoItemException:
             print('Waiting {} secs and retry attempt: {}'.format(1, retries))
             sleep(1)
             retries += 1
 
-    return
+    return status_code

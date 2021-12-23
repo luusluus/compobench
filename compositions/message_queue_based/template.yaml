@@ -63,7 +63,7 @@ Resources:
             Topic: !Ref MessageQueueTopic
             FilterPolicy:
               caller:
-                - ProxyClient
+                - Client
 
   MessageQueueFunctionB:
     Type: AWS::Serverless::Function

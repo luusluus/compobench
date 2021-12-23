@@ -92,29 +92,31 @@ def message_queue():
     payload = request.get_json(force=True)
     status_code = message_queue_client.invoke(
         sleep=payload['sleep'],
-        waiter_config=payload['waiter_config']
+        waiter_config=payload['waiter_config'],
+        message_attributes=payload['message_attributes']
     )
     
     return Response("", status=status_code, mimetype='application/json')
 
 
-@app.route("/storage_based", methods=['POST'])
+@app.route("/storage", methods=['POST'])
 def storage_based():
     payload = request.get_json(force=True)
+    print(payload)
     status_code = storage_client.invoke(
         sleep=payload['sleep'],
         workflow=payload['workflow'],
+        full_workflow=payload['full_workflow'],
         waiter_config=payload['waiter_config']
     )
-    
+    print(status_code)
     return Response("", status=status_code, mimetype='application/json')
 
 @app.route("/workflow_engine", methods=['POST'])
 def workflow_engine():
     payload = request.get_json(force=True)
     status_code = workflow_client.invoke(
-        sleep=payload['sleep'],
-        waiter_config=payload['waiter_config']
+        sleep=payload['sleep']
     )
     
     return Response("", status=status_code, mimetype='application/json')
