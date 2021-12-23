@@ -50,7 +50,7 @@ def async_coordinator():
     )
     return Response("", status=status_code, mimetype='application/json')
 
-@app.route("/async_sequence")
+@app.route("/async_sequence", methods=['POST'])
 def async_sequence():
     payload = request.get_json(force=True)
     status_code = async_sequence_client.invoke(
@@ -59,7 +59,7 @@ def async_sequence():
     )
     return Response("", status=status_code, mimetype='application/json')
 
-@app.route("/routing_slip")
+@app.route("/routing_slip", methods=['POST'])
 def routing_slip():
     payload = request.get_json(force=True)
     status_code = routing_slip_client.invoke(
@@ -70,7 +70,7 @@ def routing_slip():
     
     return Response("", status=status_code, mimetype='application/json')
 
-@app.route("/event_sourcing")
+@app.route("/event_sourcing", methods=['POST'])
 def event_sourcing():
     payload = request.get_json(force=True)
     status_code = event_sourcing_client.invoke(
@@ -80,14 +80,14 @@ def event_sourcing():
     
     return Response("", status=status_code, mimetype='application/json')
 
-@app.route("/blackboard")
+@app.route("/blackboard", methods=['POST'])
 def blackboard():
     payload = request.get_json(force=True)
     status_code = blackboard_client.invoke()
     
     return Response("", status=status_code, mimetype='application/json')
 
-@app.route("/message_queue")
+@app.route("/message_queue", methods=['POST'])
 def message_queue():
     payload = request.get_json(force=True)
     status_code = message_queue_client.invoke(
@@ -98,7 +98,7 @@ def message_queue():
     return Response("", status=status_code, mimetype='application/json')
 
 
-@app.route("/storage_based")
+@app.route("/storage_based", methods=['POST'])
 def storage_based():
     payload = request.get_json(force=True)
     status_code = storage_client.invoke(
@@ -109,7 +109,7 @@ def storage_based():
     
     return Response("", status=status_code, mimetype='application/json')
 
-@app.route("/workflow_engine")
+@app.route("/workflow_engine", methods=['POST'])
 def workflow_engine():
     payload = request.get_json(force=True)
     status_code = workflow_client.invoke(
