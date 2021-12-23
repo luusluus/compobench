@@ -1,36 +1,48 @@
+import os
 import json
+import uuid
+import time
 
 from boto3 import client as boto3_client
+from botocore.exceptions import ClientError
+
 from compositions.aws_helpers.s3 import S3BucketHelper
 
 
-aws_region = 'eu-central-1'
+def invoke(sleep: int, waiter_config: dict):
+    aws_region = 'eu-central-1'
+    s3_helper = S3BucketHelper(aws_region=aws_region)
 
-client = boto3_client('lambda', region_name=aws_region)
+    workflow_instance_id = str(uuid.uuid4())
+    bucket_name = 'message-queue-store'
+    result_key = f'result_{workflow_instance_id}.json'
 
-response = client.invoke(
-    FunctionName='MessageQueueProxyFunction',
-    InvocationType='RequestResponse',
-    Payload=json.dumps({
-        'sleep': 2,
-        'waiter_config': {
-            'delay': 1,
-            'max_attempts': 30
-        },
-        "message_attributes": {
-                "caller": {
-                    "DataType": "String",
-                    "StringValue": "ProxyClient"
-                },
-                "last_function": {
-                    "DataType": "String",
-                    "StringValue": "MessageQueueFunctionC"
-                }
-            }
-    })
-)
+    client = boto3_client('sns', region_name=aws_region)
 
-if response['StatusCode'] == 200:
-    print(response)
-else:
-    print('Composition Failed')
+    topics = client.list_topics()['Topics']
+
+    first_topic = topics[0]['TopicArn']
+    client.publish(
+        TopicArn=first_topic,
+        MessageAttributes=event['message_attributes'],
+        Message=json.dumps({
+            'sleep': sleep,
+            'workflow_instance_id': workflow_instance_id
+        })
+    )
+
+    time.sleep(sleep * 3)
+
+    s3_bucket_helper = S3BucketHelper(aws_region=aws_region)
+
+    s3_bucket_helper.poll_object_from_bucket(
+        bucket_name=bucket_name, 
+        object_key=result_key,
+        waiter_config={
+            'Delay': waiter_config['delay'],
+            'MaxAttempts': waiter_config['max_attempts']
+        })
+
+    s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
+
+    return

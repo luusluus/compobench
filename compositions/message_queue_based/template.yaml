@@ -48,23 +48,6 @@ Resources:
       Topics:
         - !Ref MessageQueueTopic
 
-  MessageQueueProxyFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: proxy_client.lambda_handler
-      FunctionName: MessageQueueProxyFunction
-      Policies:
-        - Statement:
-              -
-                Effect: Allow
-                Action:
-                  - 'sns:ListTopics'
-                Resource: '*'
-        - S3CrudPolicy:
-            BucketName: !Ref S3BucketName
-        - SNSPublishMessagePolicy:
-            TopicName: !Ref MessageQueueTopic
-
   MessageQueueFunctionA:
     Type: AWS::Serverless::Function
     Properties:

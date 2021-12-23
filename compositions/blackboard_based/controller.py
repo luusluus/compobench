@@ -4,6 +4,7 @@ from aws_lambda import LambdaHelper
 
 from aws_xray_sdk.core import xray_recorder
 
+sleep_time = 2
 class NoValidWorkflowEvent(Exception):
     pass
 
@@ -66,7 +67,8 @@ class Controller:
                 'workflow_instance_id': self._state['workflow_instance_id'],
                 'workflow_id': self._workflow_id,
                 'step_id': self._state['step_id'],
-                'previous_step_id': self._state['previous_step_id']
+                'previous_step_id': self._state['previous_step_id'],
+                'sleep': sleep_time
             })
     
     def is_end_workflow(self):

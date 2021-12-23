@@ -23,15 +23,6 @@ Resources:
       Properties:
         BucketName: !Ref S3BucketName 
 
-  StorageBasedProxyFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: proxy_client.lambda_handler
-      FunctionName: StorageBasedProxyFunction
-      Policies:
-        - S3CrudPolicy:
-            BucketName: !Ref S3BucketName
-
   StorageBasedFunctionA:
     Type: AWS::Serverless::Function
     Properties:

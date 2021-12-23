@@ -39,4 +39,4 @@ def invoke(sleep: int, workflow: list, waiter_config: dict):
             )
         s3_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
 
-    return response
+    return status_code

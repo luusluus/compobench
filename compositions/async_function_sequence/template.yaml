@@ -23,17 +23,6 @@ Resources:
       Properties:
         BucketName: !Ref S3BucketName
 
-  AsyncSequenceProxyFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: proxy_client.lambda_handler
-      FunctionName: AsyncSequenceProxyFunction
-      Policies:
-        - S3CrudPolicy:
-            BucketName: !Ref S3BucketName
-        - LambdaInvokePolicy:
-            FunctionName: AsyncSequenceFunctionA
-
   AsyncSequenceFunctionA:
     Type: AWS::Serverless::Function
     Properties:

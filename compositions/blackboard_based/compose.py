@@ -1,12 +1,11 @@
 import os
+import time
 import pytz
 from datetime import datetime
 from dynamodb import DynamoDBTableHelper, NoItemException
 
-from aws_xray_sdk.core import xray_recorder
 
 def compose(event, business_logic_function):
-    print(os.environ.get('_X_AMZN_TRACE_ID'))
     workflow_instance_id = event['workflow_instance_id']
     workflow_id = event['workflow_id']
     step_id = event['step_id']
@@ -30,10 +29,8 @@ def compose(event, business_logic_function):
             'result': ''
         }
 
-    subsegment = xray_recorder.begin_subsegment('Identification')
     result = business_logic_function(step_output['result'])
-    subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
-    xray_recorder.end_subsegment()
+    time.sleep(event['sleep'])
     
     output_item = {
         'result': result

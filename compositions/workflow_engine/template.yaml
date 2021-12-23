@@ -44,22 +44,7 @@ Resources:
             FunctionName: !Ref WorkflowFunctionC
         - S3WritePolicy:
             BucketName: !Ref S3BucketName
-
-  WorkflowProxyFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: proxy_client.lambda_handler
-      FunctionName: WorkflowProxyFunction
-      Policies:
-        - Statement:
-            -
-              Effect: Allow
-              Action:
-                - 'cloudformation:ListStackResources'
-                - 'states:StartExecution'
-                - 'states:DescribeExecution'
-              Resource: '*'
-
+            
   WorkflowFunctionA:
     Type: AWS::Serverless::Function # More info about Function Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
     Properties:
