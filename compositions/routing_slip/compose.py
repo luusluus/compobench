@@ -1,13 +1,16 @@
 import os
+import time
 
 from aws_lambda import LambdaHelper
 from s3 import S3BucketHelper
 
 def compose(event):
     workflow_instance_id = event['workflow_instance_id']
+    time.sleep(event['sleep'])
     
     payload = {
         'workflow_instance_id': workflow_instance_id,
+        'sleep': event['sleep']
     }
 
     aws_region = os.environ['AWS_REGION']
