@@ -42,15 +42,13 @@ def invoke(sleep: int, workflow: list, full_workflow: list, waiter_config: dict)
 
         for function in full_workflow:
             object_key = f'{function}/{workflow_instance_id}.json'
-            print(f'deleting {object_key}')
             s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=object_key)
 
-        print(f'deleting {result_key}')
         s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
         status_code = 200
     
     except Exception as e:
-        print(e)
+        # print(e)
         status_code = 404
 
     return status_code

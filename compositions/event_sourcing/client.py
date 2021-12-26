@@ -13,7 +13,6 @@ def invoke(sleep: int, input: str):
 
     workflow_instance_id = str(uuid.uuid4())
 
-    print(workflow_instance_id)
     response = lambda_helper.invoke_lambda_async(
         function_name='EventSourcingOrchestrator', 
         payload={
@@ -43,13 +42,12 @@ def invoke(sleep: int, input: str):
 
                 if len(items) > 0:
                     result = next((item for item in items if int(item['EventTypeId']) == event_definitions.EXECUTION_COMPLETED['id']))
-                    print(result['Result'])
                     status_code = 200
                     break
 
             except StopIteration:
                 wait = 1
-                print('Waiting {} secs and retry attempt: {}'.format(wait, retries))
+                # print('Waiting {} secs and retry attempt: {}'.format(wait, retries))
                 time.sleep(wait)
                 retries += 1
 

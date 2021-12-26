@@ -1,6 +1,7 @@
 
 
 import json
+import logging
 from boto3 import client as boto3_client
 
 def invoke(sleep: int):
@@ -16,5 +17,7 @@ def invoke(sleep: int):
         InvocationType='RequestResponse',
         Payload=json.dumps(event)
     )
+
+    logging.info(response)
 
     return response['StatusCode']

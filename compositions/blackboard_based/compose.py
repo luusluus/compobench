@@ -24,7 +24,7 @@ def compose(event, business_logic_function):
         step_input = previous_step['Input']
         step_output = previous_step['Output']
     except NoItemException:
-        print('key not found')
+        # print('key not found')
         step_input = step_output = {
             'result': ''
         }

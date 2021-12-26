@@ -15,7 +15,7 @@ def invoke(sleep: int, waiter_config: dict):
     bucket_name = 'async-sequence-store'
     result_key = f'result_{workflow_instance_id}.json'
 
-    print(result_key)
+    # print(result_key)
     response = lambda_helper.invoke_lambda_async(
         function_name='AsyncSequenceFunctionA', 
         payload={

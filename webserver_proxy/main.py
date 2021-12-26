@@ -102,14 +102,12 @@ def message_queue():
 @app.route("/storage", methods=['POST'])
 def storage_based():
     payload = request.get_json(force=True)
-    print(payload)
     status_code = storage_client.invoke(
         sleep=payload['sleep'],
         workflow=payload['workflow'],
         full_workflow=payload['full_workflow'],
         waiter_config=payload['waiter_config']
     )
-    print(status_code)
     return Response("", status=status_code, mimetype='application/json')
 
 @app.route("/workflow_engine", methods=['POST'])
@@ -121,7 +119,23 @@ def workflow_engine():
     
     return Response("", status=status_code, mimetype='application/json')
 
-if __name__ == "__main__":
-    import bjoern
+import socket
+try:
+    from cheroot.wsgi import Server as WSGIServer
+except ImportError:
+    from cherrypy.wsgiserver import CherryPyWSGIServer as WSGIServer
 
-    bjoern.run(app, "127.0.0.1", 8000)
+server = WSGIServer(
+    bind_addr=('127.0.0.1', 8000),
+    wsgi_app=app,
+    request_queue_size=1500,
+    server_name=socket.gethostname()
+)
+
+if __name__ == '__main__':
+    try:
+        server.start()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.stop()

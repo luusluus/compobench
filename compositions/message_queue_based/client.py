@@ -45,7 +45,7 @@ def invoke(sleep: int, waiter_config: dict, message_attributes: dict):
 
         s3_bucket_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
     except Exception as e:
-        print(e)
+        # print(e)
         status_code = 404
         
     return status_code

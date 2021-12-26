@@ -35,13 +35,13 @@ def invoke(sleep: int):
         response = step_functions_client.describe_execution(executionArn=execution_arn)
         status = response["status"]
         if status == "SUCCEEDED":
-            print(json.loads(response['output']))
+            # print(json.loads(response['output']))
             status_code = 200
             break
         elif status == "RUNNING":
             time.sleep(1)
         else:
-            print(f"Execution {execution_arn} failed with status {status}")
+            # print(f"Execution {execution_arn} failed with status {status}")
             status_code = 400
             break
 

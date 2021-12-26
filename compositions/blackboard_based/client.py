@@ -46,12 +46,12 @@ def invoke():
                     'WorkflowInstanceId': workflow_instance_id,
                     'StepId': last_step
                 })
-            print(item['Output']['result'])
+            # print(item['Output']['result'])
 
             status_code = 200
             break
         except NoItemException:
-            print('Waiting {} secs and retry attempt: {}'.format(1, retries))
+            # print('Waiting {} secs and retry attempt: {}'.format(1, retries))
             sleep(1)
             retries += 1
 

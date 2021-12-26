@@ -29,7 +29,7 @@ class Controller:
     def determine_next_step(self, event):
         # start a new workflow
         if 'workflow_instance_id' in event:
-            print(event['workflow_instance_id'])
+            # print(event['workflow_instance_id'])
             # parse first step
             first_step = self._workflow_data[0]
             workflow_instance_id = event['workflow_instance_id']
@@ -73,7 +73,7 @@ class Controller:
     
     def is_end_workflow(self):
         if not self._state['next_function_name']:
-            print('workflow finished')
+            # print('workflow finished')
             return True
         return False
 

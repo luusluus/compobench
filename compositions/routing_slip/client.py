@@ -15,7 +15,7 @@ def invoke(sleep: int, composition: list, waiter_config: dict):
     bucket_name = 'routing-slip-store'
     result_key = f'result_{workflow_instance_id}.json'
 
-    print(result_key)
+    # print(result_key)
     response = lambda_helper.invoke_lambda_async(
         function_name='RoutingSlipFunctionA', 
         payload={
@@ -40,7 +40,7 @@ def invoke(sleep: int, composition: list, waiter_config: dict):
             s3_helper.delete_object_from_bucket(bucket_name=bucket_name, object_key=result_key)
             status_code = 200
         except Exception as e:
-            print(e)
+            # print(e)
             status_code = 404
 
     return status_code

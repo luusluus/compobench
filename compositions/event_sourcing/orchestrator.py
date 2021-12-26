@@ -32,7 +32,7 @@ class Orchestrator:
             else:
                 previous_function_result = ''
 
-            print(f'scheduling next function {next_function["name"]}')
+            # print(f'scheduling next function {next_function["name"]}')
             self.schedule_next_function(
                 function_name=next_function['name'],
                 function_input=previous_function_result)

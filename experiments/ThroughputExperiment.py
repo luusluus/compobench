@@ -1,23 +1,15 @@
 from datetime import datetime, timedelta, timezone
 from io import StringIO
-import json
 import time
-import uuid
 import subprocess
-import json
-import uuid
 
 import boto3
 import pandas as pd
 
-from aws_auth import AWSRequestsAuth
-from XRayWrapper import XRayWrapper
 from ExperimentData import ThroughputExperimentData
 
 class ThroughputExperiment:
     def __init__(self, experiment_data: ThroughputExperimentData):
-        self._xray_wrapper = XRayWrapper()
-
         self._experiment_data = experiment_data
 
         self._results = pd.DataFrame()
@@ -32,22 +24,21 @@ class ThroughputExperiment:
             # print('warm up phase')
             # executor.start(
             #     concurrent_workers=load['concurrent_workers'],
-            #     duration='10s',
             #     rate_limit=-1
             # )
 
-            time.sleep(10)
+            # time.sleep(10)
             # start throughput measurement
             print('measurement phase')
             print(f'RPS: {load["rps"]}')
-            start = datetime.utcnow()
+            # start = datetime.utcnow()
 
             output = executor.start(
                 concurrent_workers=load['concurrent_workers'],
                 rate_limit=-1
             )
 
-            end = datetime.utcnow() + timedelta(seconds=10)
+            # end = datetime.utcnow() + timedelta(seconds=10)
 
             result_df = self.process_results(output=output, rps=load['rps'])
             self._results = self._results.append(result_df)

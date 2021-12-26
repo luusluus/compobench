@@ -20,7 +20,7 @@ def lambda_handler(event, context):
         else:
             raise Exception
     except Exception as e:
-        print(e)
+        # print(e)
         cfnresponse.send(event, context, cfnresponse.FAILED, response_data)
 
 def populate_workflow_definition_table(table_name: str):

@@ -16,7 +16,7 @@ def invoke(sleep: int, workflow: list, waiter_config: dict):
     bucket_name = 'async-coordinator-store'
     result_key = f'result_{workflow_instance_id}.json'
 
-    print(result_key)
+    # print(result_key)
     response = lambda_helper.invoke_lambda_async(
         function_name='AsyncCoordinatorFunctionCoordinator', 
         payload={

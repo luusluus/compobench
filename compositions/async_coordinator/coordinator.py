@@ -32,7 +32,6 @@ class Coordinator:
 
 
     def determine_next_step(self, event):
-        print(event)
         workflow = event['workflow']
         try:
             index = workflow.index(event.get('prev_invoked_function'))
