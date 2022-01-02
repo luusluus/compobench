@@ -128,7 +128,7 @@ except ImportError:
 server = WSGIServer(
     bind_addr=('127.0.0.1', 8000),
     wsgi_app=app,
-    request_queue_size=1500,
+    request_queue_size=65536,
     server_name=socket.gethostname()
 )
 
