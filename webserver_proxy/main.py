@@ -1,4 +1,3 @@
-import logging
 from flask import Flask, jsonify, request, Response
 
 # from sequence import client
@@ -19,7 +18,7 @@ app = Flask(__name__)
 @app.route("/sequence", methods=['POST'])
 def sequence():
     payload = request.get_json(force=True)
-    logging.info('invoking sequence')
+    print('invoking sequence')
     status_code = sequence_client.invoke(
         sleep=payload['sleep'],
     )
