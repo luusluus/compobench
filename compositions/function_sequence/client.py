@@ -1,5 +1,4 @@
-
-
+import sys
 import json
 import logging
 from boto3 import client as boto3_client
@@ -21,3 +20,8 @@ def invoke(sleep: int):
     logging.info(response)
 
     return response['StatusCode']
+
+if __name__ == "__main__":
+    sleep = sys.argv[1]
+    status_code = invoke(sleep=int(sleep))
+    print(status_code)
