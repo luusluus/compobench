@@ -21,6 +21,7 @@ func sequence(w http.ResponseWriter, req *http.Request) {
 		fmt.Println(err)
 	}
 	status_code := parse_python_response(out)
+	fmt.Println(status_code)
 
 	w.WriteHeader(status_code)
 	w.Header().Set("Content-Type", "application/json")

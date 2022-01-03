@@ -2,7 +2,11 @@
     "rps": [
         {
             "rps": 40, 
-            "concurrent_workers": 400
+            "concurrent_workers": 5
+        },
+        {
+            "rps": 80, 
+            "concurrent_workers": 10
         }
     ],
     "duration": "10s",
