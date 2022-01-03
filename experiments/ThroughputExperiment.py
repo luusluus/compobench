@@ -27,7 +27,7 @@ class ThroughputExperiment:
             #     rate_limit=-1
             # )
 
-            time.sleep(10)
+            # time.sleep(10)
             # start throughput measurement
             print('measurement phase')
             print(f'RPS: {load["rps"]}')
