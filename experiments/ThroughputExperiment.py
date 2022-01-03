@@ -47,6 +47,7 @@ class ThroughputExperiment:
         df = pd.read_csv(StringIO(output))
         df['composition'] = self._experiment_data.name
         df['rps'] = rps
+        print(df.to_string())
 
         return df
 
