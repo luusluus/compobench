@@ -20,12 +20,13 @@ class ThroughputExperiment:
         for load in workload:
             print(f'composition: {self._experiment_data.name}')
             # warm-up phase
-            # print('warm up phase')
+            print('warm up phase')
             executor.start(
                 concurrent_workers=load['concurrent_workers'],
                 rate_limit=-1
             )
 
+            print('sleep 30 sec')
             time.sleep(30)
             # start throughput measurement
             print('measurement phase')
