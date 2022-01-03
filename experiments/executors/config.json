@@ -5,7 +5,7 @@
             "concurrent_workers": 400
         }
     ],
-    "duration": "5s",
+    "duration": "10s",
     "compositions": {
         "sequence": {
             "payload": {
