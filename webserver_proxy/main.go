@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os/exec"
 	"strconv"
+
+	fs "webserver_proxy/function_sequence"
 )
 
 type Message struct {
@@ -15,17 +17,17 @@ type Message struct {
 
 func sequence(w http.ResponseWriter, req *http.Request) {
 	message := parse_message(req)
-	cmd := exec.Command("python", "../compositions/function_sequence/client.py", strconv.Itoa(message.Sleep))
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println(err)
-	}
-	status_code := parse_python_response(out)
-	fmt.Println(status_code)
+	b := new(bytes.Buffer)
+	json.NewEncoder(b).Encode(message)
+	status_code := fs.Invoke(b.Bytes())
 
 	w.WriteHeader(status_code)
 	w.Header().Set("Content-Type", "application/json")
-	return
+}
+
+func hello(w http.ResponseWriter, req *http.Request) {
+	w.WriteHeader(201)
+	w.Header().Set("Content-Type", "application/json")
 }
 
 func parse_message(req *http.Request) Message {
@@ -48,8 +50,8 @@ func parse_python_response(response []byte) int {
 }
 
 func main() {
-
 	http.HandleFunc("/sequence", sequence)
-
+	http.HandleFunc("/hello", hello)
+	fmt.Printf("Starting server at port 8000\n")
 	http.ListenAndServe(":8000", nil)
 }
