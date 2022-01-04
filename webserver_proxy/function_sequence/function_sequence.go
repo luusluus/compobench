@@ -2,6 +2,7 @@ package function_sequence
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/lambda"
 
@@ -25,10 +26,15 @@ func Invoke(payload []byte) int {
 
 	result, err := service.Invoke(input)
 	if err != nil {
-		log.Println(err)
+		if aerr, ok := err.(awserr.Error); ok {
+			switch aerr.Code() {
+			case lambda.ErrCodeTooManyRequestsException:
+				return 429
+			default:
+				return 500
+			}
+		}
 	}
-
-	log.Println(*result.StatusCode)
 
 	return int(*(result.StatusCode))
 
