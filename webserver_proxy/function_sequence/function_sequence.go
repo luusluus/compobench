@@ -5,7 +5,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/lambda"
 
-	"fmt"
+	"log"
 )
 
 func Invoke(payload []byte) int {
@@ -13,8 +13,7 @@ func Invoke(payload []byte) int {
 		Region: aws.String("eu-central-1")},
 	)
 	if err != nil {
-		fmt.Println(err.Error())
-
+		log.Println(err.Error())
 	}
 
 	service := lambda.New(sess)
@@ -26,8 +25,10 @@ func Invoke(payload []byte) int {
 
 	result, err := service.Invoke(input)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
+
+	log.Println(*result.StatusCode)
 
 	return int(*(result.StatusCode))
 
