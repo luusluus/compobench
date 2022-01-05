@@ -77,9 +77,10 @@ all_experiment_data.append(sequence_experiment_data)
 for experiment_data in all_experiment_data:
     experiment = ThroughputExperiment(experiment_data=experiment_data)
     experiment.start()
-    results_df = experiment.get_results()
-    
-    results_df.rename(columns={
+    hey_results_df = experiment.get_hey_results()
+    aws_results_df = experiment.get_aws_results()
+
+    hey_results_df.rename(columns={
             'response-time': 'response_time', 
             'DNS+dialup': 'dns_dialup',
             'Request-write': 'request_write',
@@ -90,4 +91,5 @@ for experiment_data in all_experiment_data:
         inplace=True)
 
     Path(f'results/{experiment_data.name}').mkdir(parents=True, exist_ok=True)
-    results_df.to_csv(f'results/{experiment_data.name}/{int(time.time())}.csv', index=False)
+    hey_results_df.to_csv(f'results/{experiment_data.name}/hey_{int(time.time())}.csv', index=False)
+    aws_results_df.to_csv(f'results/{experiment_data.name}/aws_{int(time.time())}.csv', index=False)
