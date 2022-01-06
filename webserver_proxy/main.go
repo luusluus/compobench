@@ -7,6 +7,7 @@ import (
 
 	async "webserver_proxy/async_function"
 	m "webserver_proxy/message"
+	mq "webserver_proxy/message_queue"
 	sync "webserver_proxy/sync_function"
 	sfn "webserver_proxy/workflow_engine"
 )
@@ -65,6 +66,15 @@ func async_coordinator(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
+func message_queue(w http.ResponseWriter, req *http.Request) {
+	message := parse_message(req)
+
+	status_code := mq.Invoke(message)
+
+	w.WriteHeader(status_code)
+	w.Header().Set("Content-Type", "application/json")
+}
+
 func workflow_engine(w http.ResponseWriter, req *http.Request) {
 	message := parse_message(req)
 
@@ -90,6 +100,7 @@ func main() {
 	http.HandleFunc("/async_sequence", async_sequence)
 	http.HandleFunc("/routing_slip", routing_slip)
 	http.HandleFunc("/async_coordinator", async_coordinator)
+	http.HandleFunc("/message_queue", message_queue)
 	http.HandleFunc("/workflow_engine", workflow_engine)
 
 	fmt.Printf("Starting server at port 8000\n")
