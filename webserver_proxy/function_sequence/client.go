@@ -1,15 +1,20 @@
 package function_sequence
 
 import (
+	"bytes"
+	"encoding/json"
+	"log"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/lambda"
+	"github.com/google/uuid"
 
-	"log"
+	m "webserver_proxy/message"
 )
 
-func Invoke(payload []byte) int {
+func Invoke(payload m.Message) int {
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String("eu-central-1")},
 	)
@@ -19,9 +24,14 @@ func Invoke(payload []byte) int {
 
 	service := lambda.New(sess)
 
+	payload.WorkflowInstanceId = uuid.New().String()
+
+	b := new(bytes.Buffer)
+	json.NewEncoder(b).Encode(payload)
+
 	input := &lambda.InvokeInput{
 		FunctionName: aws.String("SequenceFunctionA"),
-		Payload:      payload,
+		Payload:      b.Bytes(),
 	}
 
 	result, err := service.Invoke(input)
