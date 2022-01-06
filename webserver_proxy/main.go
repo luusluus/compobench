@@ -8,6 +8,7 @@ import (
 	async "webserver_proxy/async_function"
 	m "webserver_proxy/message"
 	sync "webserver_proxy/sync_function"
+	sfn "webserver_proxy/workflow_engine"
 )
 
 func sequence(w http.ResponseWriter, req *http.Request) {
@@ -64,6 +65,15 @@ func async_coordinator(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
+func workflow_engine(w http.ResponseWriter, req *http.Request) {
+	message := parse_message(req)
+
+	status_code := sfn.Invoke(message)
+
+	w.WriteHeader(status_code)
+	w.Header().Set("Content-Type", "application/json")
+}
+
 func parse_message(req *http.Request) m.Message {
 	var m m.Message
 	err := json.NewDecoder(req.Body).Decode(&m)
@@ -80,6 +90,7 @@ func main() {
 	http.HandleFunc("/async_sequence", async_sequence)
 	http.HandleFunc("/routing_slip", routing_slip)
 	http.HandleFunc("/async_coordinator", async_coordinator)
+	http.HandleFunc("/workflow_engine", workflow_engine)
 
 	fmt.Printf("Starting server at port 8000\n")
 	http.ListenAndServe(":8000", nil)
