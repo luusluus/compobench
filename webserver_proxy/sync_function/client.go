@@ -14,7 +14,7 @@ import (
 	m "webserver_proxy/message"
 )
 
-func Invoke(payload m.Message) int {
+func Invoke(payload m.Message, function_name string) int {
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String("eu-central-1")},
 	)
@@ -30,7 +30,7 @@ func Invoke(payload m.Message) int {
 	json.NewEncoder(b).Encode(payload)
 
 	input := &lambda.InvokeInput{
-		FunctionName: aws.String("SequenceFunctionA"),
+		FunctionName: aws.String(function_name),
 		Payload:      b.Bytes(),
 	}
 

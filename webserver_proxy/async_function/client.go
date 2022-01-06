@@ -17,7 +17,7 @@ import (
 	m "webserver_proxy/message"
 )
 
-func Invoke(payload m.Message) int {
+func Invoke(payload m.Message, function_name string, bucket_name string) int {
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String("eu-central-1")},
 	)
@@ -29,14 +29,13 @@ func Invoke(payload m.Message) int {
 
 	payload.WorkflowInstanceId = uuid.New().String()
 
-	bucket_name := "async-sequence-store"
 	result_key := fmt.Sprintf("result_%s.json", payload.WorkflowInstanceId)
 
 	b := new(bytes.Buffer)
 	json.NewEncoder(b).Encode(payload)
 
 	input := &lambda.InvokeInput{
-		FunctionName:   aws.String("AsyncSequenceFunctionA"),
+		FunctionName:   aws.String(function_name),
 		Payload:        b.Bytes(),
 		InvocationType: aws.String("Event"),
 	}

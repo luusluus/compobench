@@ -5,15 +5,33 @@ import (
 	"fmt"
 	"net/http"
 
-	as "webserver_proxy/async_sequence"
-	fs "webserver_proxy/function_sequence"
+	async "webserver_proxy/async_function"
 	m "webserver_proxy/message"
+	sync "webserver_proxy/sync_function"
 )
 
 func sequence(w http.ResponseWriter, req *http.Request) {
 	message := parse_message(req)
 
-	status_code := fs.Invoke(message)
+	status_code := sync.Invoke(message, "SequenceFunctionA")
+
+	w.WriteHeader(status_code)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func compiled(w http.ResponseWriter, req *http.Request) {
+	message := parse_message(req)
+
+	status_code := sync.Invoke(message, "CompiledFunction")
+
+	w.WriteHeader(status_code)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func coordinator(w http.ResponseWriter, req *http.Request) {
+	message := parse_message(req)
+
+	status_code := sync.Invoke(message, "CoordinatorFunctionCoordinator")
 
 	w.WriteHeader(status_code)
 	w.Header().Set("Content-Type", "application/json")
@@ -22,7 +40,25 @@ func sequence(w http.ResponseWriter, req *http.Request) {
 func async_sequence(w http.ResponseWriter, req *http.Request) {
 	message := parse_message(req)
 
-	status_code := as.Invoke(message)
+	status_code := async.Invoke(message, "AsyncSequenceFunctionA", "async-sequence-store")
+
+	w.WriteHeader(status_code)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func routing_slip(w http.ResponseWriter, req *http.Request) {
+	message := parse_message(req)
+
+	status_code := async.Invoke(message, "RoutingSlipFunctionA", "routing-slip-store")
+
+	w.WriteHeader(status_code)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func async_coordinator(w http.ResponseWriter, req *http.Request) {
+	message := parse_message(req)
+
+	status_code := async.Invoke(message, "AsyncCoordinatorFunctionCoordinator", "async-coordinator-store")
 
 	w.WriteHeader(status_code)
 	w.Header().Set("Content-Type", "application/json")
@@ -39,7 +75,11 @@ func parse_message(req *http.Request) m.Message {
 
 func main() {
 	http.HandleFunc("/sequence", sequence)
+	http.HandleFunc("/coordinator", coordinator)
+	http.HandleFunc("/compiled", compiled)
 	http.HandleFunc("/async_sequence", async_sequence)
+	http.HandleFunc("/routing_slip", routing_slip)
+	http.HandleFunc("/async_coordinator", async_coordinator)
 
 	fmt.Printf("Starting server at port 8000\n")
 	http.ListenAndServe(":8000", nil)

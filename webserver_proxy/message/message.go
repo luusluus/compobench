@@ -2,6 +2,8 @@ package message
 
 type Message struct {
 	Sleep              int      `json:"sleep"`
-	Workflow           []string `json:"workflow"`
 	WorkflowInstanceId string   `json:"workflow_instance_id"`
+	Workflow           []string `json:"workflow"`
+	Composition        []string `json:"composition"`
+	Input              string   `json:"input"`
 }
