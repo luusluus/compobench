@@ -68,8 +68,10 @@ class ThroughputExperiment:
         invocation_count = self._cloudwatch.get_statistics(metric_name='Invocations', start=start, end=end)
         throttle_count = self._cloudwatch.get_statistics(metric_name='Throttles', start=start, end=end)
 
+        error_rate = error_count / invocation_count
         df = pd.DataFrame({
             'error_count': [error_count],
+            'error_rate': [error_rate],
             'invocation_count': [invocation_count],
             'throttle_count': [throttle_count],
             'rps': rps,
