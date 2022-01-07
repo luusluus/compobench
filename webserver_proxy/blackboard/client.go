@@ -1,4 +1,4 @@
-package event_sourcing
+package blackboard
 
 import (
 	"bytes"
@@ -11,7 +11,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 	"github.com/aws/aws-sdk-go/service/lambda"
 	"github.com/google/uuid"
 
@@ -26,7 +25,7 @@ func Invoke(payload p.Payload) int {
 		log.Println(err.Error())
 	}
 	dynamodb_service := dynamodb.New(sess)
-	event_history_table := "EventHistoryTable"
+	execution_table := "BlackboardWorkflowDefinitionTable"
 
 	payload.WorkflowInstanceId = uuid.New().String()
 
@@ -36,7 +35,7 @@ func Invoke(payload p.Payload) int {
 	json.NewEncoder(b).Encode(payload)
 
 	input := &lambda.InvokeInput{
-		FunctionName:   aws.String("EventSourcingOrchestrator"),
+		FunctionName:   aws.String("BlackboardFunctionController"),
 		Payload:        b.Bytes(),
 		InvocationType: aws.String("Event"),
 	}
@@ -52,38 +51,39 @@ func Invoke(payload p.Payload) int {
 			}
 		}
 	}
+
+	log.Println(payload.WorkflowInstanceId)
 	status_code := int(*(result.StatusCode))
 	if status_code == 202 {
 		time.Sleep(8 * time.Second)
 
 		tables, _ := dynamodb_service.ListTables(&dynamodb.ListTablesInput{})
 		for _, table_name := range tables.TableNames {
-			if strings.Contains(*table_name, event_history_table) {
-				event_history_table = *table_name
+			if strings.Contains(*table_name, execution_table) {
+				execution_table = *table_name
 			}
 		}
 
-		filter := expression.Name("WorkflowInstanceId").Equal(expression.Value(payload.WorkflowInstanceId))
-		filter_expression, _ := expression.NewBuilder().WithFilter(filter).Build()
-		scan_input := &dynamodb.ScanInput{
-			ExpressionAttributeNames:  filter_expression.Names(),
-			ExpressionAttributeValues: filter_expression.Values(),
-			FilterExpression:          filter_expression.Filter(),
-			TableName:                 aws.String(event_history_table),
+		key := make(map[string]*dynamodb.AttributeValue)
+		key["WorkflowInstanceId"] = &dynamodb.AttributeValue{
+			S: aws.String(payload.WorkflowInstanceId),
+		}
+		// last function to execute. BlackboardFunctionC
+		key["StepId"] = &dynamodb.AttributeValue{
+			S: aws.String("3"),
 		}
 
 		retries := 1
 		for {
-			query_result, _ := dynamodb_service.Scan(scan_input)
-
-			for _, item := range query_result.Items {
-				event_type_id := *item["EventTypeId"].N
-				if event_type_id == "6" {
-					return 200
-				}
+			get_item_input := &dynamodb.GetItemInput{
+				Key:       key,
+				TableName: aws.String(execution_table),
 			}
 
-			time.Sleep(100 * time.Millisecond)
+			query_result, _ := dynamodb_service.GetItem(get_item_input)
+
+			log.Println(query_result.Item)
+			time.Sleep(1000 * time.Millisecond)
 			retries += 1
 
 			if retries > 50 {

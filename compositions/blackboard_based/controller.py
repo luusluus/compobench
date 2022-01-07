@@ -2,8 +2,6 @@ import os
 from dynamodb import DynamoDBTableHelper, NoItemException
 from aws_lambda import LambdaHelper
 
-from aws_xray_sdk.core import xray_recorder
-
 sleep_time = 2
 class NoValidWorkflowEvent(Exception):
     pass
@@ -50,9 +48,6 @@ class Controller:
         # not a valid event
             raise NoValidWorkflowEvent
 
-        subsegment = xray_recorder.begin_subsegment('Identification')
-        subsegment.put_annotation('workflow_instance_id', workflow_instance_id)
-        xray_recorder.end_subsegment()
         self._state = {
                 'workflow_instance_id': workflow_instance_id,
                 'next_function_name': next_function_name,

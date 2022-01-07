@@ -1,10 +1,6 @@
 import os
 from compose import compose
 
-from aws_xray_sdk.core import patch_all
-
-patch_all()
-
 def lambda_handler(event, context):
     return compose(event=event, business_logic_function=hello_world)
 

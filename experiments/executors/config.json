@@ -63,7 +63,9 @@
             }
         },
         "blackboard": {
-            "payload": {}
+            "payload": {
+                "sleep": 2
+            }
         },
         "message_queue": {
             "payload": {

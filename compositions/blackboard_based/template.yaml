@@ -6,7 +6,6 @@ Description: >
 Globals:
   Function:
     Runtime: python3.8
-    Tracing: Active
     Timeout: 180
     Layers:
       - !Ref BlackboardDepends
