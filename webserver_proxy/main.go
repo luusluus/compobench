@@ -6,14 +6,14 @@ import (
 	"net/http"
 
 	async "webserver_proxy/async_function"
-	m "webserver_proxy/message"
 	mq "webserver_proxy/message_queue"
+	p "webserver_proxy/payload"
 	sync "webserver_proxy/sync_function"
 	sfn "webserver_proxy/workflow_engine"
 )
 
 func sequence(w http.ResponseWriter, req *http.Request) {
-	message := parse_message(req)
+	message := parse_payload(req)
 
 	status_code := sync.Invoke(message, "SequenceFunctionA")
 
@@ -22,7 +22,7 @@ func sequence(w http.ResponseWriter, req *http.Request) {
 }
 
 func compiled(w http.ResponseWriter, req *http.Request) {
-	message := parse_message(req)
+	message := parse_payload(req)
 
 	status_code := sync.Invoke(message, "CompiledFunction")
 
@@ -31,7 +31,7 @@ func compiled(w http.ResponseWriter, req *http.Request) {
 }
 
 func coordinator(w http.ResponseWriter, req *http.Request) {
-	message := parse_message(req)
+	message := parse_payload(req)
 
 	status_code := sync.Invoke(message, "CoordinatorFunctionCoordinator")
 
@@ -40,7 +40,7 @@ func coordinator(w http.ResponseWriter, req *http.Request) {
 }
 
 func async_sequence(w http.ResponseWriter, req *http.Request) {
-	message := parse_message(req)
+	message := parse_payload(req)
 
 	status_code := async.Invoke(message, "AsyncSequenceFunctionA", "async-sequence-store")
 
@@ -49,7 +49,7 @@ func async_sequence(w http.ResponseWriter, req *http.Request) {
 }
 
 func routing_slip(w http.ResponseWriter, req *http.Request) {
-	message := parse_message(req)
+	message := parse_payload(req)
 
 	status_code := async.Invoke(message, "RoutingSlipFunctionA", "routing-slip-store")
 
@@ -58,7 +58,7 @@ func routing_slip(w http.ResponseWriter, req *http.Request) {
 }
 
 func async_coordinator(w http.ResponseWriter, req *http.Request) {
-	message := parse_message(req)
+	message := parse_payload(req)
 
 	status_code := async.Invoke(message, "AsyncCoordinatorFunctionCoordinator", "async-coordinator-store")
 
@@ -67,7 +67,7 @@ func async_coordinator(w http.ResponseWriter, req *http.Request) {
 }
 
 func message_queue(w http.ResponseWriter, req *http.Request) {
-	message := parse_message(req)
+	message := parse_payload(req)
 
 	status_code := mq.Invoke(message)
 
@@ -76,7 +76,7 @@ func message_queue(w http.ResponseWriter, req *http.Request) {
 }
 
 func workflow_engine(w http.ResponseWriter, req *http.Request) {
-	message := parse_message(req)
+	message := parse_payload(req)
 
 	status_code := sfn.Invoke(message)
 
@@ -84,13 +84,13 @@ func workflow_engine(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
-func parse_message(req *http.Request) m.Message {
-	var m m.Message
-	err := json.NewDecoder(req.Body).Decode(&m)
+func parse_payload(req *http.Request) p.Payload {
+	var p p.Payload
+	err := json.NewDecoder(req.Body).Decode(&p)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return m
+	return p
 }
 
 func main() {

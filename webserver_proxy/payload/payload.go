@@ -1,6 +1,6 @@
 package message
 
-type Message struct {
+type Payload struct {
 	Sleep              int      `json:"sleep"`
 	WorkflowInstanceId string   `json:"workflow_instance_id"`
 	Workflow           []string `json:"workflow"`

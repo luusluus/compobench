@@ -13,10 +13,10 @@ import (
 	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/google/uuid"
 
-	m "webserver_proxy/message"
+	p "webserver_proxy/payload"
 )
 
-func Invoke(payload m.Message) int {
+func Invoke(payload p.Payload) int {
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String("eu-central-1")},
 	)
