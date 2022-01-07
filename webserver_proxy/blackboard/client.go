@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 	"github.com/aws/aws-sdk-go/service/lambda"
 	"github.com/google/uuid"
 
@@ -25,7 +26,7 @@ func Invoke(payload p.Payload) int {
 		log.Println(err.Error())
 	}
 	dynamodb_service := dynamodb.New(sess)
-	execution_table := "BlackboardWorkflowDefinitionTable"
+	execution_table := "BlackboardWorkflowExecutionTable"
 
 	payload.WorkflowInstanceId = uuid.New().String()
 
@@ -64,26 +65,27 @@ func Invoke(payload p.Payload) int {
 			}
 		}
 
-		key := make(map[string]*dynamodb.AttributeValue)
-		key["WorkflowInstanceId"] = &dynamodb.AttributeValue{
-			S: aws.String(payload.WorkflowInstanceId),
-		}
-		// last function to execute. BlackboardFunctionC
-		key["StepId"] = &dynamodb.AttributeValue{
-			S: aws.String("3"),
+		filter := expression.Name("WorkflowInstanceId").Equal(expression.Value(payload.WorkflowInstanceId))
+		filter_expression, _ := expression.NewBuilder().WithFilter(filter).Build()
+		scan_input := &dynamodb.ScanInput{
+			ExpressionAttributeNames:  filter_expression.Names(),
+			ExpressionAttributeValues: filter_expression.Values(),
+			FilterExpression:          filter_expression.Filter(),
+			TableName:                 aws.String(execution_table),
 		}
 
 		retries := 1
 		for {
-			get_item_input := &dynamodb.GetItemInput{
-				Key:       key,
-				TableName: aws.String(execution_table),
+			query_result, _ := dynamodb_service.Scan(scan_input)
+			for _, item := range query_result.Items {
+				event_type_id := *item["StepId"].N
+				if event_type_id == "3" {
+					log.Println(*item["WorkflowInstanceId"].S)
+					return 200
+				}
 			}
 
-			query_result, _ := dynamodb_service.GetItem(get_item_input)
-
-			log.Println(query_result.Item)
-			time.Sleep(1000 * time.Millisecond)
+			time.Sleep(100 * time.Millisecond)
 			retries += 1
 
 			if retries > 50 {
