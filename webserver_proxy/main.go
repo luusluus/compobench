@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	async "webserver_proxy/async_function"
+	es "webserver_proxy/event_sourcing"
 	mq "webserver_proxy/message_queue"
 	p "webserver_proxy/payload"
 	sb "webserver_proxy/storage"
@@ -67,6 +68,15 @@ func async_coordinator(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
+func event_sourcing(w http.ResponseWriter, req *http.Request) {
+	payload := parse_payload(req)
+
+	status_code := es.Invoke(payload)
+
+	w.WriteHeader(status_code)
+	w.Header().Set("Content-Type", "application/json")
+}
+
 func message_queue(w http.ResponseWriter, req *http.Request) {
 	payload := parse_payload(req)
 
@@ -110,6 +120,7 @@ func main() {
 	http.HandleFunc("/async_sequence", async_sequence)
 	http.HandleFunc("/routing_slip", routing_slip)
 	http.HandleFunc("/async_coordinator", async_coordinator)
+	http.HandleFunc("/event_sourcing", event_sourcing)
 	http.HandleFunc("/message_queue", message_queue)
 	http.HandleFunc("/storage", storage_based)
 	http.HandleFunc("/workflow_engine", workflow_engine)
