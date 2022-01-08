@@ -11,6 +11,12 @@
     ],
     "duration": "10s",
     "compositions": {
+        "client_side": {
+            "payload": {
+                "workflow": ["ClientSideFunctionA", "ClientSideFunctionB", "ClientSideFunctionC"],
+                "sleep": 2
+            }
+        },
         "sequence": {
             "payload": {
                 "sleep": 2

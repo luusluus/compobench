@@ -7,6 +7,7 @@ import (
 
 	async "webserver_proxy/async_function"
 	bb "webserver_proxy/blackboard"
+	cs "webserver_proxy/client_side"
 	es "webserver_proxy/event_sourcing"
 	mq "webserver_proxy/message_queue"
 	p "webserver_proxy/payload"
@@ -14,6 +15,15 @@ import (
 	sync "webserver_proxy/sync_function"
 	sfn "webserver_proxy/workflow_engine"
 )
+
+func client_side(w http.ResponseWriter, req *http.Request) {
+	payload := parse_payload(req)
+
+	status_code := cs.Invoke(payload)
+
+	w.WriteHeader(status_code)
+	w.Header().Set("Content-Type", "application/json")
+}
 
 func sequence(w http.ResponseWriter, req *http.Request) {
 	payload := parse_payload(req)
@@ -124,6 +134,7 @@ func parse_payload(req *http.Request) p.Payload {
 }
 
 func main() {
+	http.HandleFunc("/client_side", client_side)
 	http.HandleFunc("/sequence", sequence)
 	http.HandleFunc("/coordinator", coordinator)
 	http.HandleFunc("/compiled", compiled)
