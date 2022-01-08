@@ -35,31 +35,20 @@
         },
         "async_sequence": {
             "payload": {
-                "sleep": 2,
-                "waiter_config": {
-                    "delay": 1,
-                    "max_attempts": 30
-                }
+                "sleep": 2
             }
         },
         "routing_slip": {
             "payload": {
                 "composition": ["RoutingSlipFunctionB", "RoutingSlipFunctionC"],
-                "sleep": 2,
-                "waiter_config": {
-                    "delay": 1,
-                    "max_attempts": 30
-                }
+                "sleep": 2
             }
         },
         "async_coordinator": {
             "payload": {
                 "workflow": ["AsyncCoordinatorFunctionA", "AsyncCoordinatorFunctionB", "AsyncCoordinatorFunctionC"],
-                "sleep": 2,
-                "waiter_config": {
-                    "delay": 1,
-                    "max_attempts": 30
-                }
+                "sleep": 2
+                
             }
         },
         "event_sourcing": {
@@ -75,20 +64,7 @@
         },
         "message_queue": {
             "payload": {
-                "sleep": 2,
-                "waiter_config": {
-                    "delay": 1,
-                    "max_attempts": 30
-                },
-                "message_attributes": {
-                    "caller": {
-                        "DataType": "String",
-                        "StringValue": "Client"
-                    },
-                    "last_function": {
-                        "DataType": "String",
-                        "StringValue": "MessageQueueFunctionC"
-                    }
+                "sleep": 2
                 }
             }
         },
@@ -96,11 +72,7 @@
             "payload": {
                 "workflow": ["function_b", "function_c"],
                 "full_workflow": ["function_a", "function_b", "function_c"],
-                "sleep": 2,
-                "waiter_config": {
-                    "delay": 1,
-                    "max_attempts": 30
-                }
+                "sleep": 2
             }
         },
         "workflow_engine": {

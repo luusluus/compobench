@@ -86,7 +86,7 @@ func Invoke(payload p.Payload) int {
 			time.Sleep(100 * time.Millisecond)
 			retries += 1
 
-			if retries > 50 {
+			if retries > 100 {
 				break
 			}
 		}
