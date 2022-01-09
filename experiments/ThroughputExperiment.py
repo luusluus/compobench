@@ -70,9 +70,29 @@ class ThroughputExperiment:
         print('get statistics from cloudwatch')
         print(start)
         print(end)
-        error_count = self._cloudwatch.get_statistics(metric_name='Errors', start=start, end=end)
-        invocation_count = self._cloudwatch.get_statistics(metric_name='Invocations', start=start, end=end)
-        throttle_count = self._cloudwatch.get_statistics(metric_name='Throttles', start=start, end=end)
+        period=60
+        statistic = 'Sum'
+        error_count = self._cloudwatch.get_statistics(
+            metric_name='Errors',
+            statistic=statistic,
+            period=period,
+            start=start, 
+            end=end)
+
+        invocation_count = self._cloudwatch.get_statistics(
+            metric_name='Invocations', 
+            statistic=statistic,
+            period=period,
+            start=start, 
+            end=end
+            )
+            
+        throttle_count = self._cloudwatch.get_statistics(
+            metric_name='Throttles', 
+            statistic=statistic,
+            period=period,
+            start=start, 
+            end=end)
 
         if invocation_count > 0:
             print('invocation count is not zero')
