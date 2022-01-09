@@ -4,8 +4,8 @@ import pandas as pd
 from datetime import datetime, timedelta, timezone
 
 from CloudWatch import CloudWatch
-start = datetime(year=2022, month=1, day=9, hour=16, minute=47, second=58, tzinfo=timezone.utc)
-end = datetime(year=2022, month=1, day=9, hour=16, minute=51, second=16, tzinfo=timezone.utc)
+start = datetime(year=2022, month=1, day=9, hour=22, minute=28, second=15, tzinfo=timezone.utc) - timedelta(minutes=2)
+end = datetime(year=2022, month=1, day=9, hour=22, minute=29, second=29, tzinfo=timezone.utc)
 
 
 cloudwatch = CloudWatch()

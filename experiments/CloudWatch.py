@@ -45,8 +45,8 @@ class CloudWatch:
         statistics = self.get_metric_statistics(metric_name=metric_name, statistic=statistic, start=start, end=end, period=period)
         datapoints = statistics['Datapoints']
         if len(datapoints) > 0:
-            datapoint = max(datapoints, key=lambda x:x['Timestamp'])
-            return datapoint['Sum']
+            datapoint_sums = [datapoint['Sum'] for datapoint in datapoints if datapoint['Timestamp'] >= start]
+            return sum(datapoint_sums)
         else:
             # TODO: Raise exception
             return 0

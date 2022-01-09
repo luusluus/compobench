@@ -27,26 +27,26 @@ class ThroughputExperiment:
             # warm-up phase
             print('warm up phase')
             print()
-            print(f'start: {datetime.utcnow()}')
+            print(f'start: {datetime.now(timezone.utc)}')
             executor.start(
                 concurrent_workers=load['concurrent_workers'],
                 rate_limit=-1
             )
-            print(f'end: {datetime.utcnow()}')
+            print(f'end: {datetime.now(timezone.utc)}')
 
-            print('sleep 30 sec')
-            time.sleep(30)
+            print('sleep 120 sec')
+            time.sleep(120)
             # start throughput measurement
             print()
             print('measurement phase')
             
-            start = datetime.utcnow()
+            start = datetime.now(timezone.utc)
             print(f'start: {start}')
             output = executor.start(
                 concurrent_workers=load['concurrent_workers'],
                 rate_limit=-1
             )
-            end = datetime.utcnow() + timedelta(minutes=1)
+            end = datetime.now(timezone.utc) + timedelta(minutes=1)
             print(f'end: {end}')
             start = start - timedelta(minutes=2)
 
