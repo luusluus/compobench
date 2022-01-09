@@ -20,8 +20,9 @@ class ThroughputExperiment:
         executor = self._experiment_data.workflow_executor(self._experiment_data.name)
         workload = executor.get_workload()
         for load in workload:
+            rps = load["concurrent_workers"]
             print(f'composition: {self._experiment_data.name}')
-            print(f'RPS: {load["rps"]}')
+            print(f'RPS: {rps}')
             print()
             # warm-up phase
             print('warm up phase')
@@ -53,8 +54,8 @@ class ThroughputExperiment:
             print('wait time between next throughput round')
             print('sleep 180 sec')
             time.sleep(180)
-            self.process_aws_results(rps=load['rps'], start=start, end=end)
-            self.process_hey_results(output=output, rps=load['rps'])
+            self.process_aws_results(rps=rps, start=start, end=end)
+            self.process_hey_results(output=output, rps=rps)
 
     def process_hey_results(self, output, rps):
         df = pd.read_csv(StringIO(output))
