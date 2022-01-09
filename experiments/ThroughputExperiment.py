@@ -44,7 +44,7 @@ class ThroughputExperiment:
             )
 
             end = datetime.utcnow() + timedelta(minutes=1)
-            start = start - timedelta(minutes=1)
+            start = start - timedelta(minutes=2)
             print(start)
             print(end)
 
