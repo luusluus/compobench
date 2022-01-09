@@ -25,10 +25,10 @@ sudo apt-get update
 sudo apt-get install hey
 ```
 
-Start Cheroot proxy web server
+Start proxy web server
 ```
 cd webserver_proxy
-python3 main.py
+go run main.go
 ```
 
 Run throughput experiment
