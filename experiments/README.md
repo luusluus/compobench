@@ -25,7 +25,7 @@ sudo apt-get update
 sudo apt-get install hey
 ```
 
-Start proxy web server
+Open a new terminal and start proxy web server
 ```
 cd webserver_proxy
 go run main.go

@@ -48,7 +48,6 @@
             "payload": {
                 "workflow": ["AsyncCoordinatorFunctionA", "AsyncCoordinatorFunctionB", "AsyncCoordinatorFunctionC"],
                 "sleep": 2
-                
             }
         },
         "event_sourcing": {
@@ -80,6 +79,4 @@
                 "sleep": 2
             }
         }
-    }
-    
 }
