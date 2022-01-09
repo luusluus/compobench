@@ -33,8 +33,8 @@ class ThroughputExperiment:
             )
             print(f'end: {datetime.utcnow()}')
 
-            print('sleep 90 sec')
-            time.sleep(90)
+            print('sleep 30 sec')
+            time.sleep(30)
             # start throughput measurement
             print()
             print('measurement phase')
@@ -46,13 +46,13 @@ class ThroughputExperiment:
                 rate_limit=-1
             )
             end = datetime.utcnow() + timedelta(minutes=1)
-            print(f'start: {end}')
+            print(f'end: {end}')
             start = start - timedelta(minutes=2)
 
             print()
             print('wait time between next throughput round')
-            print('sleep 90 sec')
-            time.sleep(90)
+            print('sleep 180 sec')
+            time.sleep(180)
             self.process_aws_results(rps=load['rps'], start=start, end=end)
             self.process_hey_results(output=output, rps=load['rps'])
 
@@ -86,7 +86,7 @@ class ThroughputExperiment:
             start=start, 
             end=end
             )
-            
+
         throttle_count = self._cloudwatch.get_statistics(
             metric_name='Throttles', 
             statistic=statistic,
