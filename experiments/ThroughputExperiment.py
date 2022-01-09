@@ -64,11 +64,17 @@ class ThroughputExperiment:
         return self._hey_results.reset_index(drop=True)
 
     def process_aws_results(self, rps, start, end):
+        print('get statistics from cloudwatch')
+        print(start)
+        print(end)
         error_count = self._cloudwatch.get_statistics(metric_name='Errors', start=start, end=end)
         invocation_count = self._cloudwatch.get_statistics(metric_name='Invocations', start=start, end=end)
         throttle_count = self._cloudwatch.get_statistics(metric_name='Throttles', start=start, end=end)
 
-        error_rate = error_count / invocation_count
+        if invocation_count > 0:
+            error_rate = error_count / invocation_count
+        else:
+            error_rate = 0
         df = pd.DataFrame({
             'error_count': [error_count],
             'error_rate': [error_rate],
