@@ -33,8 +33,8 @@ class ThroughputExperiment:
             )
             print(f'end: {datetime.utcnow()}')
 
-            print('sleep 60 sec')
-            time.sleep(60)
+            print('sleep 90 sec')
+            time.sleep(90)
             # start throughput measurement
             print()
             print('measurement phase')
@@ -49,6 +49,8 @@ class ThroughputExperiment:
             print(f'start: {end}')
             start = start - timedelta(minutes=2)
 
+            print()
+            print('wait time between next throughput round')
             print('sleep 90 sec')
             time.sleep(90)
             self.process_aws_results(rps=load['rps'], start=start, end=end)
@@ -73,8 +75,10 @@ class ThroughputExperiment:
         throttle_count = self._cloudwatch.get_statistics(metric_name='Throttles', start=start, end=end)
 
         if invocation_count > 0:
+            print('invocation count is not zero')
             error_rate = error_count / invocation_count
         else:
+            print('invocation count is zero')
             error_rate = 0
         df = pd.DataFrame({
             'error_count': [error_count],
