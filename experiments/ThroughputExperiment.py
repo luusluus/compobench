@@ -96,10 +96,8 @@ class ThroughputExperiment:
             end=end)
 
         if invocation_count > 0:
-            print('invocation count is not zero')
             error_rate = error_count / invocation_count
         else:
-            print('invocation count is zero')
             error_rate = 0
         df = pd.DataFrame({
             'error_count': [error_count],

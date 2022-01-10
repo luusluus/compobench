@@ -1,13 +1,22 @@
 {
     "rps": [
         {
-            "concurrent_workers": 10
+            "concurrent_workers": 100
         },
         {
-            "concurrent_workers": 20
+            "concurrent_workers": 200
+        },
+        {
+            "concurrent_workers": 300
+        },
+        {
+            "concurrent_workers": 400
+        },
+        {
+            "concurrent_workers": 500
         }
     ],
-    "duration": "10s",
+    "duration": "30s",
     "compositions": {
         "client_side": {
             "payload": {
