@@ -1,9 +1,6 @@
 {
     "rps": [
         {
-            "concurrent_workers": 100
-        },
-        {
             "concurrent_workers": 200
         },
         {
@@ -14,6 +11,9 @@
         },
         {
             "concurrent_workers": 500
+        },
+        {
+            "concurrent_workers": 600
         }
     ],
     "duration": "30s",

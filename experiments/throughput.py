@@ -62,7 +62,7 @@ workflow_engine_experiment_data = ThroughputExperimentData(
     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor,
 )
 
-# all_experiment_data.append(sequence_experiment_data)
+all_experiment_data.append(sequence_experiment_data)
 all_experiment_data.append(coordinator_experiment_data)
 # all_experiment_data.append(compiled_experiment_data)
 # all_experiment_data.append(async_sequence_experiment_data)
