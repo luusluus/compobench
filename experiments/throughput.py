@@ -7,6 +7,11 @@ from executors import FunctionWorkflowExecutor
 
 all_experiment_data = []
 
+client_experiment_data = ThroughputExperimentData(
+    name='client_side',
+    workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor
+)
+
 sequence_experiment_data = ThroughputExperimentData(
     name='sequence',
     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor
@@ -62,6 +67,7 @@ workflow_engine_experiment_data = ThroughputExperimentData(
     workflow_executor=FunctionWorkflowExecutor.FunctionWorkflowExecutor,
 )
 
+all_experiment_data.append(client_experiment_data)
 # all_experiment_data.append(sequence_experiment_data)
 # all_experiment_data.append(coordinator_experiment_data)
 # all_experiment_data.append(compiled_experiment_data)
