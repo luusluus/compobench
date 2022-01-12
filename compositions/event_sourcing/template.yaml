@@ -40,7 +40,6 @@ Resources:
     Properties:
       FunctionName: EventSourcingOrchestrator
       Handler: handler.lambda_handler
-      Tracing: Active
 
       Policies:
         - LambdaInvokePolicy:
@@ -73,7 +72,6 @@ Resources:
   EventSourcingFunctionA:
     Type: AWS::Serverless::Function
     Properties:
-      Tracing: Active
       FunctionName: EventSourcingFunctionA
       Handler: function_a.lambda_handler
       Policies:
@@ -83,7 +81,6 @@ Resources:
   EventSourcingFunctionB:
     Type: AWS::Serverless::Function
     Properties:
-      Tracing: Active
       FunctionName: EventSourcingFunctionB
       Handler: function_b.lambda_handler
       Policies:
@@ -93,7 +90,6 @@ Resources:
   EventSourcingFunctionC:
     Type: AWS::Serverless::Function
     Properties:
-      Tracing: Active
       FunctionName: EventSourcingFunctionC
       Handler: function_c.lambda_handler
       Policies:

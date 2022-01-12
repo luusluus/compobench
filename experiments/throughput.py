@@ -68,10 +68,10 @@ workflow_engine_experiment_data = ThroughputExperimentData(
 # all_experiment_data.append(async_sequence_experiment_data)
 # all_experiment_data.append(routing_slip_experiment_data)
 # all_experiment_data.append(async_coordinator_experiment_data)
-all_experiment_data.append(event_sourcing_experiment_data)
-all_experiment_data.append(blackboard_experiment_data)
 all_experiment_data.append(message_queue_experiment_data)
 all_experiment_data.append(storage_based_experiment_data)
+# all_experiment_data.append(event_sourcing_experiment_data)
+# all_experiment_data.append(blackboard_experiment_data)
 # all_experiment_data.append(workflow_engine_experiment_data)
 
 for experiment_data in all_experiment_data:
@@ -93,3 +93,7 @@ for experiment_data in all_experiment_data:
     Path(f'results/{experiment_data.name}').mkdir(parents=True, exist_ok=True)
     hey_results_df.to_csv(f'results/{experiment_data.name}/hey_{int(time.time())}.csv', index=False)
     aws_results_df.to_csv(f'results/{experiment_data.name}/aws_{int(time.time())}.csv', index=False)
+
+    print()
+    print('wait 2 minutes before next experiment')
+    time.sleep(120)

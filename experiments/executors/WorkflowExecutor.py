@@ -69,7 +69,7 @@ class WorkflowExecutor(ABC):
         hey_command.append(url)
         return hey_command
 
-    def read_from_config(self):
+    def read_from_config(self) -> dict:
         with open(f'{pathlib.Path(__file__).parent.resolve()}/config.json') as json_file:
             config = json.load(json_file)
             return config

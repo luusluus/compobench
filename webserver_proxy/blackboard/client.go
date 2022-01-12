@@ -53,7 +53,6 @@ func Invoke(payload p.Payload) int {
 		}
 	}
 
-	log.Println(payload.WorkflowInstanceId)
 	status_code := int(*(result.StatusCode))
 	if status_code == 202 {
 		time.Sleep(8 * time.Second)

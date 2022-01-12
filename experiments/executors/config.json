@@ -1,19 +1,7 @@
 {
     "rps": [
         {
-            "concurrent_workers": 200
-        },
-        {
-            "concurrent_workers": 300
-        },
-        {
-            "concurrent_workers": 400
-        },
-        {
-            "concurrent_workers": 500
-        },
-        {
-            "concurrent_workers": 600
+            "concurrent_workers": 1
         }
     ],
     "duration": "30s",
@@ -72,8 +60,7 @@
             "payload": {
                 "sleep": 2
                 }
-            }
-        },
+            },
         "storage": {
             "payload": {
                 "workflow": ["function_b", "function_c"],
@@ -85,5 +72,7 @@
             "payload": {
                 "sleep": 2
             }
+        
         }
+    }
 }
