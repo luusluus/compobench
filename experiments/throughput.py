@@ -64,9 +64,9 @@ workflow_engine_experiment_data = ThroughputExperimentData(
 
 # all_experiment_data.append(sequence_experiment_data)
 # all_experiment_data.append(coordinator_experiment_data)
-all_experiment_data.append(compiled_experiment_data)
-all_experiment_data.append(async_sequence_experiment_data)
-all_experiment_data.append(routing_slip_experiment_data)
+# all_experiment_data.append(compiled_experiment_data)
+# all_experiment_data.append(async_sequence_experiment_data)
+# all_experiment_data.append(routing_slip_experiment_data)
 all_experiment_data.append(async_coordinator_experiment_data)
 # all_experiment_data.append(event_sourcing_experiment_data)
 # all_experiment_data.append(blackboard_experiment_data)
