@@ -76,9 +76,9 @@ workflow_engine_experiment_data = ThroughputExperimentData(
 # all_experiment_data.append(async_coordinator_experiment_data)
 # all_experiment_data.append(message_queue_experiment_data)
 # all_experiment_data.append(storage_based_experiment_data)
-all_experiment_data.append(event_sourcing_experiment_data)
-all_experiment_data.append(blackboard_experiment_data)
-# all_experiment_data.append(workflow_engine_experiment_data)
+# all_experiment_data.append(event_sourcing_experiment_data)
+# all_experiment_data.append(blackboard_experiment_data)
+all_experiment_data.append(workflow_engine_experiment_data)
 
 for experiment_data in all_experiment_data:
     experiment = ThroughputExperiment(experiment_data=experiment_data)
