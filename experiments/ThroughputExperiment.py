@@ -34,8 +34,8 @@ class ThroughputExperiment:
             )
             print(f'end: {datetime.now(timezone.utc)}')
 
-            print('sleep 150 sec')
-            time.sleep(150)
+            print('sleep 180 sec')
+            time.sleep(180)
             # start throughput measurement
             print()
             print('measurement phase')
@@ -48,7 +48,7 @@ class ThroughputExperiment:
             )
             end = datetime.now(timezone.utc) + timedelta(minutes=1)
             print(f'end: {end}')
-            start = start - timedelta(seconds=150) #2.5 min
+            start = start - timedelta(seconds=120) # 2 min
 
             print()
             print('wait time between next throughput round')
