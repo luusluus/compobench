@@ -79,7 +79,6 @@ func Invoke(payload p.Payload) int {
 			for _, item := range query_result.Items {
 				event_type_id := *item["StepId"].N
 				if event_type_id == "3" {
-					log.Println(*item["WorkflowInstanceId"].S)
 					return 200
 				}
 			}
