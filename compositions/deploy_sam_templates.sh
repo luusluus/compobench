@@ -3,6 +3,7 @@
 cd async_coordinator && sam build --cached --beta-features && sam deploy --no-confirm-changeset && \
 cd ../async_function_sequence && sam build --cached --beta-features && sam deploy --no-confirm-changeset && \
 cd ../compiled_sequence && sam build --cached --beta-features && sam deploy --no-confirm-changeset && \
+cd ../client_side_scheduling && sam build --cached --beta-features && sam deploy --no-confirm-changeset && \
 cd ../coordinator && sam build --cached --beta-features && sam deploy --no-confirm-changeset && \
 cd ../event_sourcing && sam build --cached --beta-features && sam deploy --no-confirm-changeset && \
 cd ../message_queue-based && sam build --cached --beta-features && sam deploy --no-confirm-changeset && \

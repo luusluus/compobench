@@ -1,8 +1,9 @@
 #!/bin/bash
 
-cd async-coordinator && sam delete --no-prompts && \
+cd async_coordinator && sam delete --no-prompts && \
 cd ../async_function_sequence && sam delete --no-prompts && \
-cd ../compiled-sequence && sam delete --no-prompts && \
+cd ../compiled_sequence && sam delete --no-prompts && \
+cd ../client_side_scheduling && sam delete --no-prompts && \
 cd ../coordinator && sam delete --no-prompts && \
 cd ../event_sourcing && sam delete --no-prompts && \
 cd ../message_queue-based && sam delete --no-prompts && \
