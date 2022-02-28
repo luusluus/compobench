@@ -1,0 +1,6 @@
+error_count,error_rate,invocation_count,throttle_count,rps,composition
+0.0,0.0,1767.0,0.0,200,storage
+0.0,0.0,2637.0,0.0,300,storage
+0.0,0.0,3285.0,0.0,400,storage
+0.0,0.0,4311.0,0.0,500,storage
+0.0,0.0,5355.0,0.0,600,storage

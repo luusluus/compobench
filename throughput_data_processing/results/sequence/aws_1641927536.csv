@@ -1,0 +1,6 @@
+error_count,error_rate,invocation_count,throttle_count,rps,composition
+0.0,0.0,3000.0,0.0,200,sequence
+0.0,0.0,4500.0,0.0,300,sequence
+1.0,0.00017009695526450075,5879.0,561.0,400,sequence
+76.0,0.012323658180638884,6167.0,2263.0,500,sequence
+322.0,0.054465493910690124,5912.0,6249.0,600,sequence

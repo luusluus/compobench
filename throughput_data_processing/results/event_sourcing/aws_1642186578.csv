@@ -1,0 +1,6 @@
+error_count,error_rate,invocation_count,throttle_count,rps,composition
+0.0,0.0,3394.0,0.0,200,event_sourcing
+0.0,0.0,4657.0,0.0,300,event_sourcing
+0.0,0.0,6132.0,0.0,400,event_sourcing
+0.0,0.0,7121.0,0.0,500,event_sourcing
+0.0,0.0,8956.0,0.0,600,event_sourcing

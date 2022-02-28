@@ -1,0 +1,6 @@
+error_count,error_rate,invocation_count,throttle_count,rps,composition
+0.0,0.0,4000.0,0.0,200,coordinator
+0.0,0.0,6000.0,0.0,300,coordinator
+0.0,0.0,8000.0,0.0,400,coordinator
+0.0,0.0,10000.0,0.0,500,coordinator
+143.0,0.014409512293430068,9924.0,4211.0,600,coordinator

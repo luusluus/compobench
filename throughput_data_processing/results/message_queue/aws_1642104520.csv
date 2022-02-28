@@ -1,0 +1,6 @@
+error_count,error_rate,invocation_count,throttle_count,rps,composition
+0.0,0.0,1800.0,0.0,200,message_queue
+0.0,0.0,2700.0,0.0,300,message_queue
+0.0,0.0,3600.0,0.0,400,message_queue
+0.0,0.0,4500.0,0.0,500,message_queue
+0.0,0.0,5400.0,0.0,600,message_queue

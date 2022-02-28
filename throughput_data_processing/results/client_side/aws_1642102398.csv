@@ -1,0 +1,6 @@
+error_count,error_rate,invocation_count,throttle_count,rps,composition
+0.0,0.0,3000.0,0.0,200,client_side
+0.0,0.0,4500.0,0.0,300,client_side
+0.0,0.0,6000.0,0.0,400,client_side
+0.0,0.0,7500.0,0.0,500,client_side
+0.0,0.0,9005.0,0.0,600,client_side
