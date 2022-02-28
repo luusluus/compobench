@@ -111,9 +111,6 @@ venv.bak/
 data.json
 result.json
 
-# csv files
-
-*.csv
 
 # nodejs
 node_modules/
