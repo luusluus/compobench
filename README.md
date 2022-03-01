@@ -16,33 +16,13 @@ Install AWS SAM CLI
 https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-linux.html#serverless-sam-cli-install-linux-sam-cli
 
 ## Building and deploying a composition
+Deploy all compositions to AWS Lambda and X-Ray support.
 
-First, go into one of the composition directories. For example:
-
-```
-cd compositions/sync-function-sequence
-```
-
-### Build
-```
-sam build --cached --beta-features
+### Build & Deploy All Compositions
+```bash
+bash ./deploy_sam_templates
 ```
 
-### Validate Template
-Before deploying, validate the SAM YAML template
-```
-sam validate
-```
+## Conduct Overhead Experiment
 
-### Deployment
-First time
-```
-sam deploy --guided
-```
 
-For subsequent deployments
-```
-sam deploy
-```
-
-## Conduct Experiment
