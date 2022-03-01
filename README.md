@@ -1,17 +1,7 @@
-# Serverless Function Compositions Programmability Experiment
-Each composition directory contains the dependencies it needs. This is done to evaluate programmability metrics such as LOC, CC etc.
-
-Go to master branch to build, deploy and test compositions.
-## Requirements
-- Python3
-- Radon
-- cloc
+# Serverless Function Compositions Cost Experiment
 
 ## Initial Setup
-Install python package (radon)
-```
-python3 -m venv venv && source ./venv/bin/activate && pip install -e .
-```
+Install R Studio from (here)[https://www.rstudio.com/products/rstudio/download/].
 Install cloc
 ```
 sudo apt install cloc
