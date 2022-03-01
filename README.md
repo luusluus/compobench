@@ -6,14 +6,19 @@
 - Installed AWS CLI and configured it with `aws configure` (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
 
 ## Initial Setup
-Install python package
+### Install python package
 ```
 python3 -m venv venv && source ./venv/bin/activate && pip install -e .
 ```
 
-Install AWS SAM CLI
-
+### Install AWS SAM CLI
 https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-linux.html#serverless-sam-cli-install-linux-sam-cli
+
+### Install X-Ray Daemon
+https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon.html
+
+This 3rd party tool of AWS is required to measure overhead of the client-side scheduling approach.
+
 
 ## Building and deploying a composition
 Deploy all compositions to AWS Lambda and X-Ray support.
