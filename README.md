@@ -24,5 +24,18 @@ bash ./deploy_sam_templates
 ```
 
 ## Conduct Overhead Experiment
+In `overhead.py` you configure the experiment parameters and which composition approaches you want to measure for their overhead.
 
+The variable `ROUNDS` indicates how many times an approach is repeated in one experiment.
+The variable `AMOUNT_WORKFLOWS_PER_ROUND` indicates how many workflows (i.e., composition executions) are invoked in one round.
 
+The `all_experiment_data` list contains the selected composition approaches you want to measure in this experiment.
+
+### Start experiment
+Run `overhead.py`.
+
+### Observe executions in X-Ray
+Check the AWS X-Ray web interface to see traces of each composition execution.
+
+### Results
+Results are found in `results` directory.
