@@ -1,24 +1,14 @@
 # Serverless Function Compositions Cost Experiment
 
 ## Initial Setup
-Install R Studio from (here)[https://www.rstudio.com/products/rstudio/download/].
-Install cloc
-```
-sudo apt install cloc
-```
-## Measure Lines of Code (LOC)
-Python files
-```
-radon raw . -s
-```
+Install R Studio from [here](https://www.rstudio.com/products/rstudio/download/).
 
-YAML & JSON files
-```
-cloc template.yaml
-```
+## Measurement Data
+Data of cost can be found in `cost.csv` and [here](https://docs.google.com/spreadsheets/d/1dp3d3v45LvdZhjXW9ZGXfaiKdTu4gwTnWZxpjn-N6Qg/edit?usp=sharing).
 
-## Measure Cyclomatic Complexity (CC)
+Playing with cost input variables is possible [here](https://docs.google.com/spreadsheets/d/1dp3d3v45LvdZhjXW9ZGXfaiKdTu4gwTnWZxpjn-N6Qg/edit#gid=2022748054).
 
-```
-radon cc . -sa
-```
+Render cost distribution graph by running `cost_split.r` in R Studio.
+Render cost trend graph per composition approach by running `cost_results.r` in R Studio.
+
+
