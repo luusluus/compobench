@@ -28,16 +28,6 @@ cd compositions/sync-function-sequence
 sam build
 ```
 
-### Invoke One Lambda Locally with HTTP
-```
-sam local api
-```
-
-### Invoke One Lambda Locally with CLI
-```
-sam local invoke <<FunctionName>>
-```
-
 ### Validate Template
 Before deploying, validate the SAM YAML template
 ```
