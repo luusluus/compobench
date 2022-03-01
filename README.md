@@ -1,4 +1,4 @@
-# Serverless Function Compositions with AWS Lambda
+# Serverless Function Compositions Overhead Experiment
 
 ## Requirements
 - Python3
@@ -28,16 +28,6 @@ cd compositions/sync-function-sequence
 sam build --cached --beta-features
 ```
 
-### Invoke One Lambda Locally with HTTP
-```
-sam local api
-```
-
-### Invoke One Lambda Locally with CLI
-```
-sam local invoke <<FunctionName>>
-```
-
 ### Validate Template
 Before deploying, validate the SAM YAML template
 ```
@@ -55,15 +45,4 @@ For subsequent deployments
 sam deploy
 ```
 
-## Testing a composition
-First activate virtual environment
-
-```
-source ./venv/bin/activate
-```
-
-Go into one of the composition directories and call the client script. For example:
-```
-cd compositions/sync-function-sequence
-python3 client.py
-```
+## Conduct Experiment
