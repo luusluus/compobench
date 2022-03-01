@@ -20,7 +20,12 @@ Deploy all compositions to AWS Lambda and X-Ray support.
 
 ### Build & Deploy All Compositions
 ```bash
-bash ./deploy_sam_templates
+bash ./deploy_sam_templates.sh
+```
+
+### Delete All Compositions
+```bash
+bash ./delete_sam_templates.sh
 ```
 
 ## Conduct Overhead Experiment
