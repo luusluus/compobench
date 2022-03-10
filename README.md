@@ -1,4 +1,6 @@
-# Serverless Function Compositions with AWS Lambda
+# CompoBench
+
+Serverless Function Compositions with AWS Lambda
 
 ## Requirements
 - Python3
